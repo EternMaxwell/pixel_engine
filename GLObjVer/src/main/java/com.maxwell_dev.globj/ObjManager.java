@@ -1,6 +1,6 @@
 package com.maxwell_dev.globj;
 
-import globj.texture.*;
+import com.maxwell_dev.globj.texture.*;
 
 /**
  * this class is created to make the obj generation more easy
