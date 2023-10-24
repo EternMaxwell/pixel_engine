@@ -52,6 +52,8 @@ public class Context {
          * @param program the program obj to bind
          */
         public void bind(Program program) {
+            if (this.program == program)
+                return;
             this.program = program;
             setContextCurrent();
             if (program == null) {
@@ -81,6 +83,8 @@ public class Context {
          * @param vertexArray the vertex array obj to bind
          */
         public void bind(VertexArray vertexArray) {
+            if (this.vertexArray == vertexArray)
+                return;
             this.vertexArray = vertexArray;
             setContextCurrent();
             if (vertexArray == null) {
@@ -115,6 +119,8 @@ public class Context {
          * @param framebuffer the frame buffer obj to bind
          */
         public void bind(Framebuffer framebuffer) {
+            if (this.framebuffer == framebuffer)
+                return;
             this.framebuffer = framebuffer;
             setContextCurrent();
             if (framebuffer == null) {
@@ -151,6 +157,8 @@ public class Context {
          * @param texture the texture to bind 
          */
         public void bindTexture(Texture texture) {
+            if(this.texture == texture)
+                return;
             this.texture = texture;
             setContextCurrent();
             if (texture == null) {
@@ -165,6 +173,8 @@ public class Context {
          * @param sampler the sampler to bind
          */
         public void bindSampler(Sampler sampler) {
+            if(this.sampler == sampler)
+                return;
             this.sampler = sampler;
             setContextCurrent();
             if (sampler == null) {
@@ -216,6 +226,8 @@ public class Context {
          * @param buffer the buffer to bind 
          */
         public void bind(Buffer buffer) {
+            if (this.buffer == buffer)
+                return;
             this.buffer = buffer;
             setContextCurrent();
             if (buffer == null) {
@@ -263,6 +275,8 @@ public class Context {
          * @param query the query to bind
          */
         public void bind(Query query) {
+            if (this.query == query)
+                return;
             if (this.query != null) {
                 this.query.setTarget(0);
             }
@@ -287,6 +301,10 @@ public class Context {
         private Blend blend;
 
         public void set(Blend blend) {
+            if (this.blend == blend)
+                return;
+            this.blend = blend;
+            setContextCurrent();
             if (blend == null) {
                 glBlendColor(0, 0, 0, 0);
                 glBlendEquation(GL_FUNC_ADD);
@@ -296,7 +314,6 @@ public class Context {
                 return;
             }
             glEnable(GL_BLEND);
-            this.blend = blend;
             if (blend.color().get() != null)
                 glBlendColor(blend.color().get()[0], blend.color().get()[1], blend.color().get()[2],
                         blend.color().get()[3]);
@@ -330,6 +347,10 @@ public class Context {
          * @param scissor the scissor to bind
          */
         public void set(Scissor scissor) {
+            if (this.scissor == scissor)
+                return;
+            this.scissor = scissor;
+            setContextCurrent();
             glDisable(GL_SCISSOR_TEST);
             if (scissor == null) {
                 return;
@@ -341,6 +362,12 @@ public class Context {
                     glEnablei(GL_SCISSOR_TEST, i);
                     glScissorIndexed(i, rectangle.x(), rectangle.y(), rectangle.width(), rectangle.height());
                 }
+            } else {
+                Scissor.Rectangle rectangle = scissor.scissor().get();
+                if (rectangle == null)
+                    return;
+                glEnable(GL_SCISSOR_TEST);
+                glScissor(rectangle.x(), rectangle.y(), rectangle.width(), rectangle.height());
             }
         }
 
@@ -361,6 +388,10 @@ public class Context {
          * @param stencil the stencil to bind
          */
         public void set(Stencil stencil) {
+            if (this.stencil == stencil)
+                return;
+            this.stencil = stencil;
+            setContextCurrent();
             if (stencil == null) {
                 glDisable(GL_STENCIL_TEST);
                 return;
@@ -399,6 +430,10 @@ public class Context {
          * @param depth the depth to bind
          */
         public void set(Depth depth) {
+            if (this.depth == depth)
+                return;
+            this.depth = depth;
+            setContextCurrent();
             if (depth == null) {
                 glDisable(GL_DEPTH_TEST);
                 return;
@@ -424,6 +459,10 @@ public class Context {
          * @param logicOp the logic operation to bind
          */
         public void set(LogicOp logicOp) {
+            if (this.logicOp == logicOp)
+                return;
+            this.logicOp = logicOp;
+            setContextCurrent();
             if (logicOp == null) {
                 glDisable(GL_COLOR_LOGIC_OP);
                 return;
@@ -449,6 +488,10 @@ public class Context {
          * @param writeMask the write mask to bind
          */
         public void set(WriteMask writeMask) {
+            if (this.writeMask == writeMask)
+                return;
+            this.writeMask = writeMask;
+            setContextCurrent();
             if (writeMask == null) {
                 glColorMask(true, true, true, true);
                 glDepthMask(true);
@@ -491,6 +534,10 @@ public class Context {
          * @param faceCull the face culling to bind
          */
         public void set(FaceCull faceCull) {
+            if (this.faceCull == faceCull)
+                return;
+            this.faceCull = faceCull;
+            setContextCurrent();
             if (faceCull == null || !faceCull.cullFace()) {
                 glDisable(GL_CULL_FACE);
                 return;
@@ -513,6 +560,10 @@ public class Context {
         private ViewPort viewPort;
         
         public void set(ViewPort viewPort) {
+            if (this.viewPort == viewPort)
+                return;
+            this.viewPort = viewPort;
+            setContextCurrent();
             if (viewPort == null) {
                 glViewport(0, 0, 0, 0);
                 glDepthRange(0, 1);
@@ -1025,6 +1076,22 @@ public class Context {
     public QueryBinding tessEvaluationShaderInvocationsQuery() {
         return tessEvaluationShaderInvocationsQuery;
     }
+
+    /**
+     * get the clipping input primitives query binding
+     * @return the clipping input primitives query binding
+     */
+    public QueryBinding clippingInputPrimitivesQuery() {
+        return clippingInputPrimitivesQuery;
+    }
+
+    /**
+     * get the clipping output primitives query binding
+     * @return the clipping output primitives query binding
+     */
+    public QueryBinding clippingOutputPrimitivesQuery() {
+        return clippingOutputPrimitivesQuery;
+    }
     //FLAG query bind part end
 
     /**
@@ -1095,67 +1162,126 @@ public class Context {
      * clear all the binding 
      */
     public void clear() {
-        vertexArray.bind(null);
-
-        arrayBuffer.bind(null);
-        copyReadBuffer.bind(null);
-        copyWriteBuffer.bind(null);
-        atomicCounterBuffer.bind(null);
-        dispatchIndirectBuffer.bind(null);
-        drawIndirectBuffer.bind(null);
-        elementArrayBuffer.bind(null);
-        pixelPackBuffer.bind(null);
-        pixelUnpackBuffer.bind(null);
-        queryBuffer.bind(null);
-        shaderStorageBuffer.bind(null);
-        textureBuffer.bind(null);
-        transformFeedbackBuffer.bind(null);
-        uniformBuffer.bind(null);
-
-        for (BufferBinding binding : atomicCounterBuffers)
-            binding.bind(null);
-        for (BufferBinding binding : transformFeedbackBuffers)
-            binding.bind(null);
-        for (BufferBinding binding : uniformBuffers)
-            binding.bind(null);
-        for (BufferBinding binding : shaderStorageBuffers)
-            binding.bind(null);
-
-        for (TextureUnit unit : textureUnits) {
-            unit.bindTexture(null);
-            unit.bindSampler(null);
+        //clear vertex array binding if the value is not null
+        if (vertexArray.get() != null)
+            vertexArray.bind(null);
+        //clear buffer binding if the value is not null
+        if (arrayBuffer.get() != null)
+            arrayBuffer.bind(null);
+        if (copyReadBuffer.get() != null)
+            copyReadBuffer.bind(null);
+        if (copyWriteBuffer.get() != null)
+            copyWriteBuffer.bind(null);
+        if (dispatchIndirectBuffer.get() != null)
+            dispatchIndirectBuffer.bind(null);
+        if (drawIndirectBuffer.get() != null)
+            drawIndirectBuffer.bind(null);
+        if (elementArrayBuffer.get() != null)
+            elementArrayBuffer.bind(null);
+        if (pixelPackBuffer.get() != null)
+            pixelPackBuffer.bind(null);
+        if (pixelUnpackBuffer.get() != null)
+            pixelUnpackBuffer.bind(null);
+        if (atomicCounterBuffer.get() != null)
+            atomicCounterBuffer.bind(null);
+        if (transformFeedbackBuffer.get() != null)
+            transformFeedbackBuffer.bind(null);
+        if (uniformBuffer.get() != null)
+            uniformBuffer.bind(null);
+        if (shaderStorageBuffer.get() != null)
+            shaderStorageBuffer.bind(null);
+        if (queryBuffer.get() != null)
+            queryBuffer.bind(null);
+        if (textureBuffer.get() != null)
+            textureBuffer.bind(null);
+        //clear indexed buffer binding if the value is not null
+        for (int i = 0; i < atomicCounterBuffers.size(); i++) {
+            if (atomicCounterBuffer(i).get() != null)
+                atomicCounterBuffer(i).bind(null);
         }
-
-        drawFrameBuffer.bind(null);
-        readFrameBuffer.bind(null);
-
-        program.bind(null);
-
-        samplesPassedQuery.bind(null);
-        anySamplesPassedQuery.bind(null);
-        anySamplesPassedConservativeQuery.bind(null);
-        primitivesGeneratedQuery.bind(null);
-        transformFeedbackPrimitivesWrittenQuery.bind(null);
-        timeElapsedQuery.bind(null);
-        timestampQuery.bind(null);
-        vertexShaderInvocationsQuery.bind(null);
-        geometryShaderInvocationsQuery.bind(null);
-        geometryShaderPrimitivesEmittedQuery.bind(null);
-        fragmentShaderInvocationsQuery.bind(null);
-        computeShaderInvocationsQuery.bind(null);
-        tessControlShaderPatchesQuery.bind(null);
-        tessEvaluationShaderInvocationsQuery.bind(null);
-        clippingInputPrimitivesQuery.bind(null);
-        clippingOutputPrimitivesQuery.bind(null);
-
-        scissor.set(null);
-        stencil.set(null);
-        depth.set(null);
-        blend.set(null);
-        logicOp.set(null);
-        writeMask.set(null);
-        faceCull.set(null);
-
-        viewPort.set(null);
+        for (int i = 0; i < transformFeedbackBuffers.size(); i++) {
+            if (transformFeedbackBuffer(i).get() != null)
+                transformFeedbackBuffer(i).bind(null);
+        }
+        for (int i = 0; i < uniformBuffers.size(); i++) {
+            if (uniformBuffer(i).get() != null)
+                uniformBuffer(i).bind(null);
+        }
+        for (int i = 0; i < shaderStorageBuffers.size(); i++) {
+            if (shaderStorageBuffer(i).get() != null)
+                shaderStorageBuffer(i).bind(null);
+        }
+        //clear texture unit binding if the value is not null
+        for (int i = 0; i < textureUnits.size(); i++) {
+            if (textureUnit(i).getTexture() != null)
+                textureUnit(i).bindTexture(null);
+            if (textureUnit(i).getSampler() != null)
+                textureUnit(i).bindSampler(null);
+        }
+        //clear frame buffer binding if the value is not null
+        if (readFrameBuffer.get() != null)
+            readFrameBuffer.bind(null);
+        if (drawFrameBuffer.get() != null)
+            drawFrameBuffer.bind(null);
+        //clear program binding if the value is not null
+        if (program.get() != null)
+            program.bind(null);
+        //clear query binding if the value is not null
+        if (samplesPassedQuery.get() != null)
+            samplesPassedQuery.bind(null);
+        if (anySamplesPassedQuery.get() != null)
+            anySamplesPassedQuery.bind(null);
+        if (anySamplesPassedConservativeQuery.get() != null)
+            anySamplesPassedConservativeQuery.bind(null);
+        if (primitivesGeneratedQuery.get() != null)
+            primitivesGeneratedQuery.bind(null);
+        if (transformFeedbackPrimitivesWrittenQuery.get() != null)
+            transformFeedbackPrimitivesWrittenQuery.bind(null);
+        if (timeElapsedQuery.get() != null)
+            timeElapsedQuery.bind(null);
+        if (timestampQuery.get() != null)
+            timestampQuery.bind(null);
+        if (vertexShaderInvocationsQuery.get() != null)
+            vertexShaderInvocationsQuery.bind(null);
+        if (geometryShaderInvocationsQuery.get() != null)
+            geometryShaderInvocationsQuery.bind(null);
+        if (geometryShaderPrimitivesEmittedQuery.get() != null)
+            geometryShaderPrimitivesEmittedQuery.bind(null);
+        if (fragmentShaderInvocationsQuery.get() != null)
+            fragmentShaderInvocationsQuery.bind(null);
+        if (computeShaderInvocationsQuery.get() != null)
+            computeShaderInvocationsQuery.bind(null);
+        if (tessControlShaderPatchesQuery.get() != null)
+            tessControlShaderPatchesQuery.bind(null);
+        if (tessEvaluationShaderInvocationsQuery.get() != null)
+            tessEvaluationShaderInvocationsQuery.bind(null);
+        if (clippingInputPrimitivesQuery.get() != null)
+            clippingInputPrimitivesQuery.bind(null);
+        if (clippingOutputPrimitivesQuery.get() != null)
+            clippingOutputPrimitivesQuery.bind(null);
+        //clear scissor binding if the value is not null
+        if (scissor.get() != null)
+            scissor.set(null);
+        //clear stencil binding if the value is not null
+        if (stencil.get() != null)
+            stencil.set(null);
+        //clear depth binding if the value is not null
+        if (depth.get() != null)
+            depth.set(null);
+        //clear blend binding if the value is not null
+        if (blend.get() != null)
+            blend.set(null);
+        //clear logic operation binding if the value is not null
+        if (logicOp.get() != null)
+            logicOp.set(null);
+        //clear write mask binding if the value is not null
+        if (writeMask.get() != null)
+            writeMask.set(null);
+        //clear face cull binding if the value is not null
+        if (faceCull.get() != null)
+            faceCull.set(null);
+        //clear view port binding if the value is not null
+        if (viewPort.get() != null)
+            viewPort.set(null);
     }
 }
