@@ -1,7 +1,5 @@
 package com.maxwell_dev.engine;
 
-import java.util.Set;
-
 /**
  * The basic node class. A node is a part of the scene graph. It can have children and a parent. It also has a name and a type.
  */
