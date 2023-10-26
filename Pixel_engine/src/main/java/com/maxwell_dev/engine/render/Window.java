@@ -12,24 +12,6 @@ public class Window extends Node{
     private int width;
     private int height;
     private String title;
-    //all the possible window hint name in glfw.Not in array.Not final.
-    private int resizable, visible, decorated, focused, auto_iconify, floating,
-            maximized, center_cursor, transparent_framebuffer, focus_on_show,
-            scale_to_monitor, red_bits, green_bits, blue_bits, alpha_bits, depth_bits,
-            stencil_bits, accum_red_bits, accum_green_bits, accum_blue_bits,
-            accum_alpha_bits, aux_buffers, samples, refresh_rate, stereo, srgb_capable,
-            doublebuffer, client_api, context_version_major, context_version_minor,
-            context_revision, context_robustness, opengl_forward_compat, opengl_debug_context,
-            opengl_profile, context_release_behavior, context_no_error, context_creation_api,
-            cocoa_retina_framebuffer, cocoa_frame_name, cocoa_graphics_switching,
-            x11_class_name, x11_instance_name, no_api, opengl_api, opengl_es_api,
-            no_robustness, no_reset_notification, lose_context_on_reset, opengl_any_profile,
-            opengl_core_profile, opengl_compat_profile, cursor, sticky_keys, sticky_mouse_buttons,
-            lock_key_mods, raw_mouse_motion, cursor_normal, cursor_hidden, cursor_disabled,
-            any_release_behavior, release_behavior_flush, release_behavior_none,
-            native_context_api, egl_context_api, osmesa_context_api, arrow_cursor,
-            ibeam_cursor, crosshair_cursor, hand_cursor, hresize_cursor, vresize_cursor,
-            version_major, version_minor, version_revision;
 
     public void createWindow() {
         glfwDefaultWindowHints();
