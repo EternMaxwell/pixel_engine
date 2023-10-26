@@ -1,4 +1,5 @@
 import com.maxwell_dev.engine.Application;
+import com.maxwell_dev.engine.Timer;
 import com.maxwell_dev.engine.render.Window;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -45,7 +46,9 @@ public class Main extends Application {
     @Override
     public void run() {
         init();
+        Timer timer = new Timer(60);
         while (!glfwWindowShouldClose(window.id())) {
+            timer.frame();
             input();
             update();
             render();
