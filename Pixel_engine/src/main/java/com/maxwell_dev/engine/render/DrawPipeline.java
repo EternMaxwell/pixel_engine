@@ -22,7 +22,7 @@ import com.maxwell_dev.globj.Stencil;
  * blend func , stencil , viewport
  */
 public class DrawPipeline {
-    private Context context;
+    private final Context context;
     private Program program;
 
     private Scissor scissor;

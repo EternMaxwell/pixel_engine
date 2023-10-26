@@ -5,7 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="engine">
+      <change afterPath="$PROJECT_DIR$/Pixel_engine/src/test/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GLObjVer/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/GLObjVer/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pixel_engine/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/DrawPipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/DrawPipeline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Window.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +53,9 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
+    "project.structure.last.edited": "项目",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
@@ -121,7 +132,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698135939341</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="engine">
+      <option name="closed" value="true" />
+      <created>1698244724944</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1698244724944</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

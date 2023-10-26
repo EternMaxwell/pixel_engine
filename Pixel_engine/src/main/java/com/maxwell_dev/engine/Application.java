@@ -1,5 +1,7 @@
 package com.maxwell_dev.engine;
 
+import static org.lwjgl.glfw.GLFW.*;
+
 /**
  * An application node. This node is the root of the scene graph.
  */
@@ -15,6 +17,8 @@ public abstract class Application extends Node{
     public abstract void render();
 
     public abstract void destroy();
+
+    public abstract void input();
 
     public abstract void run();
 
