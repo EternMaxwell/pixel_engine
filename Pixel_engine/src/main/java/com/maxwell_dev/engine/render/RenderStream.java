@@ -9,7 +9,7 @@ import com.maxwell_dev.globj.Context;
  * buffer , etc. that used in this render pass
  */
 public class RenderStream {
-    private Pipeline pipeline;
+    private DrawPipeline pipeline;
     private Context context;
     private Buffer vertexBuffer;
     private Buffer indexBuffer;
@@ -66,7 +66,7 @@ public class RenderStream {
      *
      * @param pipeline the pipeline to use
      */
-    public void setPipeline(Pipeline pipeline) {
+    public void setPipeline(DrawPipeline pipeline) {
         this.pipeline = pipeline;
     }
 
@@ -75,7 +75,7 @@ public class RenderStream {
      *
      * @return the pipeline used
      */
-    public Pipeline getPipeline() {
+    public DrawPipeline getPipeline() {
         return pipeline;
     }
 
