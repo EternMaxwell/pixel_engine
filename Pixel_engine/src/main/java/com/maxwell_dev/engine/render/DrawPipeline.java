@@ -32,6 +32,9 @@ public class DrawPipeline {
     private LogicOp logicOp;
     private FaceCull faceCull;
 
+    private int vertexSize;
+    private int mode;
+
     public DrawPipeline(Context context) {
         this.context = context;
     }
@@ -94,6 +97,22 @@ public class DrawPipeline {
 
     public void faceCull(FaceCull faceCull) {
         this.faceCull = faceCull;
+    }
+
+    public int vertexSize() {
+        return vertexSize;
+    }
+
+    public void vertexSize(int vertexSize) {
+        this.vertexSize = vertexSize;
+    }
+
+    public int mode() {
+        return mode;
+    }
+
+    public void mode(int mode) {
+        this.mode = mode;
     }
 
     public void usePipeline() {

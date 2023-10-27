@@ -40,6 +40,35 @@ public class Context {
     private final WriteMaskBinding writeMask;
     private final FaceCullBinding faceCull;
     private final ViewPortBinding viewPort;
+    private final MemoryBarrierBinding memoryBarrier;
+
+    public class MemoryBarrierBinding {
+        private MemoryBarrier memoryBarrier;
+
+        /**
+         * set the memory barrier to this binding point
+         * @param memoryBarrier the memory barrier to bind
+         */
+        public void set(MemoryBarrier memoryBarrier) {
+            if (this.memoryBarrier == memoryBarrier)
+                return;
+            this.memoryBarrier = memoryBarrier;
+            setContextCurrent();
+            if (memoryBarrier == null) {
+                glMemoryBarrier(0);
+                return;
+            }
+            glMemoryBarrier(memoryBarrier.barrier());
+        }
+
+        /**
+         * get the memory barrier currently bound to this binding point
+         * @return the memory barrier
+         */
+        public MemoryBarrier get() {
+            return memoryBarrier;
+        }
+    }
 
     /**
      * this class describes a program binding point in the opengl context
@@ -643,6 +672,8 @@ public class Context {
         faceCull = null;
 
         viewPort = null;
+
+        memoryBarrier = null;
     }
 
     /**
@@ -708,6 +739,8 @@ public class Context {
         faceCull = new FaceCullBinding();
 
         viewPort = new ViewPortBinding();
+
+        memoryBarrier = new MemoryBarrierBinding();
     }
 
     //====CONTEXT OPERATION====//
@@ -1159,6 +1192,14 @@ public class Context {
     }
 
     /**
+     * get the memory barrier binding
+     * @return the memory barrier binding
+     */
+    public MemoryBarrierBinding memoryBarrier() {
+        return memoryBarrier;
+    }
+
+    /**
      * clear all the binding 
      */
     public void clear() {
@@ -1283,5 +1324,57 @@ public class Context {
         //clear view port binding if the value is not null
         if (viewPort.get() != null)
             viewPort.set(null);
+        //clear memory barrier binding if the value is not null
+        if (memoryBarrier.get() != null)
+            memoryBarrier.set(null);
+    }
+
+    public void drawArrays(int mode, int first, int count) {
+        glDrawArrays(mode, first, count);
+    }
+
+    public void drawArraysInstanced(int mode, int first, int count, int instanceCount) {
+        glDrawArraysInstanced(mode, first, count, instanceCount);
+    }
+
+    public void drawArraysIndirect(int mode, long indirect) {
+        glDrawArraysIndirect(mode, indirect);
+    }
+
+    public void drawElements(int mode, int count, int type, long indices) {
+        glDrawElements(mode, count, type, indices);
+    }
+
+    public void drawElementsInstanced(int mode, int count, int type, long indices, int instanceCount) {
+        glDrawElementsInstanced(mode, count, type, indices, instanceCount);
+    }
+
+    public void drawElementsBaseVertex(int mode, int count, int type, long indices, int baseVertex) {
+        glDrawElementsBaseVertex(mode, count, type, indices, baseVertex);
+    }
+
+    public void drawElementsInstancedBaseVertex(int mode, int count, int type, long indices, int instanceCount, int baseVertex) {
+        glDrawElementsInstancedBaseVertex(mode, count, type, indices, instanceCount, baseVertex);
+    }
+
+    public void drawElementsIndirect(int mode, int type, long indirect) {
+        glDrawElementsIndirect(mode, type, indirect);
+    }
+
+    public void drawRangeElements(int mode, int start, int end, int count, int type, long indices) {
+        glDrawRangeElements(mode, start, end, count, type, indices);
+    }
+
+    public void drawRangeElementsBaseVertex(int mode, int start, int end, int count, int type, long indices, int baseVertex) {
+        glDrawRangeElementsBaseVertex(mode, start, end, count, type, indices, baseVertex);
+    }
+
+
+    public void dispatchCompute(int num_groups_x, int num_groups_y, int num_groups_z) {
+        glDispatchCompute(num_groups_x, num_groups_y, num_groups_z);
+    }
+
+    public void dispatchComputeIndirect(long indirect) {
+        glDispatchComputeIndirect(indirect);
     }
 }

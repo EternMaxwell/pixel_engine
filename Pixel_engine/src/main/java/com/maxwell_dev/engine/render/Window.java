@@ -445,6 +445,9 @@ public class Window extends Node{
         this.x11InstanceName = x11InstanceName;
     }
 
+    /**
+     * create the window in glfw view
+     */
     public void createWindow() {
         glfwDefaultWindowHints();
         if(resizable != null)
@@ -543,13 +546,139 @@ public class Window extends Node{
             this.width = width;
             this.height = height;
         });
+        glfwSetWindowPosCallback(window, (window, xpos, ypos) -> {
+            if(window != this.window)
+                return;
+            this.xpos = xpos;
+            this.ypos = ypos;
+        });
     }
 
+    /**
+     * create a window instance with the given name, width, height and title
+     * @param name the name of the window as a node
+     * @param width the width of the window
+     * @param height the height of the window
+     * @param title the title of the window
+     */
     public Window(String name, int width, int height, String title) {
         super(NodeType.WINDOW, name);
         this.width = width;
         this.height = height;
         this.title = title;
+    }
+
+    /**
+     * set the window close callback
+     * @param callback the callback to set
+     */
+    public void setWindowCloseCallback(GLFWWindowCloseCallback callback) {
+        glfwSetWindowCloseCallback(window, callback);
+    }
+
+    /**
+     * set the window refresh callback
+     * @param callback the callback to set
+     */
+    public void setWindowRefreshCallback(GLFWWindowRefreshCallback callback) {
+        glfwSetWindowRefreshCallback(window, callback);
+    }
+
+    /**
+     * set the window focus callback
+     * @param callback the callback to set
+     */
+    public void setWindowFocusCallback(GLFWWindowFocusCallback callback) {
+        glfwSetWindowFocusCallback(window, callback);
+    }
+
+    /**
+     * set the window iconify callback
+     * @param callback the callback to set
+     */
+    public void setWindowIconifyCallback(GLFWWindowIconifyCallback callback) {
+        glfwSetWindowIconifyCallback(window, callback);
+    }
+
+    /**
+     * set the window maximize callback
+     * @param callback the callback to set
+     */
+    public void setWindowMaximizeCallback(GLFWWindowMaximizeCallback callback) {
+        glfwSetWindowMaximizeCallback(window, callback);
+    }
+
+    /**
+     * set the framebuffer size callback
+     * @param callback the callback to set
+     */
+    public void setFramebufferSizeCallback(GLFWFramebufferSizeCallback callback) {
+        glfwSetFramebufferSizeCallback(window, callback);
+    }
+
+    /**
+     * set the window content scale callback
+     * @param callback the callback to set
+     */
+    public void setWindowContentScaleCallback(GLFWWindowContentScaleCallback callback) {
+        glfwSetWindowContentScaleCallback(window, callback);
+    }
+
+    /**
+     * set the drop callback
+     * @param callback the callback to set
+     */
+    public void setDropCallback(GLFWDropCallback callback) {
+        glfwSetDropCallback(window, callback);
+    }
+
+    /**
+     * request the window attention
+     */
+    public void requestWindowAttention() {
+        glfwRequestWindowAttention(window);
+    }
+
+    /**
+     * set the window iconified
+     */
+    public void iconifyWindow() {
+        glfwIconifyWindow(window);
+    }
+
+    /**
+     * set the window restored
+     */
+    public void restoreWindow() {
+        glfwRestoreWindow(window);
+    }
+
+    /**
+     * set the window maximized
+     */
+    public void maximizeWindow() {
+        glfwMaximizeWindow(window);
+    }
+
+    /**
+     * show the window
+     */
+    public void showWindow() {
+        glfwShowWindow(window);
+    }
+
+    /**
+     * hide the window
+     */
+    public void hideWindow() {
+        glfwHideWindow(window);
+    }
+    
+    /**
+     * focus the window
+     */
+    public void focusWindow() {
+        glfwFocusWindow(window);
     }
 
     /**

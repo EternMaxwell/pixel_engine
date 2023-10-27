@@ -16,6 +16,9 @@ public class Timer {
         frameCount=1;
     }
 
+    /**
+     * update the timer
+     */
     public void frame(){
         currentTime = System.nanoTime();
         deltaTime = currentTime - lastTime;
@@ -31,6 +34,18 @@ public class Timer {
         frameCount++;
     }
 
+    /**
+     * get the fps
+     * @return the fps
+     */
+    public double fps() {
+        return fps;
+    }
+
+    /**
+     * get the frame count
+     * @return the frame count
+     */
     public long frameCount() {
         return frameCount;
     }

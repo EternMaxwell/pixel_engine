@@ -16,6 +16,70 @@ public class RenderStream {
     private Buffer[] uniformBuffers;
     private Buffer[] storageBuffers;
 
+    private int mode;
+    private int vertexSize;
+    private int vertexCount;
+    private int indexCount;
+    private int firstIndex;
+    private int firstVertex;
+    private int indexBufferType;
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
+    public void setVertexSize(int vertexSize) {
+        this.vertexSize = vertexSize;
+    }
+
+    public void setIndexCount(int indexCount) {
+        this.indexCount = indexCount;
+    }
+
+    public void setVertexCount(int vertexCount) {
+        this.vertexCount = vertexCount;
+    }
+    
+    public void setFirstIndex(int firstIndex) {
+        this.firstIndex = firstIndex;
+    }
+    
+    public void setFirstVertex(int firstVertex) {
+        this.firstVertex = firstVertex;
+    }
+    
+    public void setIndexBufferType(int indexBufferType) {
+        this.indexBufferType = indexBufferType;
+    }
+    
+    public int getMode() {
+        return mode;
+    }
+    
+    public int getVertexSize() {
+        return vertexSize;
+    }
+
+    public int getIndexCount() {
+        return indexCount;
+    }
+
+    public int getVertexCount() {
+        return vertexCount;
+    }
+
+    public int getFirstIndex() {
+        return firstIndex;
+    }
+    
+    public int getFirstVertex() {
+        return firstVertex;
+    }
+    
+    public int getIndexBufferType() {
+        return indexBufferType;
+    }
+
     /**
      * create a new render stream
      */
@@ -132,5 +196,12 @@ public class RenderStream {
         if (storageBuffers != null)
             for (int index = 0; index < storageBuffers.length; index++)
                 context.shaderStorageBuffer(index).bind(storageBuffers[index]);
+    }
+
+    public void draw() {
+        if(indexBuffer == null)
+            context.drawArrays(mode, firstVertex, vertexCount);
+        else
+            context.drawElements(mode, indexCount, indexBufferType, firstIndex);
     }
 }
