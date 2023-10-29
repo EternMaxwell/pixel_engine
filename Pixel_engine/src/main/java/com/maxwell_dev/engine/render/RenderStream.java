@@ -8,7 +8,7 @@ import com.maxwell_dev.globj.Context;
  * and stores the references to the buffer data , texture , frame 
  * buffer , etc. that used in this render pass
  */
-public class RenderStream {
+public class RenderStream extends Stream{
     private DrawPipeline pipeline;
     private Context context;
     private Buffer vertexBuffer;
@@ -196,6 +196,11 @@ public class RenderStream {
         if (storageBuffers != null)
             for (int index = 0; index < storageBuffers.length; index++)
                 context.shaderStorageBuffer(index).bind(storageBuffers[index]);
+    }
+
+    public void pass(){
+        useRenderStream();
+        draw();
     }
 
     public void draw() {

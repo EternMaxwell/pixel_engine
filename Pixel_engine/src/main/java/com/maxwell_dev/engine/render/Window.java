@@ -33,6 +33,8 @@ public class Window extends Node{
      *                  <p>Default is: {@link GLFW#GLFW_TRUE}</p>
      */
     public void setResizable(boolean resizable) {
+        if(this.resizable == null)
+            this.resizable = new IntValue();
         this.resizable.value = resizable ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -44,6 +46,8 @@ public class Window extends Node{
      *                <p>Default is: {@link GLFW#GLFW_TRUE}</p>
      */
     public void setVisible(boolean visible) {
+        if(this.visible == null)
+            this.visible = new IntValue();
         this.visible.value = visible ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -55,6 +59,8 @@ public class Window extends Node{
      *                  <p>Default is: {@link GLFW#GLFW_TRUE}</p>
      */
     public void setDecorated(boolean decorated) {
+        if(this.decorated == null)
+            this.decorated = new IntValue();
         this.decorated.value = decorated ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -66,6 +72,8 @@ public class Window extends Node{
      *                <p>Default is: {@link GLFW#GLFW_TRUE}</p>
      */
     public void setFocused(boolean focused) {
+        if(this.focused == null)
+            this.focused = new IntValue();
         this.focused.value = focused ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -77,6 +85,8 @@ public class Window extends Node{
      *                    <p>Default is: {@link GLFW#GLFW_TRUE}</p>
      */
     public void setAutoIconify(boolean autoIconify) {
+        if(this.autoIconify == null)
+            this.autoIconify = new IntValue();
         this.autoIconify.value = autoIconify ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -88,6 +98,8 @@ public class Window extends Node{
      *                 <p>Default is: {@link GLFW#GLFW_FALSE}</p>
      */
     public void setFloating(boolean floating) {
+        if(this.floating == null)
+            this.floating = new IntValue();
         this.floating.value = floating ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -99,6 +111,8 @@ public class Window extends Node{
      *                  <p>Default is: {@link GLFW#GLFW_FALSE}</p>
      */
     public void setMaximized(boolean maximized) {
+        if(this.maximized == null)
+            this.maximized = new IntValue();
         this.maximized.value = maximized ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -110,6 +124,8 @@ public class Window extends Node{
      *                     <p>Default is: {@link GLFW#GLFW_FALSE}</p>
      */
     public void setCenterCursor(boolean centerCursor) {
+        if (this.centerCursor == null)
+            this.centerCursor = new IntValue();
         this.centerCursor.value = centerCursor ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -121,6 +137,8 @@ public class Window extends Node{
      *                               <p>Default is: {@link GLFW#GLFW_FALSE}</p>
      */
     public void setTransparentFramebuffer(boolean transparentFramebuffer) {
+        if(this.transparentFramebuffer == null)
+            this.transparentFramebuffer = new IntValue();
         this.transparentFramebuffer.value = transparentFramebuffer ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -132,6 +150,8 @@ public class Window extends Node{
      *                    <p>Default is: {@link GLFW#GLFW_TRUE}</p>
      */
     public void setFocusOnShow(boolean focusOnShow) {
+        if(this.focusOnShow == null)
+            this.focusOnShow = new IntValue();
         this.focusOnShow.value = focusOnShow ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -143,6 +163,8 @@ public class Window extends Node{
      *                       <p>Default is: {@link GLFW#GLFW_FALSE}</p>
      */
     public void setScaleToMonitor(boolean scaleToMonitor) {
+        if(this.scaleToMonitor == null)
+            this.scaleToMonitor = new IntValue();
         this.scaleToMonitor.value = scaleToMonitor ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -154,6 +176,8 @@ public class Window extends Node{
      *                         <p>Default is: {@link GLFW#GLFW_FALSE}</p>
      */
     public void setMousePassThrough(boolean mousePassThrough) {
+        if(this.mousePassThrough == null)
+            this.mousePassThrough = new IntValue();
         this.mousePassThrough.value = mousePassThrough ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -163,6 +187,8 @@ public class Window extends Node{
      *                <p>Default is: 8</p>
      */
     public void setRedBits(int redBits) {
+        if(this.redBits == null)
+            this.redBits = new IntValue();
         this.redBits.value = redBits;
     }
 
@@ -172,6 +198,8 @@ public class Window extends Node{
      *                  <p>Default is: 8</p>
      */
     public void setGreenBits(int greenBits) {
+        if(this.greenBits == null)
+            this.greenBits = new IntValue();
         this.greenBits.value = greenBits;
     }
 
@@ -181,6 +209,8 @@ public class Window extends Node{
      *                 <p>Default is: 8</p>
      */
     public void setBlueBits(int blueBits) {
+        if(this.blueBits == null)
+            this.blueBits = new IntValue();
         this.blueBits.value = blueBits;
     }
 
@@ -190,6 +220,8 @@ public class Window extends Node{
      *                  <p>Default is: 8</p>
      */
     public void setAlphaBits(int alphaBits) {
+        if(this.alphaBits == null)
+            this.alphaBits = new IntValue();
         this.alphaBits.value = alphaBits;
     }
 
@@ -199,6 +231,8 @@ public class Window extends Node{
      *                  <p>Default is: 24</p>
      */
     public void setDepthBits(int depthBits) {
+        if(this.depthBits == null)
+            this.depthBits = new IntValue();
         this.depthBits.value = depthBits;
     }
 
@@ -208,6 +242,8 @@ public class Window extends Node{
      *                    <p>Default is: 8</p>
      */
     public void setStencilBits(int stencilBits) {
+        if(this.stencilBits == null)
+            this.stencilBits = new IntValue();
         this.stencilBits.value = stencilBits;
     }
 
@@ -217,6 +253,8 @@ public class Window extends Node{
      *                     <p>Default is: 0</p>
      */
     public void setAccumRedBits(int accumRedBits) {
+        if(this.accumRedBits == null)
+            this.accumRedBits = new IntValue();
         this.accumRedBits.value = accumRedBits;
     }
 
@@ -226,6 +264,8 @@ public class Window extends Node{
      *                       <p>Default is: 0</p>
      */
     public void setAccumGreenBits(int accumGreenBits) {
+        if(this.accumGreenBits == null)
+            this.accumGreenBits = new IntValue();
         this.accumGreenBits.value = accumGreenBits;
     }
 
@@ -235,6 +275,8 @@ public class Window extends Node{
      *                      <p>Default is: 0</p>
      */
     public void setAccumBlueBits(int accumBlueBits) {
+        if(this.accumBlueBits == null)
+            this.accumBlueBits = new IntValue();
         this.accumBlueBits.value = accumBlueBits;
     }
 
@@ -244,6 +286,8 @@ public class Window extends Node{
      *                       <p>Default is: 0</p>
      */
     public void setAccumAlphaBits(int accumAlphaBits) {
+        if(this.accumAlphaBits == null)
+            this.accumAlphaBits = new IntValue();
         this.accumAlphaBits.value = accumAlphaBits;
     }
 
@@ -253,6 +297,8 @@ public class Window extends Node{
      *                   <p>Default is: 0</p>
      */
     public void setAuxBuffers(int auxBuffers) {
+        if(this.auxBuffers == null)
+            this.auxBuffers = new IntValue();
         this.auxBuffers.value = auxBuffers;
     }
 
@@ -262,6 +308,8 @@ public class Window extends Node{
      *                <p>Default is: 0</p>
      */
     public void setSamples(int samples) {
+        if(this.samples == null)
+            this.samples = new IntValue();
         this.samples.value = samples;
     }
 
@@ -271,6 +319,8 @@ public class Window extends Node{
      *                    <p>Default is: {@link GLFW#GLFW_DONT_CARE}</p>
      */
     public void setRefreshRate(int refreshRate) {
+        if(this.refreshRate == null)
+            this.refreshRate = new IntValue();
         this.refreshRate.value = refreshRate;
     }
 
@@ -280,6 +330,8 @@ public class Window extends Node{
      *               <p>Default is: {@link GLFW#GLFW_FALSE}</p>
      */
     public void setStereo(boolean stereo) {
+        if(this.stereo == null)
+            this.stereo = new IntValue();
         this.stereo.value = stereo ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -289,6 +341,8 @@ public class Window extends Node{
      *                    <p>Default is: {@link GLFW#GLFW_FALSE}</p>
      */
     public void setSrgbCapable(boolean srgbCapable) {
+        if(this.srgbCapable == null)
+            this.srgbCapable = new IntValue();
         this.srgbCapable.value = srgbCapable ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -298,6 +352,8 @@ public class Window extends Node{
      *                     <p>Default is: {@link GLFW#GLFW_TRUE}</p>
      */
     public void setDoublebuffer(boolean doublebuffer) {
+        if(this.doublebuffer == null)
+            this.doublebuffer = new IntValue();
         this.doublebuffer.value = doublebuffer ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -307,6 +363,8 @@ public class Window extends Node{
      *                  <p>Default is: {@link GLFW#GLFW_OPENGL_API}</p>
      */
     public void setClientApi(int clientApi) {
+        if(this.clientApi == null)
+            this.clientApi = new IntValue();
         this.clientApi.value = clientApi;
     }
 
@@ -316,6 +374,8 @@ public class Window extends Node{
      *                           <p>Default is: {@link GLFW#GLFW_NATIVE_CONTEXT_API}</p>
      */
     public void setContextCreationApi(int contextCreationApi) {
+        if(this.contextCreationApi == null)
+            this.contextCreationApi = new IntValue();
         this.contextCreationApi.value = contextCreationApi;
     }
 
@@ -325,6 +385,8 @@ public class Window extends Node{
      *                            <p>Default is: 1</p>
      */
     public void setContextVersionMajor(int contextVersionMajor) {
+        if(this.contextVersionMajor == null)
+            this.contextVersionMajor = new IntValue();
         this.contextVersionMajor.value = contextVersionMajor;
     }
 
@@ -334,6 +396,8 @@ public class Window extends Node{
      *                            <p>Default is: 0</p>
      */
     public void setContextVersionMinor(int contextVersionMinor) {
+        if(this.contextVersionMinor == null)
+            this.contextVersionMinor = new IntValue();
         this.contextVersionMinor.value = contextVersionMinor;
     }
 
@@ -343,6 +407,8 @@ public class Window extends Node{
      *                          <p>Default is: {@link GLFW#GLFW_NO_ROBUSTNESS}</p>
      */
     public void setContextRobustness(int contextRobustness) {
+        if(this.contextRobustness == null)
+            this.contextRobustness = new IntValue();
         this.contextRobustness.value = contextRobustness;
     }
 
@@ -352,6 +418,8 @@ public class Window extends Node{
      *                               <p>Default is: {@link GLFW#GLFW_ANY_RELEASE_BEHAVIOR}</p>
      */
     public void setContextReleaseBehavior(int contextReleaseBehavior) {
+        if(this.contextReleaseBehavior == null)
+            this.contextReleaseBehavior = new IntValue();
         this.contextReleaseBehavior.value = contextReleaseBehavior;
     }
 
@@ -361,6 +429,8 @@ public class Window extends Node{
      *                       <p>Default is: {@link GLFW#GLFW_FALSE}</p>
      */
     public void setContextNoError(boolean contextNoError) {
+        if(this.contextNoError == null)
+            this.contextNoError = new IntValue();
         this.contextNoError.value = contextNoError ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -370,6 +440,8 @@ public class Window extends Node{
      *                            <p>Default is: {@link GLFW#GLFW_FALSE}</p>
      */
     public void setOpenglForwardCompat(boolean openglForwardCompat) {
+        if(this.openglForwardCompat == null)
+            this.openglForwardCompat = new IntValue();
         this.openglForwardCompat.value = openglForwardCompat ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -379,6 +451,8 @@ public class Window extends Node{
      *                           <p>Default is: {@link GLFW#GLFW_FALSE}</p>
      */
     public void setOpenglDebugContext(boolean openglDebugContext) {
+        if(this.openglDebugContext == null)
+            this.openglDebugContext = new IntValue();
         this.openglDebugContext.value = openglDebugContext ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -388,6 +462,8 @@ public class Window extends Node{
      *                      <p>Default is: {@link GLFW#GLFW_OPENGL_ANY_PROFILE}</p>
      */
     public void setOpenglProfile(int openglProfile) {
+        if(this.openglProfile == null)
+            this.openglProfile = new IntValue();
         this.openglProfile.value = openglProfile;
     }
 
@@ -397,6 +473,8 @@ public class Window extends Node{
      *                          <p>Default is: {@link GLFW#GLFW_FALSE}</p>
      */
     public void setWin32KeyboardMenu(boolean win32KeyboardMenu) {
+        if(this.win32KeyboardMenu == null)
+            this.win32KeyboardMenu = new IntValue();
         this.win32KeyboardMenu.value = win32KeyboardMenu ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -406,6 +484,8 @@ public class Window extends Node{
      *                               <p>Default is: {@link GLFW#GLFW_TRUE}</p>
      */
     public void setCocoaRetinaFramebuffer(boolean cocoaRetinaFramebuffer) {
+        if(this.cocoaRetinaFramebuffer == null)
+            this.cocoaRetinaFramebuffer = new IntValue();
         this.cocoaRetinaFramebuffer.value = cocoaRetinaFramebuffer ? GLFW_TRUE : GLFW_FALSE;
     }
 
@@ -424,6 +504,8 @@ public class Window extends Node{
      *                               <p>Default is: {@link GLFW#GLFW_TRUE}</p>
      */
     public void setCocoaGraphicsSwitching(boolean cocoaGraphicsSwitching) {
+        if(this.cocoaGraphicsSwitching == null)
+            this.cocoaGraphicsSwitching = new IntValue();
         this.cocoaGraphicsSwitching.value = cocoaGraphicsSwitching ? GLFW_TRUE : GLFW_FALSE;
     }
 

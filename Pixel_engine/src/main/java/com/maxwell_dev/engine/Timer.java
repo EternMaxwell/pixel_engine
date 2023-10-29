@@ -11,7 +11,7 @@ public class Timer {
 
     public Timer(double fps) {
         this.fps = fps;
-        frameTime = 1.0 / fps;
+        frameTime = 1000.0 / fps;
         lastTime = System.nanoTime();
         frameCount=1;
     }
@@ -22,16 +22,16 @@ public class Timer {
     public void frame(){
         currentTime = System.nanoTime();
         deltaTime = currentTime - lastTime;
-        lastTime = currentTime;
-        sleepTime = (long) (frameTime * 1000000000 - deltaTime);
+        sleepTime = (long) (frameTime * 1000000 - deltaTime);
         if(sleepTime > 0){
             try {
-                Thread.sleep(sleepTime / 1000000, (int) (sleepTime % 1000000));
+                Thread.sleep(sleepTime / 1000000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         frameCount++;
+        lastTime = System.nanoTime();
     }
 
     /**
