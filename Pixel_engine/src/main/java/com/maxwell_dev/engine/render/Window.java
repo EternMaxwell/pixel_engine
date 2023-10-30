@@ -852,4 +852,8 @@ public class Window extends Node{
     public int ypos() {
         return ypos;
     }
+
+    public void swapBuffers() {
+        glfwSwapBuffers(window);
+    }
 }

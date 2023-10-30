@@ -28,4 +28,26 @@ public class Renderer extends Node {
         streams.add(stream);
         return this;
     }
+
+    public Window getWindow() {
+        return window;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public List<Stream> getStreams() {
+        return streams;
+    }
+
+    public void executeStreams(){
+        for (Stream stream : streams) {
+            stream.pass();
+        }
+    }
+
+    public void endFrame(){
+        window.swapBuffers();
+    }
 }

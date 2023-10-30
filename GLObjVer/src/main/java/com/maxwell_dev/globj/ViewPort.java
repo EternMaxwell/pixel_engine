@@ -6,19 +6,21 @@ public class ViewPort {
     
     public ViewPort() {
         viewport = new int[4];
-        depthRange = new float[2];
+        depthRange = new float[]{0,1};
     }
     
-    public void set(int x, int y, int width, int height) {
+    public ViewPort set(int x, int y, int width, int height) {
         viewport[0] = x;
         viewport[1] = y;
         viewport[2] = width;
         viewport[3] = height;
+        return this;
     }
     
-    public void setDepth(float near, float far) {
+    public ViewPort setDepth(float near, float far) {
         depthRange[0] = near;
         depthRange[1] = far;
+        return this;
     }
     
     public int[] get() {

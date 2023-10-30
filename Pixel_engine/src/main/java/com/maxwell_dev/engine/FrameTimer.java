@@ -1,15 +1,15 @@
 package com.maxwell_dev.engine;
 
-public class Timer {
+public class FrameTimer {
     private long lastTime;
     private long currentTime;
     private long deltaTime;
     private long sleepTime;
-    private final double fps;
-    private final double frameTime;
+    private double fps;
+    private double frameTime;
     private long frameCount;
 
-    public Timer(double fps) {
+    public FrameTimer(double fps) {
         this.fps = fps;
         frameTime = 1000.0 / fps;
         lastTime = System.nanoTime();
@@ -18,6 +18,7 @@ public class Timer {
 
     /**
      * update the timer
+     * <p>this method will stop the thread until the next frame</p>
      */
     public void frame(){
         currentTime = System.nanoTime();
@@ -48,5 +49,15 @@ public class Timer {
      */
     public long frameCount() {
         return frameCount;
+    }
+
+    /**
+     * set the fps
+     * <p>This allows the application to change the fps at runtime</p>
+     * @param fps the fps
+     */
+    public void setFps(double fps) {
+        this.fps = fps;
+        frameTime = 1000.0 / fps;
     }
 }

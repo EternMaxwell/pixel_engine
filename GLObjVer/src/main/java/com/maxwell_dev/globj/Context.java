@@ -2,6 +2,7 @@ package com.maxwell_dev.globj;
 
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
+import org.lwjgl.opengl.GL46;
 
 import java.util.LinkedList;
 
@@ -41,6 +42,86 @@ public class Context {
     private final FaceCullBinding faceCull;
     private final ViewPortBinding viewPort;
     private final MemoryBarrierBinding memoryBarrier;
+    private final ClearColor clearColor;
+    private final ClearBit clearBit;
+
+    /**
+     * get the current context
+     * @return the current context
+     */
+    public static Context current() {
+        return contextCurrent;
+    }
+
+    public class ClearBit {
+        private int bit;
+
+        /**
+         * set the clear bit
+         * @param bit the clear bit. can be one of the following:
+         * <p>{@link GL46#GL_COLOR_BUFFER_BIT}, {@link GL46#GL_DEPTH_BUFFER_BIT}, {@link GL46#GL_STENCIL_BUFFER_BIT}</p>
+         * 
+         */
+        public ClearBit set(int bit) {
+            this.bit = bit;
+            return this;
+        }
+
+        /**
+         * get the clear bit
+         * @return the clear bit
+         */
+        public int get() {
+            return bit;
+        }
+
+        /**
+         * clear the buffer
+         */
+        public void clear() {
+            glClear(bit);
+        }
+    }
+
+    public class ClearColor {
+        private final float[] color;
+
+        public ClearColor() {
+            color = new float[]{0, 0, 0, 0};
+        }
+
+        public ClearColor set(float r, float g, float b, float a) {
+            color[0] = r;
+            color[1] = g;
+            color[2] = b;
+            color[3] = a;
+            return this;
+        }
+
+        public float[] get() {
+            return color;
+        }
+
+        public float r() {
+            return color[0];
+        }
+
+        public float g() {
+            return color[1];
+        }
+
+        public float b() {
+            return color[2];
+        }
+
+        public float a() {
+            return color[3];
+        }
+
+        public void clear() {
+            glClearColor(color[0], color[1], color[2], color[3]);
+        }
+    }
 
     public class MemoryBarrierBinding {
         private MemoryBarrier memoryBarrier;
@@ -674,6 +755,9 @@ public class Context {
         viewPort = null;
 
         memoryBarrier = null;
+
+        clearColor = null;
+        clearBit = null;
     }
 
     /**
@@ -741,6 +825,9 @@ public class Context {
         viewPort = new ViewPortBinding();
 
         memoryBarrier = new MemoryBarrierBinding();
+
+        clearColor = new ClearColor();
+        clearBit = new ClearBit();
     }
 
     //====CONTEXT OPERATION====//
@@ -1200,6 +1287,22 @@ public class Context {
     }
 
     /**
+     * get the clear color binding
+     * @return the clear color binding
+     */
+    public ClearColor clearColor() {
+        return clearColor;
+    }
+
+    /**
+     * get the clear bit binding
+     * @return the clear bit binding
+     */
+    public ClearBit clearBit() {
+        return clearBit;
+    }
+
+    /**
      * clear all the binding 
      */
     public void clear() {
@@ -1327,6 +1430,10 @@ public class Context {
         //clear memory barrier binding if the value is not null
         if (memoryBarrier.get() != null)
             memoryBarrier.set(null);
+        //clear clear color binding
+        clearColor.set(0, 0, 0, 0);
+        //clear clear bit binding
+        clearBit.set(0);
     }
 
     public void drawArrays(int mode, int first, int count) {

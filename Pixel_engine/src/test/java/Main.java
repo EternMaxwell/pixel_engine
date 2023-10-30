@@ -1,7 +1,9 @@
 import com.maxwell_dev.engine.Application;
-import com.maxwell_dev.engine.Timer;
+import com.maxwell_dev.engine.FrameTimer;
 import com.maxwell_dev.engine.render.Window;
 import com.maxwell_dev.globj.Context;
+import com.maxwell_dev.globj.ViewPort;
+
 import org.lwjgl.glfw.GLFWWindowRefreshCallback;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -11,7 +13,7 @@ public class Main extends Application {
     private Window window;
     private Context context;
 
-    Timer timer;
+    FrameTimer timer;
 
     public Main(String name) {
         super(name);
@@ -25,7 +27,7 @@ public class Main extends Application {
             System.out.println("GLFW initialized");
         }
 
-        timer = new Timer(60);
+        timer = new FrameTimer(60);
 
         window = new Window("test",800, 600, "test");
         window.setContextVersionMajor(4);
@@ -61,9 +63,9 @@ public class Main extends Application {
 
     @Override
     public void render() {
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glViewport(0, 0, window.width(), window.height());
-        glfwSwapBuffers(window.id());
+        context.clearColor().set(0, 0, 0, 0).clear();
+        context.viewPort().set(new ViewPort().set(0, 0, window.width(), window.height()));
+        window.swapBuffers();
     }
 
     @Override
