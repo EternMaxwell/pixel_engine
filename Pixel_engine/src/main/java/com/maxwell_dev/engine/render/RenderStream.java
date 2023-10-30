@@ -3,6 +3,8 @@ package com.maxwell_dev.engine.render;
 import com.maxwell_dev.globj.Buffer;
 import com.maxwell_dev.globj.Context;
 
+//TODO change the stucture to suit the use of preload visible entity - instance rendering
+
 /**
  * a render stream class contains a pipeline this render stream uses
  * and stores the references to the buffer data , texture , frame 
@@ -23,6 +25,26 @@ public class RenderStream extends Stream{
     private int firstIndex;
     private int firstVertex;
     private int indexBufferType;
+
+    public void preload(VisibleEntity entity) {
+        //TODO need to be filled 
+    }
+    
+    public void remove(VisibleEntity entity) {
+        //TODO need to be filled
+    }
+
+    public void addEntity(VisibleEntity entity) {
+        //TODO need to be filled
+    }
+
+    public void removeEntity(VisibleEntity entity) {
+        //TODO need to be filled
+    }
+
+    public void addEntityPreloaded(VisibleEntity entity) {
+        //TODO need to be filled
+    }
 
     public void setMode(int mode) {
         this.mode = mode;

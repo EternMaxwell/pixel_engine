@@ -10,6 +10,10 @@ public abstract class Application extends Node{
         super(NodeType.APPLICATION, name);
     }
 
+    protected Application(NodeType type, String name) {
+        super(type, name);
+    }
+
     public abstract void init();
 
     public abstract void update();

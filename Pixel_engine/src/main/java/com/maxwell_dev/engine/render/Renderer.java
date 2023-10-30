@@ -4,6 +4,8 @@ import com.maxwell_dev.engine.Node;
 import com.maxwell_dev.engine.NodeType;
 import com.maxwell_dev.globj.Context;
 
+import static org.lwjgl.opengl.GL46.*;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,5 +51,6 @@ public class Renderer extends Node {
 
     public void endFrame(){
         window.swapBuffers();
+        context.clearBit().set(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT).clear();;
     }
 }
