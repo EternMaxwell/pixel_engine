@@ -3,6 +3,10 @@ package com.maxwell_dev.engine.render;
 import com.maxwell_dev.globj.Buffer;
 import com.maxwell_dev.globj.Context;
 
+import java.nio.ByteBuffer;
+
+import static org.lwjgl.opengl.GL46.*;
+
 //TODO change the stucture to suit the use of preload visible entity - instance rendering
 
 /**
@@ -15,59 +19,53 @@ public class RenderStream extends Stream{
     private Context context;
     private Buffer vertexBuffer;
     private Buffer indexBuffer;
+    private final Buffer indirectBuffer;
+    private ByteBuffer indirectData;
     private Buffer[] uniformBuffers;
     private Buffer[] storageBuffers;
 
     private int mode;
-    private int vertexSize;
-    private int vertexCount;
-    private int indexCount;
-    private int firstIndex;
-    private int firstVertex;
+    private int vertexStride;
+    private int baseIndex;
+    private int baseVertex;
     private int indexBufferType;
+    private int drawCount;
 
-    public void preload(VisibleEntity entity) {
-        //TODO need to be filled 
-    }
-    
-    public void remove(VisibleEntity entity) {
-        //TODO need to be filled
+    /**
+     * construct a new render stream
+     *
+     * @param pipeline the pipeline to use
+     * @param context  the context to use
+     * @param vertexBufferSize the size of the vertex buffer
+     * @param indexBufferSize the size of the index buffer
+     * @param indirectBufferSize the size of the indirect buffer
+     */
+    public RenderStream(DrawPipeline pipeline, Context context, long vertexBufferSize, long indexBufferSize, long indirectBufferSize){
+        vertexBuffer = new Buffer();
+        vertexBuffer.bufferData().load(vertexBufferSize, GL_DYNAMIC_DRAW);
+        indexBuffer = new Buffer();
+        indexBuffer.bufferData().load(indexBufferSize, GL_DYNAMIC_DRAW);
+        indirectBuffer = new Buffer();
+        indirectBuffer.bufferData().load(indirectBufferSize, GL_DYNAMIC_DRAW);
+        this.pipeline = pipeline;
+        this.context = context;
     }
 
-    public void addEntity(VisibleEntity entity) {
-        //TODO need to be filled
-    }
-
-    public void removeEntity(VisibleEntity entity) {
-        //TODO need to be filled
-    }
-
-    public void addEntityPreloaded(VisibleEntity entity) {
-        //TODO need to be filled
+    public void addEntity(VisibleEntity entity){
+        ByteBuffer entityVertexBuffer = entity.vertexBuffer();
+        ByteBuffer entityIndexBuffer = entity.indexBuffer();
+        indirectData.putInt(entityIndexBuffer.limit());
+        indirectData.putInt(1);
+        indirectData.putInt(baseIndex);
+        indirectData.putInt(baseVertex);
+        indirectData.putInt(0);
+        baseIndex+=entityIndexBuffer.limit();
+        baseVertex+=entityVertexBuffer.limit()/vertexStride;
+        drawCount++;
     }
 
     public void setMode(int mode) {
         this.mode = mode;
-    }
-
-    public void setVertexSize(int vertexSize) {
-        this.vertexSize = vertexSize;
-    }
-
-    public void setIndexCount(int indexCount) {
-        this.indexCount = indexCount;
-    }
-
-    public void setVertexCount(int vertexCount) {
-        this.vertexCount = vertexCount;
-    }
-    
-    public void setFirstIndex(int firstIndex) {
-        this.firstIndex = firstIndex;
-    }
-    
-    public void setFirstVertex(int firstVertex) {
-        this.firstVertex = firstVertex;
     }
     
     public void setIndexBufferType(int indexBufferType) {
@@ -78,34 +76,8 @@ public class RenderStream extends Stream{
         return mode;
     }
     
-    public int getVertexSize() {
-        return vertexSize;
-    }
-
-    public int getIndexCount() {
-        return indexCount;
-    }
-
-    public int getVertexCount() {
-        return vertexCount;
-    }
-
-    public int getFirstIndex() {
-        return firstIndex;
-    }
-    
-    public int getFirstVertex() {
-        return firstVertex;
-    }
-    
     public int getIndexBufferType() {
         return indexBufferType;
-    }
-
-    /**
-     * create a new render stream
-     */
-    public RenderStream() {
     }
 
     public void setContext(Context context) {
@@ -211,6 +183,7 @@ public class RenderStream extends Stream{
 
         context.arrayBuffer().bind(vertexBuffer);
         context.elementArrayBuffer().bind(indexBuffer);
+        context.drawIndirectBuffer().bind(indirectBuffer);
 
         if (uniformBuffers != null)
             for (int index = 0; index < uniformBuffers.length; index++)
@@ -225,10 +198,14 @@ public class RenderStream extends Stream{
         draw();
     }
 
-    public void draw() {
-        if(indexBuffer == null)
-            context.drawArrays(mode, firstVertex, vertexCount);
-        else
-            context.drawElements(mode, indexCount, indexBufferType, firstIndex);
+    public void draw(){
+        indirectData.flip();
+        indirectBuffer.mapBuffer().unmap();
+        context.multiDrawElementsIndirect(mode, indexBufferType, 0, drawCount, 0);
+        indirectBuffer.clearData().clear(GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_INT, (ByteBuffer) null);
+        indirectData = indirectBuffer.mapBuffer().map(GL_WRITE_ONLY, indirectData);
+        baseIndex=0;
+        baseVertex=0;
+        drawCount=0;
     }
 }

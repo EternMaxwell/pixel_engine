@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="engine">
-      <change afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Renderer.java" afterDir="false" />
+    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="test and engine">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/NodeType.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/NodeType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/Timer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/Timer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/DrawPipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/DrawPipeline.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/RenderStream.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/RenderStream.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Stream.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Stream.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Window.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/test/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/test/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/VisibleEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/VisibleEntity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,7 +151,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698308776815</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="test and engine">
+      <option name="closed" value="true" />
+      <created>1698574244840</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1698574244840</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -173,6 +177,8 @@
     <MESSAGE value="Initial commit" />
     <MESSAGE value="engine&#10;and test" />
     <MESSAGE value="engine" />
-    <option name="LAST_COMMIT_MESSAGE" value="engine" />
+    <MESSAGE value="context upgrade&#10;render stream 1.0-snapshot&#10;window upgrade" />
+    <MESSAGE value="test and engine" />
+    <option name="LAST_COMMIT_MESSAGE" value="test and engine" />
   </component>
 </project>

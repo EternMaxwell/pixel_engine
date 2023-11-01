@@ -1,13 +1,6 @@
 package com.maxwell_dev.engine.render;
 
-import com.maxwell_dev.globj.Blend;
-import com.maxwell_dev.globj.Context;
-import com.maxwell_dev.globj.Depth;
-import com.maxwell_dev.globj.FaceCull;
-import com.maxwell_dev.globj.LogicOp;
-import com.maxwell_dev.globj.Program;
-import com.maxwell_dev.globj.Scissor;
-import com.maxwell_dev.globj.Stencil;
+import com.maxwell_dev.globj.*;
 
 /**
  * a pipeline class is a class where stores the opengl pipeline data 
@@ -23,6 +16,7 @@ import com.maxwell_dev.globj.Stencil;
  */
 public class DrawPipeline {
     private final Context context;
+    private VertexArray vertexArray;
     private Program program;
 
     private Scissor scissor;
@@ -45,6 +39,14 @@ public class DrawPipeline {
 
     public Program program() {
         return program;
+    }
+
+    public void vertexArray(VertexArray vertexArray) {
+        this.vertexArray = vertexArray;
+    }
+
+    public VertexArray vertexArray() {
+        return vertexArray;
     }
 
     public void program(Program program) {
@@ -117,6 +119,7 @@ public class DrawPipeline {
 
     public void usePipeline() {
         context.program().bind(program);
+        context.vertexArray().bind(vertexArray);
         context.scissor().set(scissor);
         context.stencil().set(stencil);
         context.blend().set(blend);

@@ -1436,10 +1436,25 @@ public class Context {
         clearBit.set(0);
     }
 
+    //====DRAW FUNC====//
+
+    /**
+     * draw the vertex array
+     * @param mode the draw mode
+     * @param first the first vertex to draw
+     * @param count the number of vertex to draw
+     */
     public void drawArrays(int mode, int first, int count) {
         glDrawArrays(mode, first, count);
     }
 
+    /**
+     * draw the vertex array with instance
+     * @param mode the draw mode
+     * @param first the first vertex to draw
+     * @param count the number of vertex to draw
+     * @param instanceCount the number of instance to draw
+     */
     public void drawArraysInstanced(int mode, int first, int count, int instanceCount) {
         glDrawArraysInstanced(mode, first, count, instanceCount);
     }
@@ -1450,6 +1465,18 @@ public class Context {
 
     public void drawElements(int mode, int count, int type, long indices) {
         glDrawElements(mode, count, type, indices);
+    }
+
+    /**
+     * multi draw elements
+     * @param mode the draw mode
+     * @param type the type of the indices
+     * @param indirect the indirect buffer
+     * @param drawcount the number of draw
+     * @param stride the stride of the indirect buffer
+     */
+    public void multiDrawElementsIndirect(int mode, int type, long indirect, int drawcount, int stride) {
+        glMultiDrawElementsIndirect(mode, type, indirect, drawcount, stride);
     }
 
     public void drawElementsInstanced(int mode, int count, int type, long indices, int instanceCount) {
