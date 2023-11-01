@@ -14,6 +14,12 @@ public class Renderer extends Node {
     private final Context context;
     private final List<Stream> streams;
 
+    /**
+     * Creates a new renderer
+     * @param name The name of the renderer
+     * @param window The window to render to
+     * @param context The context to render to
+     */
     protected Renderer(String name, Window window, Context context){
         super(NodeType.RENDERER, name);
         this.window = window;
@@ -31,6 +37,16 @@ public class Renderer extends Node {
         return this;
     }
 
+    /**
+     * Removes a stream from the renderer
+     * @param stream The stream to remove
+     * @return The renderer
+     */
+    public Renderer removeStream(Stream stream) {
+        streams.remove(stream);
+        return this;
+    }
+
     public Window getWindow() {
         return window;
     }
@@ -43,12 +59,18 @@ public class Renderer extends Node {
         return streams;
     }
 
+    /**
+     * Executes all streams
+     */
     public void executeStreams(){
         for (Stream stream : streams) {
             stream.pass();
         }
     }
 
+    /**
+     * Swaps the buffers and clears the screen
+     */
     public void endFrame(){
         window.swapBuffers();
         context.clearBit().set(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT).clear();;

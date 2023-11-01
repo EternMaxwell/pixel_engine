@@ -59,7 +59,18 @@ public class RenderStream extends Stream{
         indirectData.putInt(baseIndex);
         indirectData.putInt(baseVertex);
         indirectData.putInt(0);
-        baseIndex+=entityIndexBuffer.limit();
+        vertexBuffer.mapBuffer().range(baseVertex * vertexStride, entityVertexBuffer.limit(), GL_WRITE_ONLY)
+                .put(entityVertexBuffer);
+        int indexBytes;
+        if(indexBufferType == GL_INT)
+            indexBytes = 4;
+        else if(indexBufferType == GL_SHORT)
+            indexBytes = 2;
+        else
+            indexBytes = 1;
+        indexBuffer.mapBuffer().range(baseIndex * indexBytes, entityIndexBuffer.limit(), GL_WRITE_ONLY)
+                .put(entityIndexBuffer);
+        baseIndex+=entityIndexBuffer.limit()/indexBytes;
         baseVertex+=entityVertexBuffer.limit()/vertexStride;
         drawCount++;
     }
