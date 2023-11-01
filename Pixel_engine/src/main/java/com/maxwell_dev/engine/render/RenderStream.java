@@ -214,7 +214,7 @@ public class RenderStream extends Stream{
         indirectData.flip();
         indirectBuffer.mapBuffer().unmap();
         context.multiDrawElementsIndirect(mode, indexBufferType, 0, drawCount, 0);
-        indirectBuffer.clearData().clear(GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_INT, (ByteBuffer) null);
+        indirectBuffer.clearData().clear(GL_R32I, GL_RED_INTEGER, GL_INT, (ByteBuffer) null);
         indirectData = indirectBuffer.mapBuffer().map(GL_WRITE_ONLY, indirectData);
         baseIndex=0;
         baseVertex=0;
