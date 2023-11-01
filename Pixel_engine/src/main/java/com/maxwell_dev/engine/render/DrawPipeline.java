@@ -14,7 +14,7 @@ import com.maxwell_dev.globj.*;
  * contains the shader program , vertex array , vertex buffer , color 
  * blend func , stencil , viewport
  */
-public class DrawPipeline {
+public class DrawPipeline extends Pipeline {
     private final Context context;
     private VertexArray vertexArray;
     private Program program;

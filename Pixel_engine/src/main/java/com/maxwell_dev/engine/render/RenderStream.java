@@ -47,6 +47,7 @@ public class RenderStream extends Stream{
         indexBuffer.bufferData().load(indexBufferSize, GL_DYNAMIC_DRAW);
         indirectBuffer = new Buffer();
         indirectBuffer.bufferData().load(indirectBufferSize, GL_DYNAMIC_DRAW);
+        indirectData = indirectBuffer.mapBuffer().map(GL_WRITE_ONLY);
         this.pipeline = pipeline;
         this.context = context;
     }
