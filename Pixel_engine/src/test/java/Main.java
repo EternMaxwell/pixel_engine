@@ -29,12 +29,13 @@ public class Main extends Application {
 
         timer = new FrameTimer(60);
 
-        window = new Window("test",800, 600, "test");
+        window = new Window("test",400, 225, "test");
         window.setContextVersionMajor(4);
         window.setContextVersionMinor(6);
         window.setVisible(false);
         window.setFocused(true);
         window.createWindow();
+        window.setSizeLimit(800,450,-1,-1);
 
         glfwMakeContextCurrent(window.id());
         context = new Context();
@@ -45,6 +46,8 @@ public class Main extends Application {
             public void invoke(long window) {
                 if(window == Main.this.window.id()){
                     timer.frame();
+                    update();
+                    render();
                 }
             }
         });

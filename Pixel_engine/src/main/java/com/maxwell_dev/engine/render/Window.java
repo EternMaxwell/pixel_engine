@@ -806,6 +806,17 @@ public class Window extends Node{
     }
 
     /**
+     * set the window size limits
+     * @param widthMin the minimum width, in screen coordinates, of the content area, or {@link GLFW#GLFW_DONT_CARE} which is -1
+     * @param heightMin the minimum height, in screen coordinates, of the content area, or {@link GLFW#GLFW_DONT_CARE} which is -1
+     * @param widthMax the maximum width, in screen coordinates, of the content area, or {@link GLFW#GLFW_DONT_CARE} which is -1
+     * @param heightMax the maximum height, in screen coordinates, of the content area, or {@link GLFW#GLFW_DONT_CARE} which is -1
+     */
+    public void setSizeLimit(int widthMin, int heightMin, int widthMax, int heightMax) {
+        glfwSetWindowSizeLimits(window, widthMin, heightMin, widthMax, heightMax);
+    }
+
+    /**
      * get the id of the window
      * @return the id of the window
      */
