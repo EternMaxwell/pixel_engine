@@ -1,7 +1,5 @@
 package com.maxwell_dev.engine.ui;
 
-import java.util.Vector;
-
 import org.joml.Vector2f;
 
 public abstract class UIShape {

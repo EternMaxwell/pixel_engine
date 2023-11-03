@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Container {
     private int focusIndex;
+    public static Container root;
     private final List<Container> children;
 
     public Container() {
@@ -58,5 +59,13 @@ public class Container {
     public Container removeChild(Container child) {
         children.remove(child);
         return this;
+    }
+
+    /**
+     * if this container is focused
+     * @return true if this container is focused
+     */
+    public boolean focused() {
+        return root.focus() == this;
     }
 }
