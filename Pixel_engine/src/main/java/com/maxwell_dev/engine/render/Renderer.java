@@ -20,7 +20,7 @@ public class Renderer extends Node {
      * @param window The window to render to
      * @param context The context to render to
      */
-    protected Renderer(String name, Window window, Context context){
+    public Renderer(String name, Window window, Context context){
         super(NodeType.RENDERER, name);
         this.window = window;
         this.context = context;

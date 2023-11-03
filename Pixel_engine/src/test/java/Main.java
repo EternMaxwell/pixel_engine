@@ -1,5 +1,7 @@
 import com.maxwell_dev.engine.Application;
 import com.maxwell_dev.engine.FrameTimer;
+import com.maxwell_dev.engine.TickTimer;
+import com.maxwell_dev.engine.render.Renderer;
 import com.maxwell_dev.engine.render.Window;
 import com.maxwell_dev.globj.Context;
 import com.maxwell_dev.globj.ViewPort;
@@ -12,8 +14,10 @@ import static org.lwjgl.opengl.GL46.*;
 public class Main extends Application {
     private Window window;
     private Context context;
+    private Renderer renderer;
 
-    FrameTimer timer;
+    private FrameTimer timer;
+    private TickTimer tickTimer;
 
     public Main(String name) {
         super(name);
@@ -28,6 +32,7 @@ public class Main extends Application {
         }
 
         timer = new FrameTimer(60);
+        tickTimer = new TickTimer(20);
 
         window = new Window("test",400, 225, "test");
         window.setContextVersionMajor(4);
@@ -52,11 +57,16 @@ public class Main extends Application {
             }
         });
         window.showWindow();
+
+        renderer = new Renderer("renderer", window, context);
     }
 
     @Override
     public void update() {
-
+        if(tickTimer.tick()){
+            System.out.println("tick");
+            //tick update
+        }
     }
 
     @Override
@@ -68,7 +78,8 @@ public class Main extends Application {
     public void render() {
         context.clearColor().set(0, 0, 0, 0).clear();
         context.viewPort().set(new ViewPort().set(0, 0, window.width(), window.height()));
-        window.swapBuffers();
+        //render actual data
+        renderer.endFrame();
     }
 
     @Override
@@ -80,9 +91,9 @@ public class Main extends Application {
     public void run() {
         init();
         while (!glfwWindowShouldClose(window.id())) {
-            timer.frame();
             input();
             update();
+            timer.frame();
             render();
         }
         destroy();
