@@ -26,11 +26,21 @@ public class DrawPipeline extends Pipeline {
     private LogicOp logicOp;
     private FaceCull faceCull;
 
+    private int vertexStride;
+
     private int vertexSize;
     private int mode;
 
     public DrawPipeline(Context context) {
         this.context = context;
+    }
+
+    public void vertexStride(int vertexStride) {
+        this.vertexStride = vertexStride;
+    }
+
+    public int vertexStride() {
+        return vertexStride;
     }
 
     public Context context() {

@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL46.*;
 
-//TODO change the stucture to suit the use of preload visible entity - instance rendering
+//TODO change the structure to suit the use of preload visible entity - instance rendering
 
 /**
  * a render stream class contains a pipeline this render stream uses
@@ -25,7 +25,6 @@ public class RenderStream extends Stream{
     private Buffer[] storageBuffers;
 
     private int mode;
-    private int vertexStride;
     private int baseIndex;
     private int baseVertex;
     private int indexBufferType;
@@ -35,12 +34,11 @@ public class RenderStream extends Stream{
      * construct a new render stream
      *
      * @param pipeline the pipeline to use
-     * @param context  the context to use
      * @param vertexBufferSize the size of the vertex buffer
      * @param indexBufferSize the size of the index buffer
      * @param indirectBufferSize the size of the indirect buffer
      */
-    public RenderStream(DrawPipeline pipeline, Context context, long vertexBufferSize, long indexBufferSize, long indirectBufferSize){
+    public RenderStream(DrawPipeline pipeline, long vertexBufferSize, long indexBufferSize, long indirectBufferSize){
         vertexBuffer = new Buffer();
         vertexBuffer.bufferData().load(vertexBufferSize, GL_DYNAMIC_DRAW);
         indexBuffer = new Buffer();
@@ -49,18 +47,20 @@ public class RenderStream extends Stream{
         indirectBuffer.bufferData().load(indirectBufferSize, GL_DYNAMIC_DRAW);
         indirectData = indirectBuffer.mapBuffer().map(GL_WRITE_ONLY);
         this.pipeline = pipeline;
-        this.context = context;
+        context = pipeline.context();
     }
 
-    public void addEntity(VisibleEntity entity){
+    public void addEntity(Visible entity){
         ByteBuffer entityVertexBuffer = entity.vertexBuffer();
         ByteBuffer entityIndexBuffer = entity.indexBuffer();
+        if(entityVertexBuffer == null || entityIndexBuffer == null)
+            return;
         indirectData.putInt(entityIndexBuffer.limit());
         indirectData.putInt(1);
         indirectData.putInt(baseIndex);
         indirectData.putInt(baseVertex);
         indirectData.putInt(0);
-        vertexBuffer.mapBuffer().range(baseVertex * vertexStride, entityVertexBuffer.limit(), GL_WRITE_ONLY)
+        vertexBuffer.mapBuffer().range((long) baseVertex * pipeline.vertexStride(), entityVertexBuffer.limit(), GL_WRITE_ONLY)
                 .put(entityVertexBuffer);
         int indexBytes;
         if(indexBufferType == GL_INT)
@@ -69,10 +69,10 @@ public class RenderStream extends Stream{
             indexBytes = 2;
         else
             indexBytes = 1;
-        indexBuffer.mapBuffer().range(baseIndex * indexBytes, entityIndexBuffer.limit(), GL_WRITE_ONLY)
+        indexBuffer.mapBuffer().range((long) baseIndex * indexBytes, entityIndexBuffer.limit(), GL_WRITE_ONLY)
                 .put(entityIndexBuffer);
         baseIndex+=entityIndexBuffer.limit()/indexBytes;
-        baseVertex+=entityVertexBuffer.limit()/vertexStride;
+        baseVertex+=entityVertexBuffer.limit()/pipeline.vertexStride();
         drawCount++;
     }
 
@@ -90,10 +90,6 @@ public class RenderStream extends Stream{
     
     public int getIndexBufferType() {
         return indexBufferType;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
     }
 
     /**
@@ -138,6 +134,7 @@ public class RenderStream extends Stream{
      */
     public void setPipeline(DrawPipeline pipeline) {
         this.pipeline = pipeline;
+        context = pipeline.context();
     }
 
     /**
@@ -191,11 +188,12 @@ public class RenderStream extends Stream{
      */
     public void useRenderStream() {
         context.setContextCurrent();
-        pipeline.usePipeline();
 
         context.arrayBuffer().bind(vertexBuffer);
         context.elementArrayBuffer().bind(indexBuffer);
         context.drawIndirectBuffer().bind(indirectBuffer);
+
+        pipeline.usePipeline();
 
         if (uniformBuffers != null)
             for (int index = 0; index < uniformBuffers.length; index++)

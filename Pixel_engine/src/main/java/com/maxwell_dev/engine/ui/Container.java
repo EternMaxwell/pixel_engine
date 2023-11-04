@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Container {
     private int focusIndex;
-    public static Container root;
+    public Container parent;
     private final List<Container> children;
 
     public Container() {
@@ -48,6 +48,7 @@ public class Container {
      */
     public Container addChild(Container child) {
         children.add(child);
+        child.parent = this;
         return this;
     }
 
@@ -57,8 +58,23 @@ public class Container {
      * @return this container
      */
     public Container removeChild(Container child) {
+        if(focusIndex >= 0 && children.indexOf(child) < focusIndex)
+            focusIndex--;
         children.remove(child);
+        child.parent = null;
         return this;
+    }
+
+    /**
+     * get the root of this container
+     * @return the root of this container
+     */
+    public Container root(){
+        Container result = this;
+        while(result.parent != null){
+            result = result.parent;
+        }
+        return result;
     }
 
     /**
@@ -66,6 +82,6 @@ public class Container {
      * @return true if this container is focused
      */
     public boolean focused() {
-        return root.focus() == this;
+        return root().focus() == this;
     }
 }
