@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="engine">
-      <change afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/ui/shape/CombinedShape.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/ui/shape/Triangle.java" afterDir="false" />
+    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="engine&#10;ui">
+      <change afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/ui/Image.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/ui/text/Font.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/ui/text/Text.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -207,7 +208,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699016666665</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="engine&#10;ui">
+      <option name="closed" value="true" />
+      <created>1699108257839</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1699108257839</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -228,6 +237,7 @@
     <MESSAGE value="test and engine" />
     <MESSAGE value="engine&#10;render system" />
     <MESSAGE value="engine" />
-    <option name="LAST_COMMIT_MESSAGE" value="engine" />
+    <MESSAGE value="engine&#10;ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="engine&#10;ui" />
   </component>
 </project>
