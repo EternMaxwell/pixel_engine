@@ -3,7 +3,11 @@ package com.maxwell_dev.engine.render;
 import com.maxwell_dev.globj.Buffer;
 import com.maxwell_dev.globj.Context;
 
+import com.maxwell_dev.globj.Texture;
+import com.maxwell_dev.globj.Sampler;
+
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL46.*;
 
@@ -23,6 +27,31 @@ public class RenderStream extends Stream{
     private ByteBuffer indirectData;
     private Buffer[] uniformBuffers;
     private Buffer[] storageBuffers;
+
+    private List<TextureUnit> textureUnits;
+
+    public static class TextureUnit {
+        private Texture texture;
+        private Sampler sampler;
+
+        public TextureUnit() {}
+
+        public void bindTexture(Texture texture) {
+            this.texture = texture;
+        }
+
+        public void bindSampler(Sampler sampler) {
+            this.sampler = sampler;
+        }
+
+        public Texture getTexture() {
+            return texture;
+        }
+
+        public Sampler getSampler() {
+            return sampler;
+        }
+    }
 
     private int mode;
     private int baseIndex;
@@ -180,6 +209,18 @@ public class RenderStream extends Stream{
      */
     public Buffer getIndexBuffer() {
         return indexBuffer;
+    }
+
+    /**
+     * get the texture unit used in this render stream
+     * @param index the index of the texture unit
+     * @return the texture unit used
+     */
+    public TextureUnit textureUnit(int index) {
+        if (textureUnits.get(index) == null) {
+            textureUnits.add(index, new TextureUnit());
+        }
+        return textureUnits.get(index);
     }
 
     /**
