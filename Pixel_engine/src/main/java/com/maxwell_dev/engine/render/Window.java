@@ -867,4 +867,8 @@ public class Window extends Node{
     public void swapBuffers() {
         glfwSwapBuffers(window);
     }
+
+    public void dispose() {
+        glfwDestroyWindow(window);
+    }
 }

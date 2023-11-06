@@ -76,7 +76,7 @@ public class Main extends Application {
 
     @Override
     public void render() {
-        context.clearColor().set(0, 0, 0, 0).clear();
+        System.out.println("render");
         context.viewPort().set(new ViewPort().set(0, 0, window.width(), window.height()));
         //render actual data
         renderer.endFrame();
@@ -84,6 +84,7 @@ public class Main extends Application {
 
     @Override
     public void destroy() {
+        window.dispose();
         glfwTerminate();
     }
 
@@ -97,13 +98,6 @@ public class Main extends Application {
             render();
         }
         destroy();
-    }
-
-    public void loop(){
-        timer.frame();
-        input();
-        update();
-        render();
     }
 
     @Override

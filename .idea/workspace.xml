@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="engine&#10;ui text">
-      <change afterPath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/textShaders/text.frag" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/textShaders/text.vert" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Pipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Pipeline.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,8 +15,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="GLSL Shader" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -77,7 +74,7 @@
     "project.structure.last.edited": "模块",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "MavenSettings"
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
@@ -225,7 +222,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699175154749</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="engine&#10;ui text">
+      <option name="closed" value="true" />
+      <created>1699176600260</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1699176600260</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
