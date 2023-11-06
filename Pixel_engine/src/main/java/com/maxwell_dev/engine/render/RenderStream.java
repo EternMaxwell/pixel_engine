@@ -235,11 +235,12 @@ public class RenderStream extends Stream{
     public void useRenderStream() {
         context.setContextCurrent();
 
+        pipeline.usePipeline();
+
         context.arrayBuffer().bind(vertexBuffer);
         context.elementArrayBuffer().bind(indexBuffer);
         context.drawIndirectBuffer().bind(indirectBuffer);
 
-        pipeline.usePipeline();
 
         if (textureUnits != null)
             for (int index = 0; index < textureUnits.size(); index++) {
@@ -268,7 +269,7 @@ public class RenderStream extends Stream{
     public void draw(){
         indirectData.flip();
         indirectBuffer.mapBuffer().unmap();
-        context.multiDrawElementsIndirect(mode, indexBufferType, 0, drawCount, 0);
+        context.multiDrawElementsIndirect(mode, indexBufferType, 0, drawCount, 20);
         indirectData = indirectBuffer.mapBuffer().map(GL_WRITE_ONLY, indirectData);
         if(resetEachPass) {
             baseIndex = 0;

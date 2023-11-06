@@ -59,8 +59,9 @@ public class TextFrame{
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 4, GL_FLOAT, false, 0, 16);
 
-        glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
         temp.delete();
 
         renderStreams = new LinkedList<>();

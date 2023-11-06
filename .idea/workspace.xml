@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="engine&#10;test">
+    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="engine&#10;test&#10;text">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GLObjVer/src/main/java/com/maxwell_dev/globj/Buffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/GLObjVer/src/main/java/com/maxwell_dev/globj/Buffer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/RenderStream.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/RenderStream.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Renderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/ui/text/Text.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/ui/text/Text.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/ui/text/TextFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/ui/text/TextFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/textShaders/text.vert" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/textShaders/text.vert" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/test/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/test/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/textShaders/text.frag" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/textShaders/text.frag" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -253,7 +249,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699257078318</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="engine&#10;test&#10;text">
+      <option name="closed" value="true" />
+      <created>1699282325592</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1699282325592</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -277,7 +281,8 @@
     <MESSAGE value="engine&#10;ui" />
     <MESSAGE value="engine&#10;ui text" />
     <MESSAGE value="engine&#10;test" />
-    <option name="LAST_COMMIT_MESSAGE" value="engine&#10;test" />
+    <MESSAGE value="engine&#10;test&#10;text" />
+    <option name="LAST_COMMIT_MESSAGE" value="engine&#10;test&#10;text" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
