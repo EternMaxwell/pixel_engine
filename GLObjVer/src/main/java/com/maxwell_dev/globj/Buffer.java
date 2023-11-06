@@ -358,7 +358,7 @@ public class Buffer implements glInterface {
          */
         public java.nio.ByteBuffer map(int access, long length, java.nio.ByteBuffer old_buffer) {
             if (isSub) {
-                return glMapBufferRange(id, baseOffset, length, access);
+                return glMapNamedBufferRange(id, baseOffset, length, access);
             }
             return glMapNamedBuffer(id, access, length, old_buffer);
         }
@@ -378,7 +378,7 @@ public class Buffer implements glInterface {
          * @return the buffer
          */
         public java.nio.ByteBuffer range(long offset, long length, int access) {
-            if (offset + length > bufferSize) {
+            if (isSub && offset + length > bufferSize) {
                 throw new ArrayIndexOutOfBoundsException("the required range is not all included in this buffer");
             }
             return glMapNamedBufferRange(id, offset + baseOffset, length, access);
@@ -400,7 +400,7 @@ public class Buffer implements glInterface {
          * @return the buffer
          */
         public java.nio.ByteBuffer range(long offset, long length, int access, java.nio.ByteBuffer old_buffer) {
-            if (offset + length > bufferSize) {
+            if (isSub && offset + length > bufferSize) {
                 throw new ArrayIndexOutOfBoundsException("the required range is not all included in this buffer");
             }
             return glMapNamedBufferRange(id, offset + baseOffset, length, access, old_buffer);
@@ -421,7 +421,7 @@ public class Buffer implements glInterface {
          * @param length the length of the buffer subrange, in basic machine units
          */
         public void flushRange(long offset, long length) {
-            if (offset + length > bufferSize) {
+            if (isSub && offset + length > bufferSize) {
                 throw new ArrayIndexOutOfBoundsException("the required range is not all included in this buffer");
             }
             glFlushMappedNamedBufferRange(id, offset + baseOffset, length);
