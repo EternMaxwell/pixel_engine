@@ -34,11 +34,16 @@ public class Text{
         color[3] = 1;
     }
 
-    public void setColor(float r, float g, float b, float a){
+    public Text setColor(float r, float g, float b, float a){
         color[0] = r;
         color[1] = g;
         color[2] = b;
         color[3] = a;
+        return this;
+    }
+
+    public BufferedImage bitmap(){
+        return bitmap;
     }
 
     public float[] color(){
@@ -61,18 +66,20 @@ public class Text{
         return color[3];
     }
 
-    public void setText(String text){
+    public Text setText(String text){
         if(this.text.equals(text))
-            return;
+            return this;
         this.text = text;
         bitmap = font.bitmapOfText(text);
         IntBuffer buffer = MemoryUtil.memAllocInt(bitmap.getWidth()*bitmap.getHeight());
         buffer.put(bitmap.getRGB(0,0,bitmap.getWidth(),bitmap.getHeight(),null,0,bitmap.getWidth()));
         texture.textureImage().image(1,GL_RGBA32F,bitmap.getWidth(),bitmap.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE,buffer);
+        return this;
     }
 
-    public void setHeight(float height) {
+    public Text setHeight(float height) {
         this.height = height;
+        return this;
     }
 
     public float height() {

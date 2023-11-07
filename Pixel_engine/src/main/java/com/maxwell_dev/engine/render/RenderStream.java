@@ -7,6 +7,7 @@ import com.maxwell_dev.globj.Texture;
 import com.maxwell_dev.globj.Sampler;
 
 import java.nio.ByteBuffer;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL46.*;
@@ -27,6 +28,7 @@ public class RenderStream extends Stream{
     private ByteBuffer indirectData;
     private Buffer[] uniformBuffers;
     private Buffer[] storageBuffers;
+    private boolean resetEachPass;
 
     private List<TextureUnit> textureUnits;
 
@@ -67,7 +69,7 @@ public class RenderStream extends Stream{
      * @param indexBufferSize the size of the index buffer
      * @param indirectBufferSize the size of the indirect buffer
      */
-    public RenderStream(DrawPipeline pipeline, long vertexBufferSize, long indexBufferSize, long indirectBufferSize){
+    public RenderStream(DrawPipeline pipeline, long vertexBufferSize, long indexBufferSize, long indirectBufferSize, boolean resetEachPass){
         vertexBuffer = new Buffer();
         vertexBuffer.bufferData().load(vertexBufferSize, GL_DYNAMIC_DRAW);
         indexBuffer = new Buffer();
@@ -77,6 +79,8 @@ public class RenderStream extends Stream{
         indirectData = indirectBuffer.mapBuffer().map(GL_WRITE_ONLY);
         this.pipeline = pipeline;
         context = pipeline.context();
+        textureUnits = new LinkedList<>();
+        this.resetEachPass = resetEachPass;
     }
 
     public void addEntity(Visible entity){
@@ -89,8 +93,7 @@ public class RenderStream extends Stream{
         indirectData.putInt(baseIndex);
         indirectData.putInt(baseVertex);
         indirectData.putInt(0);
-        vertexBuffer.mapBuffer().range((long) baseVertex * pipeline.vertexStride(), entityVertexBuffer.limit(), GL_WRITE_ONLY)
-                .put(entityVertexBuffer);
+        vertexBuffer.bufferSubData().load((long) baseVertex * pipeline.vertexStride(), entityVertexBuffer);
         int indexBytes;
         if(indexBufferType == GL_INT)
             indexBytes = 4;
@@ -98,8 +101,7 @@ public class RenderStream extends Stream{
             indexBytes = 2;
         else
             indexBytes = 1;
-        indexBuffer.mapBuffer().range((long) baseIndex * indexBytes, entityIndexBuffer.limit(), GL_WRITE_ONLY)
-                .put(entityIndexBuffer);
+        indexBuffer.bufferSubData().load((long) baseIndex * indexBytes, entityIndexBuffer);
         baseIndex+=entityIndexBuffer.limit()/indexBytes;
         baseVertex+=entityVertexBuffer.limit()/pipeline.vertexStride();
         drawCount++;
@@ -217,9 +219,12 @@ public class RenderStream extends Stream{
      * @return the texture unit used
      */
     public TextureUnit textureUnit(int index) {
-        if (textureUnits.get(index) == null) {
-            textureUnits.add(index, new TextureUnit());
+        if(index >= textureUnits.size()){
+            for(int i = textureUnits.size(); i <= index; i++)
+                textureUnits.add(null);
         }
+        if(textureUnits.get(index) == null)
+            textureUnits.set(index, new TextureUnit());
         return textureUnits.get(index);
     }
 
@@ -230,11 +235,23 @@ public class RenderStream extends Stream{
     public void useRenderStream() {
         context.setContextCurrent();
 
+        pipeline.usePipeline();
+
         context.arrayBuffer().bind(vertexBuffer);
         context.elementArrayBuffer().bind(indexBuffer);
         context.drawIndirectBuffer().bind(indirectBuffer);
 
-        pipeline.usePipeline();
+
+        if (textureUnits != null)
+            for (int index = 0; index < textureUnits.size(); index++) {
+                TextureUnit textureUnit = textureUnits.get(index);
+                if (textureUnit != null) {
+                    if (textureUnit.getTexture() != null)
+                        context.textureUnit(index).bindTexture(textureUnit.getTexture());
+                    if (textureUnit.getSampler() != null)
+                        context.textureUnit(index).bindSampler(textureUnit.getSampler());
+                }
+            }
 
         if (uniformBuffers != null)
             for (int index = 0; index < uniformBuffers.length; index++)
@@ -252,11 +269,12 @@ public class RenderStream extends Stream{
     public void draw(){
         indirectData.flip();
         indirectBuffer.mapBuffer().unmap();
-        context.multiDrawElementsIndirect(mode, indexBufferType, 0, drawCount, 0);
-        indirectBuffer.clearData().clear(GL_R32I, GL_RED_INTEGER, GL_INT, (ByteBuffer) null);
+        context.multiDrawElementsIndirect(mode, indexBufferType, 0, drawCount, 20);
         indirectData = indirectBuffer.mapBuffer().map(GL_WRITE_ONLY, indirectData);
-        baseIndex=0;
-        baseVertex=0;
-        drawCount=0;
+        if(resetEachPass) {
+            baseIndex = 0;
+            baseVertex = 0;
+            drawCount = 0;
+        }
     }
 }

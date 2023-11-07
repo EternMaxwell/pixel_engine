@@ -7,7 +7,7 @@ layout(location = 2) in vec4 in_color;
 layout(location = 0) out vec2 out_texcoord;
 layout(location = 1) out vec4 out_color;
 
-layout(binding = 0, std140) uniform Uniforms {
+layout(binding = 0) uniform Uniforms {
     mat4 projection;
     mat4 view;
     mat4 model;

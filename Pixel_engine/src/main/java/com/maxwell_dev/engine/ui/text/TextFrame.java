@@ -38,8 +38,8 @@ public class TextFrame{
     public TextFrame(Context context){
         vectors = new LinkedList<>();
         Program program = new Program();
-        Shader vertexShader = new Shader(GL_VERTEX_SHADER, "shaders/textShaders/text.vert");
-        Shader fragmentShader = new Shader(GL_FRAGMENT_SHADER, "shaders/textShaders/text.frag");
+        Shader vertexShader = new Shader(GL_VERTEX_SHADER, "Pixel_engine/src/main/resources/shaders/textShaders/text.vert");
+        Shader fragmentShader = new Shader(GL_FRAGMENT_SHADER, "Pixel_engine/src/main/resources/shaders/textShaders/text.frag");
         program.vertexShader().attach(vertexShader);
         program.fragmentShader().attach(fragmentShader);
         program.linkProgram();
@@ -59,8 +59,9 @@ public class TextFrame{
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 4, GL_FLOAT, false, 0, 16);
 
-        glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
         temp.delete();
 
         renderStreams = new LinkedList<>();
@@ -72,7 +73,7 @@ public class TextFrame{
         vector.x = x;
         vector.y = y;
         vectors.add(vector);
-        RenderStream renderStream = new RenderStream(pipeline, 256, 36, 256);
+        RenderStream renderStream = new RenderStream(pipeline, 256, 36, 256, false);
         renderStream.addEntity(new Visible() {
             private ByteBuffer vertexBuffer = MemoryUtil.memAlloc(256)
                     .putFloat(x).putFloat(y).putFloat(0).putFloat(0)
@@ -94,6 +95,8 @@ public class TextFrame{
             }
         });
         renderStream.textureUnit(0).bindTexture(text.texture());
+        renderStream.setMode(GL_TRIANGLES);
+        renderStream.setIndexBufferType(GL_INT);
         renderStreams.add(renderStream);
     }
 
@@ -115,6 +118,10 @@ public class TextFrame{
     public void clear(){
         vectors.clear();
         renderStreams.clear();
+    }
+
+    public List<RenderStream> getStreams(){
+        return renderStreams;
     }
 
     public List<Vector> getVectors(){

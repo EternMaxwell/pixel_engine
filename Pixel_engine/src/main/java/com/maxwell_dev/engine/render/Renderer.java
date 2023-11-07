@@ -37,6 +37,13 @@ public class Renderer extends Node {
         return this;
     }
 
+    public Renderer addStream(List<? extends Stream> streams) {
+        for (Stream stream : streams) {
+            addStream(stream);
+        }
+        return this;
+    }
+
     /**
      * Removes a stream from the renderer
      * @param stream The stream to remove
