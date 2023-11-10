@@ -107,6 +107,8 @@ public class RenderStream extends Stream{
         drawCount++;
     }
 
+    public void removeEntity(Visible entity){}
+
     public void setMode(int mode) {
         this.mode = mode;
     }
@@ -232,7 +234,7 @@ public class RenderStream extends Stream{
      * use this render stream
      * deploy the setting to the opengl context
      */
-    public void useRenderStream() {
+    public void useStream() {
         context.setContextCurrent();
 
         pipeline.usePipeline();
@@ -262,7 +264,7 @@ public class RenderStream extends Stream{
     }
 
     public void pass(){
-        useRenderStream();
+        useStream();
         draw();
     }
 

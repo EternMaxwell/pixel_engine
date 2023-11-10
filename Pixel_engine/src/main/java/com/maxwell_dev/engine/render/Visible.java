@@ -2,7 +2,16 @@ package com.maxwell_dev.engine.render;
 
 import java.nio.ByteBuffer;
 
+import static org.lwjgl.opengl.GL46.*;
+
 public interface Visible{
+
+    /**
+     * @return The mode to render in
+     */
+    public default int mode() {
+        return GL_TRIANGLES;
+    }
 
     /**
      * @return The index buffer
@@ -36,16 +45,48 @@ public interface Visible{
     public int vertexStride();
 
     /**
+     * @return The vertex count
+     */
+    public int vertexCount();
+
+    /**
      * get the render stream this visible object uses
      * @return the render stream
      */
     public RenderStream renderStream();
 
     /**
+     * get the pipeline this visible object uses
+     * @return the pipeline
+     */
+    public DrawPipeline pipeline();
+
+    /**
      * get if the storage buffer is different in different instances of this visible
      * @return if the storage buffer is different
      */
     public default boolean differStorageBuffer() {
+        return false;
+    }
+
+    /**
+     * get if the storage buffer has changed since last load
+     * @return if the storage buffer is changed
+     */
+    public boolean storageBufferChanged();
+
+    /**
+     * get if the storage buffer has changed since last load
+     * @param index the index of the storage buffer
+     * @return if the storage buffer is changed
+     */
+    public boolean storageBufferChanged(int index);
+
+    /**
+     * get if the storage buffers are different in different instances of this visible
+     * @return if the storage buffers are different
+     */
+    public default boolean differStorageBuffers() {
         return false;
     }
 
@@ -90,6 +131,27 @@ public interface Visible{
     }
 
     /**
+     * get if the uniform buffers are different in different instances of this visible
+     * @return if the uniform buffers are different
+     */
+    public default boolean differUniformBuffers() {
+        return false;
+    }
+
+    /**
+     * get if the uniform buffer has changed since last load
+     * @return if the uniform buffer is changed
+     */
+    public boolean uniformBufferChanged();
+
+    /**
+     * get if the uniform buffer has changed since last load
+     * @param index the index of the uniform buffer
+     * @return if the uniform buffer is changed
+     */
+    public boolean uniformBufferChanged(int index);
+
+    /**
      * get the uniform buffer bytes, the length of the uniform buffer per instance of this visible uses
      * @return the uniform buffer bytes
      */
@@ -126,4 +188,10 @@ public interface Visible{
      * @return the index of this instance in the render stream
      */
     public int indexInStream();
+
+    /**
+     * set the index of this instance in the render stream
+     * @param index the index of this instance in the render stream
+     */
+    public void indexInStream(int index);
 }
