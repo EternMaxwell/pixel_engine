@@ -42,7 +42,7 @@ public interface Visible{
     /**
      * @return The vertex stride in bytes
      */
-    public int vertexStride();
+    public long vertexStride();
 
     /**
      * @return The vertex count
@@ -94,7 +94,7 @@ public interface Visible{
      * get the storage buffer bytes, the length of the storage buffer per instance of this visible uses
      * @return the storage buffer bytes
      */
-    public default int storageBufferBytes() {
+    public default long storageBufferBytes() {
         return 0;
     }
 
@@ -102,7 +102,7 @@ public interface Visible{
      * get the storage buffers bytes, the lengths of the storage buffers per instance of this visible uses
      * @return the storage buffers bytes
      */
-    public default int[] storageBuffersBytes() {
+    public default long[] storageBuffersBytes() {
         return null;
     }
 
@@ -155,7 +155,7 @@ public interface Visible{
      * get the uniform buffer bytes, the length of the uniform buffer per instance of this visible uses
      * @return the uniform buffer bytes
      */
-    public default int uniformBufferBytes() {
+    public default long uniformBufferBytes() {
         return 0;
     }
 
@@ -163,7 +163,7 @@ public interface Visible{
      * get the uniform buffers bytes, the lengths of the uniform buffers per instance of this visible uses
      * @return the uniform buffers bytes
      */
-    public default int[] uniformBuffersBytes() {
+    public default long[] uniformBuffersBytes() {
         return null;
     }
 
@@ -194,4 +194,9 @@ public interface Visible{
      * @param index the index of this instance in the render stream
      */
     public void indexInStream(int index);
+
+    /**
+     * dispose of this visible
+     */
+    public void dispose();
 }

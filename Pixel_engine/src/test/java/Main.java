@@ -6,6 +6,7 @@ import com.maxwell_dev.engine.render.Window;
 import com.maxwell_dev.engine.ui.text.Font;
 import com.maxwell_dev.engine.ui.text.Text;
 import com.maxwell_dev.engine.ui.text.TextFrame;
+import com.maxwell_dev.engine.ui.util.Image;
 import com.maxwell_dev.globj.Context;
 import com.maxwell_dev.globj.ViewPort;
 
@@ -13,6 +14,7 @@ import org.lwjgl.glfw.GLFWWindowRefreshCallback;
 
 import javax.imageio.ImageIO;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -27,6 +29,8 @@ public class Main extends Application {
     private TickTimer tickTimer;
 
     private TextFrame textFrame;
+
+    Image image;
 
     public Main(String name) {
         super(name);
@@ -69,18 +73,14 @@ public class Main extends Application {
 
         renderer = new Renderer("renderer", window, context);
 
-        textFrame = new TextFrame(context);
-        Text text = new Text(new Font(new java.awt.Font("Arial", java.awt.Font.PLAIN, 16)), "Hello World").setHeight(0.01f);
-
+        Image.init(context);
         try {
-            ImageIO.write(text.bitmap(), "png", new java.io.File("Pixel_engine/src/test/output/test.png"));
+            image = new Image(ImageIO.read(new File("Pixel_engine/src/test/output/test.png")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        textFrame.addText(text, 0, 0);
-
-        renderer.addStream(textFrame.getStreams());
+        image.setPosition(0,0);
+        image.setSize(0.5f,0.5f);
     }
 
     @Override
@@ -101,6 +101,7 @@ public class Main extends Application {
         System.out.println("render");
         context.viewPort().set(new ViewPort().set(0, 0, window.width(), window.height()));
         //render actual data
+        image.draw();
         renderer.executeStreams();
         renderer.endFrame();
     }

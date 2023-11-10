@@ -137,4 +137,9 @@ public class DrawPipeline extends Pipeline {
         context.logicOp().set(logicOp);
         context.faceCull().set(faceCull);
     }
+
+    public void dispose() {
+        program.delete();
+        vertexArray.delete();
+    }
 }

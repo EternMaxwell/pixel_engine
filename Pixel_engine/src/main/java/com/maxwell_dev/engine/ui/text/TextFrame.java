@@ -68,36 +68,6 @@ public class TextFrame{
     }
 
     public void addText(Text text, float x, float y){
-        Vector vector = new Vector();
-        vector.text = text;
-        vector.x = x;
-        vector.y = y;
-        vectors.add(vector);
-        RenderStream renderStream = new RenderStream(pipeline, 256, 36, 256, false);
-        renderStream.addEntity(new Visible() {
-            private ByteBuffer vertexBuffer = MemoryUtil.memAlloc(256)
-                    .putFloat(x).putFloat(y).putFloat(0).putFloat(0)
-                    .putFloat(text.colorR()).putFloat(text.colorG()).putFloat(text.colorB()).putFloat(text.colorA())
-                    .putFloat(x + text.width()).putFloat(y).putFloat(1).putFloat(0)
-                    .putFloat(text.colorR()).putFloat(text.colorG()).putFloat(text.colorB()).putFloat(text.colorA())
-                    .putFloat(x + text.width()).putFloat(y + text.height()).putFloat(1).putFloat(1)
-                    .putFloat(text.colorR()).putFloat(text.colorG()).putFloat(text.colorB()).putFloat(text.colorA())
-                    .putFloat(x).putFloat(y + text.height()).putFloat(0).putFloat(1)
-                    .putFloat(text.colorR()).putFloat(text.colorG()).putFloat(text.colorB()).putFloat(text.colorA());
-            private ByteBuffer indexBuffer = MemoryUtil.memAlloc(36)
-                    .putInt(0).putInt(1).putInt(2)
-                    .putInt(2).putInt(3).putInt(0);
-            public ByteBuffer indexBuffer() {
-                return indexBuffer;
-            }
-            public ByteBuffer vertexBuffer() {
-                return vertexBuffer;
-            }
-        });
-        renderStream.textureUnit(0).bindTexture(text.texture());
-        renderStream.setMode(GL_TRIANGLES);
-        renderStream.setIndexBufferType(GL_INT);
-        renderStreams.add(renderStream);
     }
 
     public void removeText(Text text) {

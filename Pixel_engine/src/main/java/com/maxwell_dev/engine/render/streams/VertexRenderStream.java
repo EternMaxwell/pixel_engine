@@ -1,5 +1,6 @@
 package com.maxwell_dev.engine.render.streams;
 
+import com.maxwell_dev.engine.render.RenderStream;
 import com.maxwell_dev.engine.render.Visible;
 import com.maxwell_dev.globj.Buffer;
 import com.maxwell_dev.globj.Context;
@@ -10,11 +11,12 @@ import com.maxwell_dev.engine.render.DrawPipeline;
 import static org.lwjgl.opengl.GL46.*;
 
 import java.nio.ByteBuffer;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.maxwell_dev.engine.render.Stream;
 
-public class VertexRenderStream extends Stream {
+public class VertexRenderStream extends RenderStream {
     private int mode;
     private int vertexCount;
     private Buffer vertexBuffer;
@@ -48,6 +50,11 @@ public class VertexRenderStream extends Stream {
             this.sampler = sampler;
         }
 
+        public void set(Texture texture, Sampler sampler){
+            this.texture = texture;
+            this.sampler = sampler;
+        }
+
         public Texture getTexture() {
             return texture;
         }
@@ -57,7 +64,14 @@ public class VertexRenderStream extends Stream {
         }
     }
 
-    public VertexRenderStream(DrawPipeline pipeline, Visible instance, int limit, int maxUnit, long vertexCountMax) {
+    /**
+     * create a new vertex render stream
+     * @param pipeline the pipeline to use
+     * @param instance the construction takes an any instance to initialize the stream
+     * @param limit the maximum number of entities to draw
+     * @param vertexCountMax the maximum number of vertices to draw
+     */
+    public VertexRenderStream(DrawPipeline pipeline, Visible instance, int limit, long vertexCountMax) {
         this.pipeline = pipeline;
         this.context = pipeline.context();
         this.limit = limit;
@@ -95,6 +109,8 @@ public class VertexRenderStream extends Stream {
                 storageBuffers[i].bufferData().load(limit * instance.storageBuffersBytes()[i], GL_DYNAMIC_DRAW);
             }
         }
+        textureUnits = new LinkedList<>();
+        freeIndices = new LinkedList<>();
     }
 
     /**
@@ -106,7 +122,7 @@ public class VertexRenderStream extends Stream {
         boolean loaded = true;
         if (entity.indexInStream() <= 0) {
             loaded = false;
-            if (freeIndices.size() > 0) {
+            if (!freeIndices.isEmpty()) {
                 int index = freeIndices.get(0);
                 freeIndices.remove(0);
                 entity.indexInStream(index);
@@ -205,17 +221,42 @@ public class VertexRenderStream extends Stream {
      * add the entity to the draw command list
      * @param entity the entity to draw
      */
-    public void drawEntity(Visible entity) {
+    public boolean drawEntity(Visible entity) {
         int index = entity.indexInStream();
         if (index < 0) {
-            return;
+            return false;
         }
         ByteBuffer vertexData = entity.vertexBuffer();
         vertexBuffer.mapBuffer()
-                .range(vertexCount * entity.vertexStride(), vertexData.limit(), GL_WRITE_ONLY)
+                .range(vertexCount * entity.vertexStride(), vertexData.limit(), GL_MAP_WRITE_BIT)
                 .put(vertexData);
+        vertexData.flip();
         vertexBuffer.mapBuffer().unmap();
         vertexCount += entity.vertexCount();
+        return true;
+    }
+
+    /**
+     * get the texture unit at the specified index
+     * @param index the index of the texture unit
+     * @return the texture unit at the specified index
+     */
+    public TextureUnit textureUnit(int index){
+        if(index >= textureUnits.size()){
+            for(int i = textureUnits.size(); i <= index; i++){
+                textureUnits.add(null);
+            }
+            textureUnits.add(index, new TextureUnit());
+        }
+        return textureUnits.get(index);
+    }
+
+    /**
+     * get the draw pipeline
+     * @return the draw pipeline
+     */
+    public DrawPipeline pipeline() {
+        return pipeline;
     }
 
     /**

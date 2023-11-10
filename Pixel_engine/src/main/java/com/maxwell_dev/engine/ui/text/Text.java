@@ -1,12 +1,9 @@
 package com.maxwell_dev.engine.ui.text;
 
-import com.maxwell_dev.engine.render.Visible;
-import com.maxwell_dev.engine.ui.Image;
 import com.maxwell_dev.globj.texture.Texture_2D;
 import org.lwjgl.system.MemoryUtil;
 
 import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL46.*;
