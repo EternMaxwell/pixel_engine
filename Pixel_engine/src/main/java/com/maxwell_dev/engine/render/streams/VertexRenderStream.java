@@ -35,6 +35,10 @@ public class VertexRenderStream extends RenderStream {
 
     private List<TextureUnit> textureUnits;
 
+    public Buffer vertexBuffer() {
+        return vertexBuffer;
+    }
+
     public static class TextureUnit {
         private Texture texture;
         private Sampler sampler;

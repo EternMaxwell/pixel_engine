@@ -1,15 +1,18 @@
 import com.maxwell_dev.engine.Application;
 import com.maxwell_dev.engine.FrameTimer;
 import com.maxwell_dev.engine.TickTimer;
+import com.maxwell_dev.engine.render.RenderStream;
 import com.maxwell_dev.engine.render.Renderer;
 import com.maxwell_dev.engine.render.Window;
 import com.maxwell_dev.engine.ui.text.Font;
 import com.maxwell_dev.engine.ui.text.Text;
 import com.maxwell_dev.engine.ui.text.TextFrame;
 import com.maxwell_dev.engine.ui.util.Image;
+import com.maxwell_dev.engine.ui.util.LineUtil;
 import com.maxwell_dev.globj.Context;
 import com.maxwell_dev.globj.ViewPort;
 
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWWindowRefreshCallback;
 
 import javax.imageio.ImageIO;
@@ -29,6 +32,7 @@ public class Main extends Application {
     private TickTimer tickTimer;
 
     private TextFrame textFrame;
+    private LineUtil lineUtil;
 
     Image image;
 
@@ -81,6 +85,8 @@ public class Main extends Application {
         }
         image.setPosition(0,0);
         image.setSize(0.5f,0.5f);
+
+        lineUtil = new LineUtil(context);
     }
 
     @Override
@@ -101,6 +107,8 @@ public class Main extends Application {
         System.out.println("render");
         context.viewPort().set(new ViewPort().set(0, 0, window.width(), window.height()));
         //render actual data
+        lineUtil.drawLine(0,0,1,1,new float[]{1,1,1,1});
+
         image.draw();
         renderer.executeStreams();
         renderer.endFrame();

@@ -79,6 +79,12 @@ public class Shader implements glInterface {
      */
     public void compileShader() {
         glCompileShader(id);
+        int status = glGetShaderi(id, GL_COMPILE_STATUS);
+        if (status == GL_FALSE) {
+            String info = glGetShaderInfoLog(id);
+            throw new RuntimeException("Failed to compile shader!"
+                    + System.lineSeparator() + info);
+        }
     }
 
     /**

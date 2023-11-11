@@ -96,6 +96,11 @@ public class Program implements glInterface {
      */
     public void linkProgram() {
         glLinkProgram(id);
+        int status = glGetProgrami(id, GL_LINK_STATUS);
+        if (status != GL_TRUE) {
+            String infoLog = glGetProgramInfoLog(id);
+            System.err.println("Linker failure: " + infoLog);
+        }
     }
 
     /**

@@ -73,14 +73,18 @@ public interface Visible{
      * get if the storage buffer has changed since last load
      * @return if the storage buffer is changed
      */
-    public boolean storageBufferChanged();
+    public default boolean storageBufferChanged(){
+        return true;
+    }
 
     /**
      * get if the storage buffer has changed since last load
      * @param index the index of the storage buffer
      * @return if the storage buffer is changed
      */
-    public boolean storageBufferChanged(int index);
+    public default boolean storageBufferChanged(int index){
+        return true;
+    }
 
     /**
      * get if the storage buffers are different in different instances of this visible
@@ -142,14 +146,18 @@ public interface Visible{
      * get if the uniform buffer has changed since last load
      * @return if the uniform buffer is changed
      */
-    public boolean uniformBufferChanged();
+    public default boolean uniformBufferChanged(){
+        return true;
+    }
 
     /**
      * get if the uniform buffer has changed since last load
      * @param index the index of the uniform buffer
      * @return if the uniform buffer is changed
      */
-    public boolean uniformBufferChanged(int index);
+    public default boolean uniformBufferChanged(int index){
+        return true;
+    }
 
     /**
      * get the uniform buffer bytes, the length of the uniform buffer per instance of this visible uses
