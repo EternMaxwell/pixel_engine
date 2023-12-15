@@ -11,8 +11,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>Pixel_engine</module>
-        <module>GLObjVer</module>
+        <module>entity</module>
     </modules>
 
     <properties>
