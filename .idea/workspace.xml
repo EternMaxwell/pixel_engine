@@ -5,22 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="engine&#10;render">
-      <change afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/ui/util/LineUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/line/line.frag" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/line/line.vert" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GLObjVer/src/main/java/com/maxwell_dev/globj/Program.java" beforeDir="false" afterPath="$PROJECT_DIR$/GLObjVer/src/main/java/com/maxwell_dev/globj/Program.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GLObjVer/src/main/java/com/maxwell_dev/globj/Shader.java" beforeDir="false" afterPath="$PROJECT_DIR$/GLObjVer/src/main/java/com/maxwell_dev/globj/Shader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GLObjVer/src/main/java/com/maxwell_dev/globj/texture/Texture_2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/GLObjVer/src/main/java/com/maxwell_dev/globj/texture/Texture_2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/RenderStream.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/RenderStream.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Visible.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/Visible.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/streams/VertexRenderStream.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/render/streams/VertexRenderStream.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/ui/util/Image.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/java/com/maxwell_dev/engine/ui/util/Image.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/image/image.frag" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/image/image.frag" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/image/image.vert" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/image/image.vert" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/triangletest/shader.frag" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/triangle/shader.frag" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/triangletest/shader.vert" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/main/resources/shaders/triangle/shader.vert" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pixel_engine/src/test/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel_engine/src/test/java/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,18 +67,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/Programming/Projects/Java/Idea intelliJ/GameOff2023&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/Programming/Projects/Java/Idea intelliJ/GameOff2023",
+    "project.structure.last.edited": "模块",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "应用程序.Main.executor": "Debug"
   }
-}</component>
+}]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="pixel_engine" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="pixel_engine" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-17.0.9-corretto-17.0.9-8336523bb0d9-93b19daf" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
@@ -286,7 +296,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699621399250</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="engine&#10;render">
+      <option name="closed" value="true" />
+      <created>1699709599731</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1699709599731</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

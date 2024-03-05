@@ -8,12 +8,7 @@
     <artifactId>pixel_engine</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>Pixel_engine</module>
-        <module>GLObjVer</module>
-    </modules>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
