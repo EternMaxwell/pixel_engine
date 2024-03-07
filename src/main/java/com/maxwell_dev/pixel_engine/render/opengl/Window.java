@@ -5,9 +5,10 @@ import org.lwjgl.glfw.*;
 import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Window {
+public class Window extends com.maxwell_dev.pixel_engine.render.Window {
     private long window;
     private String title;
+    private int width, height;
 
     private IntValue resizable, visible, decorated, focused, autoIconify, floating, maximized, centerCursor, transparentFramebuffer, focusOnShow, scaleToMonitor, mousePassThrough;
     private IntValue redBits, greenBits, blueBits, alphaBits, depthBits, stencilBits, accumRedBits, accumGreenBits, accumBlueBits, accumAlphaBits, auxBuffers, samples, refreshRate;
@@ -749,8 +750,6 @@ public class Window {
      * @param ypos the y position of the window
      */
     public void setPosition(int xpos, int ypos) {
-        this.xpos = xpos;
-        this.ypos = ypos;
         glfwSetWindowPos(window, xpos, ypos);
     }
 
@@ -872,6 +871,13 @@ public class Window {
         int[] ypos = new int[1];
         glfwGetWindowPos(window, xpos, ypos);
         return ypos[0];
+    }
+
+    public int[] pos() {
+        int[] xpos = new int[1];
+        int[] ypos = new int[1];
+        glfwGetWindowPos(window, xpos, ypos);
+        return new int[]{xpos[0], ypos[0]};
     }
 
     public void swapBuffers() {
