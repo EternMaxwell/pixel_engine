@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="initial process">
+    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="optimized the framework more">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/world/falling_sand/Element.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/world/falling_sand/Element.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/world/falling_sand/Grid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/world/falling_sand/Grid.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,8 +18,8 @@
         <option value="vs-template" />
         <option value="GLSL Shader" />
         <option value="package-info" />
-        <option value="Enum" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -332,7 +330,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709819625612</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="optimized the framework more">
+      <option name="closed" value="true" />
+      <created>1709911520589</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1709911520589</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -360,7 +366,8 @@
     <MESSAGE value="engine&#10;render" />
     <MESSAGE value="rebuild the whole project based on Scale" />
     <MESSAGE value="initial process" />
-    <option name="LAST_COMMIT_MESSAGE" value="initial process" />
+    <MESSAGE value="optimized the framework more" />
+    <option name="LAST_COMMIT_MESSAGE" value="optimized the framework more" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

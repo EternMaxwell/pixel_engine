@@ -2,7 +2,7 @@ package com.maxwell_dev.pixel_engine.world.falling_sand;
 
 import com.maxwell_dev.pixel_engine.render.Renderer;
 
-public abstract class Grid <T extends Element,V extends Renderer, ActionEnum>{
+public abstract class Grid <T extends Element<?,?,?>,V extends Renderer, ActionEnum>{
     public abstract T elementsAt(int x, int y);
     public abstract boolean validAt(int x, int y);
     public abstract boolean invalidAsWall();
