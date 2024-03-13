@@ -15,9 +15,9 @@ public class InputTool {
     private Map<Integer, Integer> keyMapLast;
     private Map<Integer, Integer> mouseMap;
     private Map<Integer, Integer> mouseMapLast;
-    private double[] mousePos = new double[2];
-    private double[] mousePosLast = new double[2];
-    private double[] scroll = new double[2];
+    private final double[] mousePos = new double[2];
+    private final double[] mousePosLast = new double[2];
+    private final double[] scroll = new double[2];
 
     public InputTool(Window window) {
         keyMap = new HashMap<>();
