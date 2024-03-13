@@ -4,8 +4,8 @@ import com.maxwell_dev.pixel_engine.core.InputTool;
 import com.maxwell_dev.pixel_engine.render.Renderer;
 
 public abstract class UIComponent <T extends Renderer>{
-    public UIManager manager;
-    public UIComponent(UIManager manager){
+    public UIManager<T> manager;
+    public UIComponent(UIManager<T> manager){
         this.manager = manager;
     }
     public abstract void render(T renderer);

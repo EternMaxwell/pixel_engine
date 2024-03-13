@@ -2,7 +2,6 @@ package com.maxwell_dev.pixel_engine.render.opengl;
 
 import org.lwjgl.glfw.*;
 
-import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Window extends com.maxwell_dev.pixel_engine.render.Window {
