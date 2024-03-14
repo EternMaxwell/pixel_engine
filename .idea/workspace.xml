@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="optimized the framework more">
+    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="input enhanced">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/ui_system/UIWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/core/InputTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/core/InputTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/ui_system/UIComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/ui_system/UIComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/ui_system/UIManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/ui_system/UIManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/ui_system/UIPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/ui_system/UIPage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,8 +22,8 @@
         <option value="vs-template" />
         <option value="GLSL Shader" />
         <option value="package-info" />
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -50,8 +53,9 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
+        <option name="customMavenHome" value="$PROJECT_DIR$/../../../../apache-maven-3.9.5" />
         <option name="localRepository" value="C:\Users\64603\.m2\repository" />
-        <option name="mavenHome" value="$PROJECT_DIR$/../../../../apache-maven-3.9.5" />
+        <option name="mavenHomeTypeForPersistence" value="CUSTOM" />
         <option name="useMavenConfig" value="false" />
         <option name="userSettingsFile" value="C:\Users\64603\.m2\settings.xml" />
       </MavenGeneralSettings>
@@ -347,7 +351,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710167583985</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="input enhanced">
+      <option name="closed" value="true" />
+      <created>1710308151481</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1710308151481</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -376,7 +388,8 @@
     <MESSAGE value="rebuild the whole project based on Scale" />
     <MESSAGE value="initial process" />
     <MESSAGE value="optimized the framework more" />
-    <option name="LAST_COMMIT_MESSAGE" value="optimized the framework more" />
+    <MESSAGE value="input enhanced" />
+    <option name="LAST_COMMIT_MESSAGE" value="input enhanced" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
