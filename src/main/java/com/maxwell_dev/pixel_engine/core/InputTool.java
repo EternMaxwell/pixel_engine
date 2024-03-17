@@ -18,6 +18,7 @@ public class InputTool {
     private final double[] mousePos = new double[2];
     private final double[] mousePosLast = new double[2];
     private final double[] scroll = new double[2];
+    private boolean scrollChanged = false;
 
     public InputTool(Window window) {
         keyMap = new HashMap<>();
@@ -29,11 +30,18 @@ public class InputTool {
             public void invoke(long window, double xoffset, double yoffset) {
                 scroll[0] = xoffset;
                 scroll[1] = yoffset;
+                scrollChanged = true;
             }
         });
     }
 
     public void input(Window window){
+        if(scrollChanged){
+            scrollChanged = false;
+        }else {
+            scroll[0] = 0;
+            scroll[1] = 0;
+        }
         Map<Integer, Integer> temp = keyMapLast;
         keyMapLast = keyMap;
         keyMap = temp;
