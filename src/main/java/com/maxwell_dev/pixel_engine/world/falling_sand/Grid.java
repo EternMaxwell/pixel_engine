@@ -2,6 +2,7 @@ package com.maxwell_dev.pixel_engine.world.falling_sand;
 
 import com.maxwell_dev.pixel_engine.render.Renderer;
 import com.maxwell_dev.pixel_engine.world.box2d.Body;
+import org.jbox2d.dynamics.World;
 
 import java.util.Collection;
 
@@ -16,5 +17,5 @@ public abstract class Grid <T extends Element<?,?,?>,V extends Renderer, ActionE
     public abstract void render(V renderer);
     public abstract int[] basePos();
     public abstract void action(double x, double y, ActionEnum action, double[] arguments);
-    public abstract C toBodies();
+    public abstract C toBodies(World world);
 }
