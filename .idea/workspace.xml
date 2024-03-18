@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="input fix" />
+    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="new branch for falling-sand-test; render from scale">
+      <change afterPath="$PROJECT_DIR$/src/test/java/fallingSandTest/main/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/fallingSandTest/main/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/core/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/core/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/fallingSandTest/render/EasyRender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/fallingSandTest/render/EasyRender.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -96,21 +102,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "falling-sand-test",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/Programming/Projects/Java/Idea intelliJ/pixel_engine/src/test/resources",
-    "project.structure.last.edited": "模块",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "应用程序.Main.executor": "Debug",
-    "应用程序.Test.executor": "Debug"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;falling-sand-test&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Programming/Projects/Java/Idea intelliJ/pixel_engine/src/test/resources&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;应用程序.Main.executor&quot;: &quot;Debug&quot;,
+    &quot;应用程序.Test.executor&quot;: &quot;Debug&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\Programming\Projects\Java\Idea intelliJ\pixel_engine\src\test\resources" />
@@ -120,6 +126,15 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration name="Test" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="fallingSandTest.main.Main" />
+      <module name="pixel_engine" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="pixel_engine" />
       <method v="2">
@@ -422,7 +437,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710686390922</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="new branch for falling-sand-test; render from scale">
+      <option name="closed" value="true" />
+      <created>1710739720288</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1710739720288</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -436,7 +459,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="master" />
+                        <option value="falling-sand-test" />
                       </list>
                     </value>
                   </entry>
@@ -468,7 +491,8 @@
     <MESSAGE value="git ignore fix" />
     <MESSAGE value="grid to body part added, not tested yet" />
     <MESSAGE value="input fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="input fix" />
+    <MESSAGE value="new branch for falling-sand-test; render from scale" />
+    <option name="LAST_COMMIT_MESSAGE" value="new branch for falling-sand-test; render from scale" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

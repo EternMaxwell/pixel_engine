@@ -1800,14 +1800,13 @@ public class EasyRender {
         text.begin();
     }
 
-    public void end(Window window) {
+    public void end() {
         line.end();
         triangle.end();
         pixel.end();
         image.end();
         point.end();
         text.flush();
-        glfwSwapBuffers(window.id());
     }
 
     public int createShader(String shaderSourceFileLoc, int shaderType) {
