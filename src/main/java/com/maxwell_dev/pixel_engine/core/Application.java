@@ -1,10 +1,20 @@
 package com.maxwell_dev.pixel_engine.core;
 
 public abstract class Application {
-    public abstract void start();
+    public void start(){
+        init();
+        while(running()){
+            loop();
+        }
+        destroy();
+    }
 
     public abstract void init();
-    public abstract void loop();
+    public void loop(){
+        input();
+        update();
+        render();
+    }
     public abstract void input();
     public abstract void update();
     public abstract void render();
