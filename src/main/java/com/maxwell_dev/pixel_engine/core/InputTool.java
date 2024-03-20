@@ -3,7 +3,9 @@ package com.maxwell_dev.pixel_engine.core;
 import com.maxwell_dev.pixel_engine.render.Window;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.lwjgl.glfw.GLFWScrollCallback;
 
@@ -11,10 +13,15 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class InputTool {
 
+    private static final int STATE_RELEASE = 0;
+    private static final int STATE_PRESS = 1;
+    private static final int STATE_JUST_RELEASED = 2;
+    private static final int STATE_JUST_PRESSED = 3;
+
     private Map<Integer, Integer> keyMap;
-    private Map<Integer, Integer> keyMapLast;
     private Map<Integer, Integer> mouseMap;
-    private Map<Integer, Integer> mouseMapLast;
+    private Set<Integer> keyJustPressed;
+    private Set<Integer> mouseJustPressed;
     private final double[] mousePos = new double[2];
     private final double[] mousePosLast = new double[2];
     private final double[] scroll = new double[2];
@@ -22,9 +29,9 @@ public class InputTool {
 
     public InputTool(Window window) {
         keyMap = new HashMap<>();
-        keyMapLast = new HashMap<>();
         mouseMap = new HashMap<>();
-        mouseMapLast = new HashMap<>();
+        keyJustPressed = new HashSet<>();
+        mouseJustPressed = new HashSet<>();
         glfwSetScrollCallback(window.id(), new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double xoffset, double yoffset) {
@@ -42,17 +49,39 @@ public class InputTool {
             scroll[0] = 0;
             scroll[1] = 0;
         }
-        Map<Integer, Integer> temp = keyMapLast;
-        keyMapLast = keyMap;
-        keyMap = temp;
-        temp = mouseMapLast;
-        mouseMapLast = mouseMap;
-        mouseMap = temp;
+        keyJustPressed.clear();
+        mouseJustPressed.clear();
         for(Map.Entry<Integer, Integer> entry : keyMap.entrySet()){
-            entry.setValue(glfwGetKey(window.id(), entry.getKey()));
+            int value = entry.getValue();
+            if(glfwGetKey(window.id(), entry.getKey()) == GLFW_PRESS) {
+                if (value == STATE_RELEASE || value == STATE_JUST_RELEASED) {
+                    entry.setValue(STATE_JUST_PRESSED);
+                    keyJustPressed.add(entry.getKey());
+                }else
+                    entry.setValue(STATE_PRESS);
+            }else{
+                if(value == STATE_PRESS || value == STATE_JUST_PRESSED)
+                    entry.setValue(STATE_JUST_RELEASED);
+                else
+                    entry.setValue(STATE_RELEASE);
+            }
+            entry.setValue(value);
         }
         for(Map.Entry<Integer, Integer> entry : mouseMap.entrySet()){
-            entry.setValue(glfwGetMouseButton(window.id(), entry.getKey()));
+            int value = entry.getValue();
+            if(glfwGetMouseButton(window.id(), entry.getKey()) == GLFW_PRESS) {
+                if (value == STATE_RELEASE || value == STATE_JUST_RELEASED) {
+                    entry.setValue(STATE_JUST_PRESSED);
+                    mouseJustPressed.add(entry.getKey());
+                } else
+                    entry.setValue(STATE_PRESS);
+            }else{
+                if(value == STATE_PRESS || value == STATE_JUST_PRESSED)
+                    entry.setValue(STATE_JUST_RELEASED);
+                else
+                    entry.setValue(STATE_RELEASE);
+            }
+            entry.setValue(value);
         }
         double[] posX = new double[1];
         double[] posY = new double[1];
@@ -65,50 +94,50 @@ public class InputTool {
 
     public boolean isKeyPressed(int key){
         keyMap.putIfAbsent(key, 0);
-        keyMapLast.putIfAbsent(key, 0);
-        return keyMap.get(key) == GLFW_PRESS;
+        return keyMap.get(key) == STATE_PRESS || keyMap.get(key) == STATE_JUST_PRESSED;
     }
 
     public boolean isKeyJustPressed(int key){
         keyMap.putIfAbsent(key, 0);
-        keyMapLast.putIfAbsent(key, 0);
-        return keyMap.get(key) == GLFW_PRESS && keyMapLast.get(key) == GLFW_RELEASE;
+        return keyMap.get(key) == STATE_JUST_PRESSED;
     }
 
     public boolean isKeyReleased(int key){
         keyMap.putIfAbsent(key, 0);
-        keyMapLast.putIfAbsent(key, 0);
-        return keyMap.get(key) == GLFW_RELEASE;
+        return keyMap.get(key) == STATE_RELEASE || keyMap.get(key) == STATE_JUST_RELEASED;
     }
 
     public boolean isKeyJustReleased(int key){
         keyMap.putIfAbsent(key, 0);
-        keyMapLast.putIfAbsent(key, 0);
-        return keyMap.get(key) == GLFW_RELEASE && keyMapLast.get(key) == GLFW_PRESS;
+        return keyMap.get(key) == STATE_JUST_RELEASED;
     }
 
     public boolean isMousePressed(int key){
         mouseMap.putIfAbsent(key, 0);
-        mouseMapLast.putIfAbsent(key, 0);
-        return mouseMap.get(key) == GLFW_PRESS;
+        return mouseMap.get(key) == STATE_PRESS || mouseMap.get(key) == STATE_JUST_PRESSED;
     }
 
     public boolean isMouseJustPressed(int key){
         mouseMap.putIfAbsent(key, 0);
-        mouseMapLast.putIfAbsent(key, 0);
-        return mouseMap.get(key) == GLFW_PRESS && mouseMapLast.get(key) == GLFW_RELEASE;
+        return mouseMap.get(key) == STATE_JUST_PRESSED;
     }
 
     public boolean isMouseReleased(int key){
         mouseMap.putIfAbsent(key, 0);
-        mouseMapLast.putIfAbsent(key, 0);
-        return mouseMap.get(key) == GLFW_RELEASE;
+        return mouseMap.get(key) == STATE_RELEASE || mouseMap.get(key) == STATE_JUST_RELEASED;
     }
 
     public boolean isMouseJustReleased(int key){
         mouseMap.putIfAbsent(key, 0);
-        mouseMapLast.putIfAbsent(key, 0);
-        return mouseMap.get(key) == GLFW_RELEASE && mouseMapLast.get(key) == GLFW_PRESS;
+        return mouseMap.get(key) == STATE_JUST_RELEASED;
+    }
+
+    public int[] keyJustPressed(){
+        return keyJustPressed.stream().mapToInt(i -> i).toArray();
+    }
+
+    public int[] mouseJustPressed(){
+        return mouseJustPressed.stream().mapToInt(i -> i).toArray();
     }
 
     public double[] mousePos(){
