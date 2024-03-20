@@ -2,25 +2,24 @@ package com.maxwell_dev.pixel_engine.render.opengl;
 
 import static org.lwjgl.opengl.GL46.*;
 
-public class ShaderProgram {
+public class Program {
     public final int id;
 
     /**
      * create a new shader program
      */
-    public ShaderProgram(){
+    public Program(){
         id = glCreateProgram();
     }
 
     /**
      * create a new shader program
-     * @param types the types of shaders
      * @param shaders the shaders
      */
-    public ShaderProgram(int[] types, String[] shaders){
+    public Program(Shader[] shaders){
         id = glCreateProgram();
-        for(int i = 0; i < types.length; i++){
-            attach(new Shader(types[i], shaders[i]));
+        for(Shader shader : shaders){
+            attach(shader);
         }
         link();
     }

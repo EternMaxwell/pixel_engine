@@ -12,6 +12,15 @@ public class Shader {
     public final int id;
     public final int type;
 
+    public static class Type {
+        public static final int VERTEX = GL_VERTEX_SHADER;
+        public static final int FRAGMENT = GL_FRAGMENT_SHADER;
+        public static final int GEOMETRY = GL_GEOMETRY_SHADER;
+        public static final int TESS_CONTROL = GL_TESS_CONTROL_SHADER;
+        public static final int TESS_EVALUATION = GL_TESS_EVALUATION_SHADER;
+        public static final int COMPUTE = GL_COMPUTE_SHADER;
+    }
+
     /**
      * create a new shader
      * @param type the type of shader
@@ -34,7 +43,7 @@ public class Shader {
      * @param filePath the path to the file
      * @return the source
      */
-    private @NotNull String sourceFromFile(String filePath){
+    private static @NotNull String sourceFromFile(String filePath){
         StringBuilder source = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));

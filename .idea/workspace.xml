@@ -4,8 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="Application polish, start and loop no need to implement">
+    <list default="true" id="fb284131-4b44-49fe-a6db-fe477a2ddcf6" name="更改" comment="changed the way grid works with box2d body">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/render/opengl/FrameBuffer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/render/opengl/Image.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/stage/Stage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/ImageDrawer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/Test.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/shaders/image/shader.fsh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/shaders/image/shader.vsh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/textures/test.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/render/opengl/Pipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/render/opengl/Pipeline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/render/opengl/Shader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/render/opengl/Shader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/render/opengl/ShaderProgram.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maxwell_dev/pixel_engine/render/opengl/Program.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,9 +28,10 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="vs-template" />
-        <option value="GLSL Shader" />
         <option value="package-info" />
         <option value="Enum" />
+        <option value="Interface" />
+        <option value="GLSL Shader" />
         <option value="Class" />
       </list>
     </option>
@@ -26,7 +39,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="scaleOnPixelEngine" />
+        <entry key="$PROJECT_DIR$" value="falling-sand-test" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -49,15 +62,7 @@
                 <list>
                   <RecentBranch>
                     <option name="branchName" value="master" />
-                    <option name="lastUsedInstant" value="1710677326" />
-                  </RecentBranch>
-                  <RecentBranch>
-                    <option name="branchName" value="scaleOnPixelEngine" />
-                    <option name="lastUsedInstant" value="1710677309" />
-                  </RecentBranch>
-                  <RecentBranch>
-                    <option name="branchName" value="test" />
-                    <option name="lastUsedInstant" value="1710677133" />
+                    <option name="lastUsedInstant" value="1710913787" />
                   </RecentBranch>
                 </list>
               </option>
@@ -91,7 +96,7 @@
     </option>
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
@@ -108,29 +113,19 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/Programming/Projects/Java/Idea intelliJ/GameOff2023&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Programming/Projects/Java/Idea intelliJ/pixel_engine/src/test/resources/textures&quot;,
     &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode&quot;,
     &quot;应用程序.Main.executor&quot;: &quot;Debug&quot;,
     &quot;应用程序.Test.executor&quot;: &quot;Debug&quot;
   }
 }</component>
-  <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="pixel_engine" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="pixel_engine" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Programming\Projects\Java\Idea intelliJ\pixel_engine\src\test\resources\textures" />
+    </key>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -467,12 +462,5 @@
     <MESSAGE value="grid to body part added, not tested yet" />
     <MESSAGE value="input fix" />
     <option name="LAST_COMMIT_MESSAGE" value="input fix" />
-  </component>
-  <component name="XDebuggerManager">
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="((RenderStream)((Node)((LinkedList)main.renderer.streams).first).item).indirectBuffer" custom="java.util.LinkedList,com.maxwell_dev.engine.render.RenderStream,java.util.LinkedList.Node" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>
