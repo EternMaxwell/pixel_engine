@@ -18,17 +18,11 @@ public class Image {
         int[] w = new int[1];
         int[] h = new int[1];
         int[] c = new int[1];
-        ByteBuffer data = stbi_load(path, w, h, c, 0);
+        ByteBuffer data = stbi_load(path, w, h, c, 4);
         if(data != null) {
             width = w[0];
             height = h[0];
-            int format;
-            if (c[0] == 3) {
-                format = GL_RGB;
-            } else {
-                format = GL_RGBA;
-            }
-            glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
             stbi_image_free(data);
         }else {
@@ -37,6 +31,17 @@ public class Image {
             glDeleteTextures(texture);
             glDeleteSamplers(sampler);
         }
+    }
+
+    public Image(int texture){
+        this.texture = texture;
+        int[] w = new int[1];
+        int[] h = new int[1];
+        glGetTextureLevelParameteriv(texture, 0, GL_TEXTURE_WIDTH, w);
+        glGetTextureLevelParameteriv(texture, 0, GL_TEXTURE_HEIGHT, h);
+        width = w[0];
+        height = h[0];
+        sampler = glGenSamplers();
     }
 
     public void samplerParameteri(int pname, int param){
