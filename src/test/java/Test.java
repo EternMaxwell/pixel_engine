@@ -2,6 +2,7 @@ import com.maxwell_dev.pixel_engine.core.Application;
 import com.maxwell_dev.pixel_engine.core.InputTool;
 import com.maxwell_dev.pixel_engine.render.opengl.Image;
 import com.maxwell_dev.pixel_engine.render.opengl.Window;
+import com.maxwell_dev.pixel_engine.util.Util;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -12,6 +13,20 @@ public class Test extends Application {
     InputTool inputTool;
     ImageDrawer imageDrawer;
     Image image;
+    LineDrawer lineDrawer;
+    float height = 0.0f;
+    float[][] line_to_simplify = new float[][]{
+            {(float) Math.random(), (float) Math.random()},
+            {(float) Math.random(), (float) Math.random()},
+            {(float) Math.random(), (float) Math.random()},
+            {(float) Math.random(), (float) Math.random()},
+            {(float) Math.random(), (float) Math.random()},
+            {(float) Math.random(), (float) Math.random()},
+            {(float) Math.random(), (float) Math.random()},
+            {(float) Math.random(), (float) Math.random()},
+            {(float) Math.random(), (float) Math.random()},
+            {(float) Math.random(), (float) Math.random()}
+    };
     @Override
     public void init() {
         if(!glfwInit())
@@ -24,6 +39,7 @@ public class Test extends Application {
         GL.createCapabilities();
         inputTool = new InputTool(window);
         imageDrawer = new ImageDrawer();
+        lineDrawer = new LineDrawer();
         image = new Image("src/test/resources/textures/test.jpg");
         image.samplerParameteri(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         image.samplerParameteri(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -38,17 +54,29 @@ public class Test extends Application {
     @Override
     public void input() {
         glfwPollEvents();
-        inputTool.input(window);
+        inputTool.input();
     }
 
     @Override
     public void update() {
-
+        float[][] simplified;
+        if(inputTool.isKeyPressed(GLFW_KEY_ESCAPE))
+            glfwSetWindowShouldClose(window.id(), true);
+        if(inputTool.isKeyJustPressed(GLFW_KEY_SPACE)) {
+            simplified = Util.line_simplification(line_to_simplify, height);
+            height += 0.1f;
+            line_to_simplify = simplified;
+            System.out.println("Simplified");
+        }
     }
 
     @Override
     public void render() {
-        imageDrawer.draw(image);
+
+        //imageDrawer.draw(image);
+        for(int i = 0; i < line_to_simplify.length - 1; i++) {
+            lineDrawer.draw(line_to_simplify[i][0], line_to_simplify[i][1], line_to_simplify[i + 1][0], line_to_simplify[i + 1][1], 1.0f, 1,1, 1.0f);
+        }
         glfwSwapBuffers(window.id());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }

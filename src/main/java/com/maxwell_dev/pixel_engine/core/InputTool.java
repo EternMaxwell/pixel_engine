@@ -13,6 +13,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class InputTool {
 
+    private Window window;
     private static final int STATE_RELEASE = 0;
     private static final int STATE_PRESS = 1;
     private static final int STATE_JUST_RELEASED = 2;
@@ -32,6 +33,7 @@ public class InputTool {
         mouseMap = new HashMap<>();
         keyJustPressed = new HashSet<>();
         mouseJustPressed = new HashSet<>();
+        this.window = window;
         glfwSetScrollCallback(window.id(), new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double xoffset, double yoffset) {
@@ -42,7 +44,7 @@ public class InputTool {
         });
     }
 
-    public void input(Window window){
+    public void input(){
         if(scrollChanged){
             scrollChanged = false;
         }else {
@@ -65,7 +67,6 @@ public class InputTool {
                 else
                     entry.setValue(STATE_RELEASE);
             }
-            entry.setValue(value);
         }
         for(Map.Entry<Integer, Integer> entry : mouseMap.entrySet()){
             int value = entry.getValue();
@@ -81,7 +82,6 @@ public class InputTool {
                 else
                     entry.setValue(STATE_RELEASE);
             }
-            entry.setValue(value);
         }
         double[] posX = new double[1];
         double[] posY = new double[1];
