@@ -5,6 +5,9 @@ import com.maxwell_dev.pixel_engine.render.opengl.Window;
 import com.maxwell_dev.pixel_engine.util.Util;
 import org.lwjgl.opengl.GL;
 
+import java.util.Arrays;
+import java.util.Set;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
 
@@ -26,6 +29,21 @@ public class Test extends Application {
             {(float) Math.random(), (float) Math.random()},
             {(float) Math.random(), (float) Math.random()},
             {(float) Math.random(), (float) Math.random()}
+    };
+
+    Object name = new Object();
+
+    Object[][] grid = new Object[][]{
+            {null, null, null, null, name, null, null, null, null, null},
+            {null, null, null, null, name, name, name, null, null, null},
+            {null, null, null, null, name, null, name, null, null, null},
+            {null, null, null, null, null, null, name, null, null, null},
+            {null, null, null, null, null, null, name, null, null, null},
+            {null, null, null, null, null, null, name, null, null, null},
+            {null, null, null, null, null, null, name, name, name, name},
+            {null, null, null, null, null, null, null, null, name, null},
+            {null, null, null, null, null, null, null, name, name, null},
+            {null, null, null, null, null, null, null, name, null, null}
     };
     @Override
     public void init() {
@@ -60,23 +78,47 @@ public class Test extends Application {
     @Override
     public void update() {
         float[][] simplified;
-        if(inputTool.isKeyPressed(GLFW_KEY_ESCAPE))
+        if (inputTool.isKeyPressed(GLFW_KEY_ESCAPE))
             glfwSetWindowShouldClose(window.id(), true);
-        if(inputTool.isKeyJustPressed(GLFW_KEY_SPACE)) {
-            simplified = Util.line_simplification(line_to_simplify, height);
-            height += 0.1f;
-            line_to_simplify = simplified;
-            System.out.println("Simplified");
+        if (inputTool.scrollY() > 0) {
+            height += 0.01f;
+        }
+        if (inputTool.scrollY() < 0) {
+            height -= 0.01f;
+            height = height < 0 ? 0 : height;
         }
     }
 
     @Override
     public void render() {
 
-        //imageDrawer.draw(image);
-        for(int i = 0; i < line_to_simplify.length - 1; i++) {
-            lineDrawer.draw(line_to_simplify[i][0], line_to_simplify[i][1], line_to_simplify[i + 1][0], line_to_simplify[i + 1][1], 1.0f, 1,1, 1.0f);
+//        imageDrawer.draw(image);
+//        for(int i = 0; i < line_to_simplify.length - 1; i++) {
+//            lineDrawer.draw(line_to_simplify[i][0], line_to_simplify[i][1], line_to_simplify[i + 1][0], line_to_simplify[i + 1][1], 1.0f, 1,1, 1.0f);
+//        }
+        Set<float[][]> result = Util.marching_squares(grid, 0.05f, Object[][]::new, Object[]::new);
+        System.out.println(result.size());
+        for(float[][] result2 : result){
+            float[][] leftHalf = Arrays.copyOfRange(result2,0, result2.length/2+1);
+            float[][] rightHalf = Arrays.copyOfRange(result2, result2.length/2, result2.length + 1);
+            rightHalf[rightHalf.length-1] = result2[0];
+            float[][] result3 = Util.line_simplification(leftHalf, height);
+            float[][] result4 = Util.line_simplification(rightHalf, height);
+            for (int i = 0; i < result3.length-1; i++) {
+                lineDrawer.draw(result3[i][0], result3[i][1], result3[(i + 1) % result3.length][0], result3[(i + 1) % result3.length][1], 1.0f, 1.0f, 1.0f, 1.0f);
+            }
+            for (int i = 0; i < result4.length-1; i++) {
+                lineDrawer.draw(result4[i][0], result4[i][1], result4[(i + 1) % result4.length][0], result4[(i + 1) % result4.length][1], 1.0f, 1.0f, 1.0f, 1.0f);
+            }
+//            float[][] result3 = Util.line_simplification(result2, 0.05f);
+//            for (int i = 0; i < result3.length; i++) {
+//                lineDrawer.draw(result3[i][0], result3[i][1], result3[(i + 1) % result3.length][0], result3[(i + 1) % result3.length][1], 1.0f, 1.0f, 1.0f, 1.0f);
+//            }
         }
+//        float[][] result = Util.marching_squares_single(grid, 0.05f);
+//        for (int i = 0; i < result.length; i++) {
+//            lineDrawer.draw(result[i][0], result[i][1], result[(i + 1) % result.length][0], result[(i + 1) % result.length][1], 1.0f, 1.0f, 1.0f, 1.0f);
+//        }
         glfwSwapBuffers(window.id());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }

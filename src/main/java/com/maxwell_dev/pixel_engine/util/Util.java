@@ -1,9 +1,7 @@
 package com.maxwell_dev.pixel_engine.util;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.IntFunction;
 
 public class Util {
     public static float[][] line_simplification(float[][] vertices_in, float maxHeight) {
@@ -62,36 +60,37 @@ public class Util {
         return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
-    public static <T> Set<T[][]> split(T[][] grid, T[][] emptyGridForCopy) {
+    public static <T> Set<T[][]> split(T[][] grid, IntFunction<T[][]> generator, IntFunction<T[]> rowGenerator) {
         Set<T[][]> result = new HashSet<>();
         Set<T[][]> temp = new HashSet<>();
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
                 if (grid[i][j] != null) {
-                    if(result.isEmpty()){
-                        T[][] newTarget = Arrays.copyOf(emptyGridForCopy, emptyGridForCopy.length);
+                    temp.clear();
+                    if (result.isEmpty()) {
+                        T[][] newTarget = generator.apply(grid.length);
+                        for(int k = 0; k < newTarget.length; k++) {
+                            newTarget[k] = rowGenerator.apply(grid[i].length);
+                        }
                         add(newTarget, grid[i][j], i, j);
                         result.add(newTarget);
                         continue;
                     }
-                    for(T[][] target : result) {
+                    for (T[][] target : result) {
                         if (hasNearby(target, i, j)) {
                             temp.add(target);
                         }
                     }
-                    if(temp.isEmpty()) {
-                        T[][] newTarget = Arrays.copyOf(emptyGridForCopy, emptyGridForCopy.length);
-                        add(newTarget, grid[i][j], i, j);
-                        result.add(newTarget);
-                    }else {
-                        List<T[][]> tempList = temp.stream().toList();
-                        T[][] first = tempList.get(0);
-                        add(first, grid[i][j], i, j);
-                        for (int k = 1; k < tempList.size(); k++) {
-                            combine(first, tempList.get(k));
-                            result.remove(tempList.get(k));
-                        }
+                    T[][] newTarget = generator.apply(grid.length);
+                    for(int k = 0; k < newTarget.length; k++) {
+                        newTarget[k] = rowGenerator.apply(grid[i].length);
                     }
+                    add(newTarget, grid[i][j], i, j);
+                    for (T[][] target : temp) {
+                        result.remove(target);
+                        combine(newTarget, target);
+                    }
+                    result.add(newTarget);
                 }
             }
         }
@@ -99,20 +98,7 @@ public class Util {
     }
 
     private static <T> boolean hasNearby(T[][] target, int x, int y) {
-        boolean result = false;
-        if (x > 0) {
-            result = result || target[x - 1][y] != null;
-        }
-        if (x < target.length - 1) {
-            result = result || target[x + 1][y] != null;
-        }
-        if (y > 0) {
-            result = result || target[x][y - 1] != null;
-        }
-        if (y < target[x].length - 1) {
-            result = result || target[x][y + 1] != null;
-        }
-        return result;
+        return (x > 0 && target[x - 1][y] != null) || (y > 0 && target[x][y - 1] != null) || (x < target.length - 1 && target[x + 1][y] != null) || (y < target[x].length - 1 && target[x][y + 1] != null);
     }
 
     private static <T> void add(T[][] target, T addition, int x, int y) {
@@ -122,55 +108,213 @@ public class Util {
     private static <T> void combine(T[][] target, T[][] addition) {
         for(int i = 0; i < target.length; i++) {
             for(int j = 0; j < target[i].length; j++) {
-                target[i][j] = addition[i][j] == null ? target[i][j] : addition[i][j];
+                target[i][j] = target[i][j] != null ? target[i][j] : addition[i][j];
             }
         }
     }
 
-    public static <T> float[][][] marching_squares(T[][] grid, float pixel_size) {
-        Set<T[][]> split = split(grid, grid);
-        float[][][] result = new float[split.size()][][];
-        int i = 0;
+    public static <T> Set<float[][]> marching_squares(T[][] grid, float pixel_size, IntFunction<T[][]> generator, IntFunction<T[]> rowGenerator) {
+        Set<T[][]> split = split(grid, generator, rowGenerator);
+        Set<float[][]> result = new HashSet<>();
         for(T[][] target : split) {
-            result[i] = marching_squares_single(target, pixel_size);
-            i++;
+            result.add(marching_squares_single(target, pixel_size));
         }
         return result;
     }
 
     public static <T> float[][] marching_squares_single(T[][] grid, float pixel_size) {
-        float[][] result = new float[grid.length * grid[0].length * 4][2];
-        int index = 0;
-        for(int i = 0; i < grid.length; i++) {
-            for(int j = 0; j < grid[i].length; j++) {
-                if(grid[i][j] != null) {
-                    float x = i * pixel_size;
-                    float y = j * pixel_size;
-                    float x1 = x + pixel_size;
-                    float y1 = y + pixel_size;
-                    if(i > 0 && grid[i - 1][j] == null) {
-                        result[index] = new float[]{x, y};
-                        result[index + 1] = new float[]{x, y1};
-                        index += 2;
-                    }
-                    if(i < grid.length - 1 && grid[i + 1][j] == null) {
-                        result[index] = new float[]{x1, y};
-                        result[index + 1] = new float[]{x1, y1};
-                        index += 2;
-                    }
-                    if(j > 0 && grid[i][j - 1] == null) {
-                        result[index] = new float[]{x, y};
-                        result[index + 1] = new float[]{x1, y};
-                        index += 2;
-                    }
-                    if(j < grid[i].length - 1 && grid[i][j + 1] == null) {
-                        result[index] = new float[]{x, y1};
-                        result[index + 1] = new float[]{x1, y1};
-                        index += 2;
-                    }
+        List<float[]> result = new LinkedList<>();
+        List<int[]> resultInInt = new LinkedList<>();
+        int[] dir = new int[]{0,1};
+        int startX = 0;
+        int startY = 0;
+        int currentX = 0;
+        int currentY = 0;
+        boolean empty = true;
+        a: for(int i = 0; i < grid.length; i++){
+            for(int j = 0; j < grid[i].length; j++){
+                if(grid[i][j] != null){
+                    startX = i;
+                    startY = j;
+                    currentX = i;
+                    currentY = j;
+                    empty = false;
+                    break a;
                 }
             }
         }
-        return Arrays.copyOf(result, index);
+        if(empty){
+            return new float[0][0];
+        }
+        do{
+            currentY += dir[1];
+            currentX += dir[0];
+            resultInInt.add(new int[]{currentX, currentY});
+            dirExpect(grid, currentX, currentY, dir);
+        }while(currentY != startY || currentX != startX);
+        for(int[] pos : resultInInt){
+            result.add(new float[]{pos[0] * pixel_size, pos[1] * pixel_size});
+        }
+        return result.toArray(new float[0][0]);
+    }
+
+    private static void left(int[] dir){
+        int temp = dir[0];
+        dir[0] = -dir[1];
+        dir[1] = temp;
+    }
+
+    private static void right(int[] dir){
+        int temp = dir[0];
+        dir[0] = dir[1];
+        dir[1] = -temp;
+    }
+
+    private static <T> boolean lb(T[][] grid, int x, int y, int[] dir) {
+        try {
+            return x > 0 && y > 0 && grid[x - 1][y - 1] != null;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
+    private static <T> boolean rb(T[][] grid, int x, int y, int[] dir) {
+        try{
+            return x < grid.length && y > 0 && grid[x][y - 1] != null;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
+    private static <T> boolean rt(T[][] grid, int x, int y, int[] dir) {
+        try{
+            return x < grid.length && y < grid[x].length && grid[x][y] != null;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
+    private static <T> boolean lt(T[][] grid, int x, int y, int[] dir) {
+        try{
+            return x > 0 && y < grid[x-1].length && grid[x - 1][y] != null;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
+    private static final int patternNone = 0;
+    private static final int patternAll = 1;
+    private static final int patternLeft = 2;
+    private static final int patternRight = 3;
+    private static final int patternTop = 4;
+    private static final int patternBottom = 5;
+    private static final int patternTopLeft = 6;
+    private static final int patternTopRight = 7;
+    private static final int patternBottomRight = 8;
+    private static final int patternBottomLeft = 9;
+    private static final int patternNoTopLeft = 10;
+    private static final int patternNoTopRight = 11;
+    private static final int patternNoBottomRight = 12;
+    private static final int patternNoBottomLeft = 13;
+
+    private static<T> void dirExpect(T[][] grid, int x, int y, int[] dir) {
+        int pattern = 0;
+        if(lb(grid, x, y, dir) && rb(grid, x, y, dir) && rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
+            pattern = patternAll;
+        }
+        if(lb(grid, x, y, dir) && rb(grid, x, y, dir) && rt(grid, x, y, dir) && !lt(grid, x, y, dir)) {
+            pattern = patternNoTopLeft;
+        }
+        if(lb(grid, x, y, dir) && rb(grid, x, y, dir) && !rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
+            pattern = patternNoTopRight;
+        }
+        if(lb(grid, x, y, dir) && !rb(grid, x, y, dir) && rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
+            pattern = patternNoBottomRight;
+        }
+        if(!lb(grid, x, y, dir) && rb(grid, x, y, dir) && rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
+            pattern = patternNoBottomLeft;
+        }
+        if(!lb(grid, x, y, dir) && !rb(grid, x, y, dir) && rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
+            pattern = patternTop;
+        }
+        if(!lb(grid, x, y, dir) && rb(grid, x, y, dir) && rt(grid, x, y, dir) && !lt(grid, x, y, dir)) {
+            pattern = patternRight;
+        }
+        if(lb(grid, x, y, dir) && rb(grid, x, y, dir) && !rt(grid, x, y, dir) && !lt(grid, x, y, dir)) {
+            pattern = patternBottom;
+        }
+        if(lb(grid, x, y, dir) && !rb(grid, x, y, dir) && !rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
+            pattern = patternLeft;
+        }
+        if(!lb(grid, x, y, dir) && !rb(grid, x, y, dir) && !rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
+            pattern = patternTopLeft;
+        }
+        if(!lb(grid, x, y, dir) && !rb(grid, x, y, dir) && rt(grid, x, y, dir) && !lt(grid, x, y, dir)) {
+            pattern = patternTopRight;
+        }
+        if(!lb(grid, x, y, dir) && rb(grid, x, y, dir) && !rt(grid, x, y, dir) && !lt(grid, x, y, dir)) {
+            pattern = patternBottomRight;
+        }
+        if(lb(grid, x, y, dir) && !rb(grid, x, y, dir) && !rt(grid, x, y, dir) && !lt(grid, x, y, dir)) {
+            pattern = patternBottomLeft;
+        }
+        switch (pattern) {
+            case patternAll:
+                dir[0] = 0;
+                dir[1] = 1;
+                break;
+            case patternLeft:
+                dir[0] = 0;
+                dir[1] = -1;
+                break;
+            case patternRight:
+                dir[0] = 0;
+                dir[1] = 1;
+                break;
+            case patternTop:
+                dir[0] = -1;
+                dir[1] = 0;
+                break;
+            case patternBottom:
+                dir[0] = 1;
+                dir[1] = 0;
+                break;
+            case patternTopLeft:
+                dir[0] = -1;
+                dir[1] = 0;
+                break;
+            case patternTopRight:
+                dir[0] = 0;
+                dir[1] = 1;
+                break;
+            case patternBottomRight:
+                dir[0] = 1;
+                dir[1] = 0;
+                break;
+            case patternBottomLeft:
+                dir[0] = 0;
+                dir[1] = -1;
+                break;
+            case patternNoTopLeft:
+                dir[0] = 0;
+                dir[1] = 1;
+                break;
+            case patternNoTopRight:
+                dir[0] = 1;
+                dir[1] = 0;
+                break;
+            case patternNoBottomRight:
+                dir[0] = 0;
+                dir[1] = -1;
+                break;
+            case patternNoBottomLeft:
+                dir[0] = -1;
+                dir[1] = 0;
+                break;
+            default:
+                dir[0] = 0;
+                dir[1] = 1;
+                break;
+        }
     }
 }

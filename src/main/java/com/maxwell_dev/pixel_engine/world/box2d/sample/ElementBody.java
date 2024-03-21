@@ -6,16 +6,12 @@ import org.jbox2d.dynamics.World;
 
 public class ElementBody<T extends Element> extends Body {
     T[][] grid;
-    public ElementBody(World world, T[][] body) {
-        super(createBody(world, body));
-    }
+    private ElementBody(World world, T[][] grid) {
 
-    public static org.jbox2d.dynamics.Body createBody(World world, Element[][] grid) {
-        return null;
     }
 
     @Override
-    public org.jbox2d.dynamics.Body getBox2dBody(World world) {
+    public org.jbox2d.dynamics.Body createBox2dBody(World world) {
         return null;
     }
 }
