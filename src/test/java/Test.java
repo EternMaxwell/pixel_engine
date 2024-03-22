@@ -34,14 +34,14 @@ public class Test extends Application {
     Object name = new Object();
 
     Object[][] grid = new Object[][]{
-            {null, null, null, null, name, null, null, null, null, null},
-            {null, null, null, null, name, name, name, null, null, null},
-            {null, null, null, null, name, null, name, null, null, null},
-            {null, null, null, null, null, null, name, null, null, null},
-            {null, null, null, null, null, null, name, null, null, null},
-            {null, null, null, null, null, null, name, null, null, null},
+            {name, name, null, null, null, null, null, null, null, null},
+            {name, null, name, name, name, name, name, null, null, null},
+            {name, null, null, null, null, null, name, null, null, null},
+            {name, name, name, name, name, name, name, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null},
             {null, null, null, null, null, null, name, name, name, name},
-            {null, null, null, null, null, null, null, null, name, null},
+            {null, null, null, null, null, null, name, null, name, null},
             {null, null, null, null, null, null, null, name, name, null},
             {null, null, null, null, null, null, null, name, null, null}
     };

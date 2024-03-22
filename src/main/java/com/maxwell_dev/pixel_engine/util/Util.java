@@ -158,13 +158,13 @@ public class Util {
         return result.toArray(new float[0][0]);
     }
 
-    private static void left(int[] dir){
+    private static void turnLeft(int[] dir){
         int temp = dir[0];
         dir[0] = -dir[1];
         dir[1] = temp;
     }
 
-    private static void right(int[] dir){
+    private static void turnRight(int[] dir){
         int temp = dir[0];
         dir[0] = dir[1];
         dir[1] = -temp;
@@ -202,119 +202,63 @@ public class Util {
         }
     }
 
-    private static final int patternNone = 0;
-    private static final int patternAll = 1;
-    private static final int patternLeft = 2;
-    private static final int patternRight = 3;
-    private static final int patternTop = 4;
-    private static final int patternBottom = 5;
-    private static final int patternTopLeft = 6;
-    private static final int patternTopRight = 7;
-    private static final int patternBottomRight = 8;
-    private static final int patternBottomLeft = 9;
-    private static final int patternNoTopLeft = 10;
-    private static final int patternNoTopRight = 11;
-    private static final int patternNoBottomRight = 12;
-    private static final int patternNoBottomLeft = 13;
+    private static boolean up(int[] dir){
+        return dir[0] == 0 && dir[1] == 1;
+    }
+
+    private static boolean down(int[] dir){
+        return dir[0] == 0 && dir[1] == -1;
+    }
+
+    private static boolean left(int[] dir){
+        return dir[0] == -1 && dir[1] == 0;
+    }
+
+    private static boolean right(int[] dir){
+        return dir[0] == 1 && dir[1] == 0;
+    }
 
     private static<T> void dirExpect(T[][] grid, int x, int y, int[] dir) {
-        int pattern = 0;
-        if(lb(grid, x, y, dir) && rb(grid, x, y, dir) && rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
-            pattern = patternAll;
-        }
-        if(lb(grid, x, y, dir) && rb(grid, x, y, dir) && rt(grid, x, y, dir) && !lt(grid, x, y, dir)) {
-            pattern = patternNoTopLeft;
-        }
-        if(lb(grid, x, y, dir) && rb(grid, x, y, dir) && !rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
-            pattern = patternNoTopRight;
-        }
-        if(lb(grid, x, y, dir) && !rb(grid, x, y, dir) && rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
-            pattern = patternNoBottomRight;
-        }
-        if(!lb(grid, x, y, dir) && rb(grid, x, y, dir) && rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
-            pattern = patternNoBottomLeft;
-        }
-        if(!lb(grid, x, y, dir) && !rb(grid, x, y, dir) && rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
-            pattern = patternTop;
-        }
-        if(!lb(grid, x, y, dir) && rb(grid, x, y, dir) && rt(grid, x, y, dir) && !lt(grid, x, y, dir)) {
-            pattern = patternRight;
-        }
-        if(lb(grid, x, y, dir) && rb(grid, x, y, dir) && !rt(grid, x, y, dir) && !lt(grid, x, y, dir)) {
-            pattern = patternBottom;
-        }
-        if(lb(grid, x, y, dir) && !rb(grid, x, y, dir) && !rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
-            pattern = patternLeft;
-        }
-        if(!lb(grid, x, y, dir) && !rb(grid, x, y, dir) && !rt(grid, x, y, dir) && lt(grid, x, y, dir)) {
-            pattern = patternTopLeft;
-        }
-        if(!lb(grid, x, y, dir) && !rb(grid, x, y, dir) && rt(grid, x, y, dir) && !lt(grid, x, y, dir)) {
-            pattern = patternTopRight;
-        }
-        if(!lb(grid, x, y, dir) && rb(grid, x, y, dir) && !rt(grid, x, y, dir) && !lt(grid, x, y, dir)) {
-            pattern = patternBottomRight;
-        }
-        if(lb(grid, x, y, dir) && !rb(grid, x, y, dir) && !rt(grid, x, y, dir) && !lt(grid, x, y, dir)) {
-            pattern = patternBottomLeft;
-        }
-        switch (pattern) {
-            case patternAll:
-                dir[0] = 0;
-                dir[1] = 1;
-                break;
-            case patternLeft:
-                dir[0] = 0;
-                dir[1] = -1;
-                break;
-            case patternRight:
-                dir[0] = 0;
-                dir[1] = 1;
-                break;
-            case patternTop:
-                dir[0] = -1;
-                dir[1] = 0;
-                break;
-            case patternBottom:
-                dir[0] = 1;
-                dir[1] = 0;
-                break;
-            case patternTopLeft:
-                dir[0] = -1;
-                dir[1] = 0;
-                break;
-            case patternTopRight:
-                dir[0] = 0;
-                dir[1] = 1;
-                break;
-            case patternBottomRight:
-                dir[0] = 1;
-                dir[1] = 0;
-                break;
-            case patternBottomLeft:
-                dir[0] = 0;
-                dir[1] = -1;
-                break;
-            case patternNoTopLeft:
-                dir[0] = 0;
-                dir[1] = 1;
-                break;
-            case patternNoTopRight:
-                dir[0] = 1;
-                dir[1] = 0;
-                break;
-            case patternNoBottomRight:
-                dir[0] = 0;
-                dir[1] = -1;
-                break;
-            case patternNoBottomLeft:
-                dir[0] = -1;
-                dir[1] = 0;
-                break;
-            default:
-                dir[0] = 0;
-                dir[1] = 1;
-                break;
+        if(up(dir)) {
+            if(rb(grid, x, y, dir)) {
+                if(rt(grid, x, y, dir)) {
+                    if(lt(grid, x, y, dir)) {
+                        turnLeft(dir);
+                    }
+                }else {
+                    turnRight(dir);
+                }
+            }
+        }else if(left(dir)) {
+            if (rt(grid, x, y, dir)) {
+                if (lt(grid, x, y, dir)) {
+                    if (lb(grid, x, y, dir)) {
+                        turnLeft(dir);
+                    }
+                } else {
+                    turnRight(dir);
+                }
+            }
+        }else if(down(dir)) {
+            if (lt(grid, x, y, dir)) {
+                if (lb(grid, x, y, dir)) {
+                    if (rb(grid, x, y, dir)) {
+                        turnLeft(dir);
+                    }
+                } else {
+                    turnRight(dir);
+                }
+            }
+        }else if(right(dir)) {
+            if (lb(grid, x, y, dir)) {
+                if (rb(grid, x, y, dir)) {
+                    if (rt(grid, x, y, dir)) {
+                        turnLeft(dir);
+                    }
+                } else {
+                    turnRight(dir);
+                }
+            }
         }
     }
 }
