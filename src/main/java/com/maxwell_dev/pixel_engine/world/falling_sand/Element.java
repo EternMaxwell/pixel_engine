@@ -14,5 +14,4 @@ public abstract class Element <T extends Grid<?,?,?>, ElementType, ElementID>{
     public abstract boolean heat(T grid, int x, int y, float heat);
     public abstract boolean damage(T grid, int x, int y, float damage);
     public abstract boolean contaminate(float[] color, float intensity);
-    public abstract boolean contaminate(Element<T,ElementType,ElementID> element, float intensity);
 }

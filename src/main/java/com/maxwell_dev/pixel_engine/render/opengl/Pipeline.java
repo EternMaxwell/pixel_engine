@@ -42,7 +42,7 @@ public abstract class Pipeline {
         vao = glGenVertexArrays();
         vbo = glGenBuffers();
         this.framebuffer = framebuffer;
-        glNamedBufferData(vbo, vboSize, GL_DYNAMIC_DRAW);
+        glNamedBufferStorage(vbo, vboSize, GL_DYNAMIC_STORAGE_BIT);
         init();
     }
 
@@ -71,7 +71,7 @@ public abstract class Pipeline {
         vao = glGenVertexArrays();
         vbo = glGenBuffers();
         this.framebuffer = null;
-        glNamedBufferData(vbo, vboSize, GL_DYNAMIC_DRAW);
+        glNamedBufferStorage(vbo, vboSize, GL_DYNAMIC_STORAGE_BIT);
         init();
     }
 
@@ -98,7 +98,7 @@ public abstract class Pipeline {
         vao = glGenVertexArrays();
         vbo = glGenBuffers();
         this.framebuffer = null;
-        glNamedBufferData(vbo, vboSize, GL_DYNAMIC_DRAW);
+        glNamedBufferStorage(vbo, vboSize, GL_DYNAMIC_STORAGE_BIT);
         init();
     }
 
