@@ -43,6 +43,10 @@ public class ElementBody<T extends Element> extends Body {
         return body;
     }
 
+    public T[][] getGrid() {
+        return grid;
+    }
+
     private float averageDensity() {
         float sum = 0;
         int count = 0;

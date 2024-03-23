@@ -25,7 +25,7 @@ public class ElementPlaceHolder extends Element{
 
     @Override
     public float[] color() {
-        return new float[4];
+        return new float[]{0,0,1,1};
     }
 
     @Override
