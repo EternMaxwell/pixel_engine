@@ -7,7 +7,11 @@ import org.jbox2d.dynamics.World;
 import java.util.Collection;
 
 public abstract class Grid <T extends Element<?,?,?>,V extends Renderer, ActionEnum>{
-    public abstract T elementsAt(int x, int y);
+    protected float pixelSize;
+    protected float gravity_y;
+    protected float gravity_x;
+
+    public abstract T elementAt(int x, int y);
     public abstract boolean validAt(int x, int y);
     public abstract boolean invalidAsWall();
     public abstract void setElementAt(int x, int y, T element);
@@ -17,4 +21,18 @@ public abstract class Grid <T extends Element<?,?,?>,V extends Renderer, ActionE
     public abstract void render(V renderer);
     public abstract int[] basePos();
     public abstract void action(double x, double y, ActionEnum action, double[] arguments);
+    public abstract float airDensity();
+    public float pixelSize() {
+        return pixelSize;
+    }
+
+    public float gravity_y() {
+        return gravity_y;
+    }
+
+    public float gravity_x() {
+        return gravity_x;
+    }
+
+    public abstract float tickTime();
 }

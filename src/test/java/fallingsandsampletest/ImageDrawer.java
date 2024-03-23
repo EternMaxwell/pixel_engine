@@ -1,3 +1,5 @@
+package fallingsandsampletest;
+
 import com.maxwell_dev.pixel_engine.render.opengl.*;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;

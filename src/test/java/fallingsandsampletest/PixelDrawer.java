@@ -1,3 +1,5 @@
+package fallingsandsampletest;
+
 import com.maxwell_dev.pixel_engine.render.opengl.Pipeline;
 import com.maxwell_dev.pixel_engine.render.opengl.Shader;
 import org.joml.Matrix4f;
@@ -7,13 +9,13 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL46.*;
 
-public class LineDrawer extends Pipeline {
+public class PixelDrawer extends Pipeline {
 
     private int uniformBuffer;
     private ByteBuffer vertices;
     private int count = 0;
 
-    public LineDrawer() {
+    public PixelDrawer() {
         super();
     }
 
@@ -23,8 +25,8 @@ public class LineDrawer extends Pipeline {
      */
     @Override
     public void init() {
-        Shader vertex = new Shader(Shader.Type.VERTEX, "src/test/resources/shaders/line/shader.vsh");
-        Shader fragment = new Shader(Shader.Type.FRAGMENT, "src/test/resources/shaders/line/shader.fsh");
+        Shader vertex = new Shader(Shader.Type.VERTEX, "src/test/resources/shaders/pixel/shader.vsh");
+        Shader fragment = new Shader(Shader.Type.FRAGMENT, "src/test/resources/shaders/pixel/shader.fsh");
         program.attach(vertex);
         program.attach(fragment);
         program.link();
@@ -58,24 +60,28 @@ public class LineDrawer extends Pipeline {
         MemoryUtil.memFree(buffer);
     }
 
-    public void draw(float x1, float y1, float x2, float y2, float r, float g, float b, float a){
-        if(vertices.remaining() < 6 * 4 * 2)
+    public void draw(float x, float y, float size, float r, float g, float b, float a){
+        if(vertices.remaining() < 6 * 4 * 6)
             flush();
-        vertex(x1, y1, r, g, b, a);
-        vertex(x2, y2, r, g, b, a);
-        count += 2;
+        vertex(x - size / 2, y - size / 2, r, g, b, a);
+        vertex(x + size / 2, y - size / 2, r, g, b, a);
+        vertex(x + size / 2, y + size / 2, r, g, b, a);
+        vertex(x + size / 2, y + size / 2, r, g, b, a);
+        vertex(x - size / 2, y + size / 2, r, g, b, a);
+        vertex(x - size / 2, y - size / 2, r, g, b, a);
     }
 
-    private void vertex(float x, float y, float r, float g, float b, float a){
+    public void vertex(float x, float y, float r, float g, float b, float a){
         vertices.putFloat(x).putFloat(y).putFloat(r).putFloat(g).putFloat(b).putFloat(a);
+        count += 1;
     }
 
     public void flush(){
         vertices.flip();
         use();
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        glNamedBufferSubData(vbo, 0, vertices);
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer);
-        glDrawArrays(GL_LINES, 0, count);
+        glDrawArrays(GL_TRIANGLES, 0, count);
         vertices.clear();
         count = 0;
     }

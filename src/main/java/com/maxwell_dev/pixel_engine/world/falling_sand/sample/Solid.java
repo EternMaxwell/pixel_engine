@@ -15,7 +15,7 @@ public abstract class Solid<ElementID> extends Element<ElementID>{
      * @return false.
      */
     @Override
-    public boolean step(Grid<?,?,ElementID> grid, int x, int y, int tick){
+    public boolean step(Grid<?,?, ElementID> grid, int x, int y, int tick){
         return false;
     }
 
@@ -26,5 +26,10 @@ public abstract class Solid<ElementID> extends Element<ElementID>{
     @Override
     public boolean freeFall(){
         return false;
+    }
+
+    @Override
+    public void impulse(float x, float y, float pixel_size) {
+        //do nothing
     }
 }

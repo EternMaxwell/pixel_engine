@@ -44,6 +44,11 @@ public class ElementPlaceHolder extends Element{
     }
 
     @Override
+    public void impulse(float x, float y, float pixel_size) {
+
+    }
+
+    @Override
     public boolean contaminate(float[] color, float intensity) {
         return false;
     }
