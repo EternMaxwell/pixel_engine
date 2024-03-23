@@ -53,7 +53,7 @@ public class Test extends Application {
             int gridY = (int) ((1 + y) * 512);
             for(int i = -5; i <= 5; i++)
                 for(int j = -5; j <= 5; j++)
-                    grid.setElementAt(gridX + i, gridY + j, (Element<ElementID>) elements[index].newInstance());
+                    grid.set(gridX + i, gridY + j, (Element<ElementID>) elements[index].newInstance());
         }
         if(inputTool.scrollY() > 0)
             index = (index + 1) % elements.length;

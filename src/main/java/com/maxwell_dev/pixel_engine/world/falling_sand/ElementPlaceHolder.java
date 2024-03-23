@@ -24,6 +24,11 @@ public class ElementPlaceHolder extends Element{
     }
 
     @Override
+    public boolean randomTick(Grid grid, int x, int y, int tick, int intensity) {
+        return false;
+    }
+
+    @Override
     public float[] color() {
         return new float[]{0,0,1,1};
     }

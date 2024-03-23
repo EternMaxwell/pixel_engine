@@ -6,7 +6,7 @@ import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Solid;
 
 public class Stone extends Solid<ElementID> {
 
-public Stone() {
+    public Stone() {
         color = new float[]{0.5f, 0.5f, 0.5f, 1f};
     }
 
@@ -23,6 +23,11 @@ public Stone() {
     @Override
     public ElementID id() {
         return ElementID.STONE;
+    }
+
+    @Override
+    public boolean randomTick(Grid<?, ?, ElementID> grid, int x, int y, int tick, int intensity) {
+        return false;
     }
 
     @Override

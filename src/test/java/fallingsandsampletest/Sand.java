@@ -26,6 +26,11 @@ public class Sand extends Powder<ElementID> {
     }
 
     @Override
+    public boolean randomTick(Grid<?, ?, ElementID> grid, int x, int y, int tick, int intensity) {
+        return false;
+    }
+
+    @Override
     public float density() {
         return 3;
     }

@@ -13,7 +13,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         grid = new Element[1024][1024];
     }
     @Override
-    public Element<ElementID> elementAt(int x, int y) {
+    public Element<ElementID> get(int x, int y) {
         if(x < 0 || y < 0 || x >= grid.length || y >= grid[0].length){
             return null;
         }
@@ -21,7 +21,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
     }
 
     @Override
-    public boolean validAt(int x, int y) {
+    public boolean valid(int x, int y) {
         return true;
     }
 
@@ -31,7 +31,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
     }
 
     @Override
-    public void setElementAt(int x, int y, Element<ElementID> element) {
+    public void set(int x, int y, Element<ElementID> element) {
         if(x < 0 || y < 0 || x >= grid.length || y >= grid[0].length){
             return;
         }
@@ -55,8 +55,8 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
     @Override
     public double step() {
         long start = System.nanoTime();
-        for (int x = 0; x < grid.length; x++) {
-            for (int y = 0; y < grid[x].length; y++) {
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid[y].length; x++) {
                 if (grid[x][y] != null) {
                     grid[x][y].step(this, x, y, 0);
                 }
