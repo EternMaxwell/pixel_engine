@@ -35,11 +35,53 @@ public class ElementBody<T extends Element> extends Body {
         org.jbox2d.dynamics.Body body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 1.0f;
-        fixtureDef.friction = 0.3f;
-        fixtureDef.restitution = 0.5f;
+        fixtureDef.density = averageDensity();
+        fixtureDef.friction = averageFriction();
+        fixtureDef.restitution = averageRestitution();
         body.createFixture(fixtureDef);
         this.body = body;
         return body;
+    }
+
+    private float averageDensity() {
+        float sum = 0;
+        int count = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if(grid[i][j] != null) {
+                    sum += grid[i][j].density();
+                    count++;
+                }
+            }
+        }
+        return sum / count;
+    }
+
+    private float averageFriction() {
+        float sum = 0;
+        int count = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if(grid[i][j] != null && !Util.mesh.nearby_full_in_target_grid(grid, i, j)) {
+                    sum += grid[i][j].friction();
+                    count++;
+                }
+            }
+        }
+        return sum / count;
+    }
+
+    private float averageRestitution() {
+        float sum = 0;
+        int count = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if(grid[i][j] != null && !Util.mesh.nearby_full_in_target_grid(grid, i, j)) {
+                    sum += grid[i][j].restitution();
+                    count++;
+                }
+            }
+        }
+        return sum / count;
     }
 }

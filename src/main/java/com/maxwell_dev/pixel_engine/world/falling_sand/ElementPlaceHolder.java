@@ -5,12 +5,12 @@ public class ElementPlaceHolder extends Element{
 
     @Override
     public String name() {
-        return null;
+        return "element:placeholder";
     }
 
     @Override
     public Element newInstance() {
-        return null;
+        return PLACEHOLDER;
     }
 
     @Override
@@ -25,12 +25,22 @@ public class ElementPlaceHolder extends Element{
 
     @Override
     public float[] color() {
-        return new float[0];
+        return new float[4];
     }
 
     @Override
     public float density() {
-        return 0;
+        return 1;
+    }
+
+    @Override
+    public float friction() {
+        return 0.6f;
+    }
+
+    @Override
+    public float restitution() {
+        return 0.1f;
     }
 
     @Override

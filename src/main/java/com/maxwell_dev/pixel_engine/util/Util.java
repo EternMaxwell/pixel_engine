@@ -1,7 +1,5 @@
 package com.maxwell_dev.pixel_engine.util;
 
-import org.lwjgl.util.opus.OGGPacket;
-
 import java.util.*;
 import java.util.function.IntFunction;
 
@@ -81,7 +79,7 @@ public class Util {
                             continue;
                         }
                         for (T[][] target : result) {
-                            if (hasNearby(target, i, j)) {
+                            if (has_nearby_in_target_grid(target, i, j)) {
                                 temp.add(target);
                             }
                         }
@@ -118,7 +116,7 @@ public class Util {
                             continue;
                         }
                         for (T[][] target : result) {
-                            if (hasNearby(target, i, j) || hasDiagonal(target, i, j)) {
+                            if (has_nearby_in_target_grid(target, i, j) || has_diagonal_in_target_grid(target, i, j)) {
                                 temp.add(target);
                             }
                         }
@@ -191,12 +189,20 @@ public class Util {
             return result;
         }
 
-        private static <T> boolean hasNearby(T[][] target, int x, int y) {
+        public static <T> boolean has_nearby_in_target_grid(T[][] target, int x, int y) {
             return (x > 0 && target[x - 1][y] != null) || (y > 0 && target[x][y - 1] != null) || (x < target.length - 1 && target[x + 1][y] != null) || (y < target[x].length - 1 && target[x][y + 1] != null);
         }
 
-        private static <T> boolean hasDiagonal(T[][] target, int x, int y) {
+        public static <T> boolean nearby_full_in_target_grid(T[][] target, int x, int y) {
+            return (x > 0 && target[x - 1][y] != null) && (y > 0 && target[x][y - 1] != null) && (x < target.length - 1 && target[x + 1][y] != null) && (y < target[x].length - 1 && target[x][y + 1] != null);
+        }
+
+        public static <T> boolean has_diagonal_in_target_grid(T[][] target, int x, int y) {
             return (x > 0 && y > 0 && target[x - 1][y - 1] != null) || (x < target.length - 1 && y > 0 && target[x + 1][y - 1] != null) || (x < target.length - 1 && y < target[x].length - 1 && target[x + 1][y + 1] != null) || (x > 0 && y < target[x].length - 1 && target[x - 1][y + 1] != null);
+        }
+
+        public static <T> boolean diagonal_full_in_target_grid(T[][] target, int x, int y) {
+            return (x > 0 && y > 0 && target[x - 1][y - 1] != null) && (x < target.length - 1 && y > 0 && target[x + 1][y - 1] != null) && (x < target.length - 1 && y < target[x].length - 1 && target[x + 1][y + 1] != null) && (x > 0 && y < target[x].length - 1 && target[x - 1][y + 1] != null);
         }
 
         private static <T> void add(T[][] target, T addition, int x, int y) {
@@ -269,7 +275,7 @@ public class Util {
             dir[1] = -temp;
         }
 
-        private static <T> boolean lb(T[][] grid, int x, int y, int[] dir) {
+        public static <T> boolean has_bottom_left(T[][] grid, int x, int y, int[] dir) {
             try {
                 return x > 0 && y > 0 && grid[x - 1][y - 1] != null;
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -277,7 +283,7 @@ public class Util {
             }
         }
 
-        private static <T> boolean rb(T[][] grid, int x, int y, int[] dir) {
+        public static <T> boolean has_bottom_right(T[][] grid, int x, int y, int[] dir) {
             try {
                 return x < grid.length && y > 0 && grid[x][y - 1] != null;
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -285,7 +291,7 @@ public class Util {
             }
         }
 
-        private static <T> boolean rt(T[][] grid, int x, int y, int[] dir) {
+        public static <T> boolean has_top_right(T[][] grid, int x, int y, int[] dir) {
             try {
                 return x < grid.length && y < grid[x].length && grid[x][y] != null;
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -293,7 +299,7 @@ public class Util {
             }
         }
 
-        private static <T> boolean lt(T[][] grid, int x, int y, int[] dir) {
+        public static <T> boolean has_top_left(T[][] grid, int x, int y, int[] dir) {
             try {
                 return x > 0 && y < grid[x - 1].length && grid[x - 1][y] != null;
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -319,9 +325,9 @@ public class Util {
 
         private static <T> void dirExpect(T[][] grid, int x, int y, int[] dir) {
             if (up(dir)) {
-                if (rb(grid, x, y, dir)) {
-                    if (rt(grid, x, y, dir)) {
-                        if (lt(grid, x, y, dir)) {
+                if (has_bottom_right(grid, x, y, dir)) {
+                    if (has_top_right(grid, x, y, dir)) {
+                        if (has_top_left(grid, x, y, dir)) {
                             turnLeft(dir);
                         }
                     } else {
@@ -329,9 +335,9 @@ public class Util {
                     }
                 }
             } else if (left(dir)) {
-                if (rt(grid, x, y, dir)) {
-                    if (lt(grid, x, y, dir)) {
-                        if (lb(grid, x, y, dir)) {
+                if (has_top_right(grid, x, y, dir)) {
+                    if (has_top_left(grid, x, y, dir)) {
+                        if (has_bottom_left(grid, x, y, dir)) {
                             turnLeft(dir);
                         }
                     } else {
@@ -339,9 +345,9 @@ public class Util {
                     }
                 }
             } else if (down(dir)) {
-                if (lt(grid, x, y, dir)) {
-                    if (lb(grid, x, y, dir)) {
-                        if (rb(grid, x, y, dir)) {
+                if (has_top_left(grid, x, y, dir)) {
+                    if (has_bottom_left(grid, x, y, dir)) {
+                        if (has_bottom_right(grid, x, y, dir)) {
                             turnLeft(dir);
                         }
                     } else {
@@ -349,9 +355,9 @@ public class Util {
                     }
                 }
             } else if (right(dir)) {
-                if (lb(grid, x, y, dir)) {
-                    if (rb(grid, x, y, dir)) {
-                        if (rt(grid, x, y, dir)) {
+                if (has_bottom_left(grid, x, y, dir)) {
+                    if (has_bottom_right(grid, x, y, dir)) {
+                        if (has_top_right(grid, x, y, dir)) {
                             turnLeft(dir);
                         }
                     } else {

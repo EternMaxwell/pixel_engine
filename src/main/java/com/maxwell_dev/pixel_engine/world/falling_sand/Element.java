@@ -11,6 +11,8 @@ public abstract class Element <T extends Grid<?,?,?>, ElementType, ElementID>{
 
     //functions that may not be needed
     public abstract float density();
+    public abstract float friction();
+    public abstract float restitution();
     public abstract boolean heat(T grid, int x, int y, float heat);
     public abstract boolean damage(T grid, int x, int y, float damage);
     public abstract boolean contaminate(float[] color, float intensity);
