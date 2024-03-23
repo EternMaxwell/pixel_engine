@@ -65,7 +65,7 @@ public class Test extends Application {
         boundaryDef.type = BodyType.STATIC;
         Body boundary = world.createBody(boundaryDef);
         PolygonShape boundaryShape = new PolygonShape();
-        boundaryShape.setAsBox(20, 0.05f);
+        boundaryShape.setAsBox(20, 01f);
         boundary.createFixture(boundaryShape, 0.0f);
     }
 
@@ -73,7 +73,7 @@ public class Test extends Application {
         ElementBody<Element> elementBody;
         List<Vec2> vertices = new LinkedList<>();
         elementBody = new ElementBody<>(elementsGrid);
-        elementBody.createBox2dBody(world, x, y, 0, vertices);
+        elementBody.createBox2dBody(world, x, y, 0, vertices, 0.05f);
         bodyVertices.put(elementBody.body, vertices);
     }
 
@@ -112,7 +112,12 @@ public class Test extends Application {
                 Vec2 v2t = new Vec2();
                 Transform.mulToOut(transform, v1, v1t);
                 Transform.mulToOut(transform, v2, v2t);
-                lineDrawer.draw(v1t.x, v1t.y, v2t.x, v2t.y, 1, 1, 1, 1);
+                if(body.isAwake()) {
+                    lineDrawer.draw(v1t.x, v1t.y, v2t.x, v2t.y, 1, 1, 1, 1);
+                }else {
+                    lineDrawer.draw(v1t.x, v1t.y, v2t.x, v2t.y, 1, 0, 0, 1);
+
+                }
             }
         }
         lineDrawer.flush();

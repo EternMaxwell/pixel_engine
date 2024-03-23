@@ -32,9 +32,8 @@ public class LineDrawer extends Pipeline {
         vertexAttribPointer(1, 4, GL_FLOAT, 6 * 4, 2 * 4);
         uniformBuffer = glGenBuffers();
         glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer);
-        glBufferData(GL_UNIFORM_BUFFER, 16 * 4 * 3, GL_DYNAMIC_DRAW);;
-        byte[] data = new byte[1024];
-        vertices = ByteBuffer.wrap(data);
+        glBufferData(GL_UNIFORM_BUFFER, 16 * 4 * 3, GL_DYNAMIC_DRAW);
+        vertices = MemoryUtil.memAlloc(1024);
         glNamedBufferData(vbo, 1024, GL_DYNAMIC_DRAW);
     }
 
@@ -74,7 +73,7 @@ public class LineDrawer extends Pipeline {
     public void flush(){
         vertices.flip();
         use();
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer);
         glDrawArrays(GL_LINES, 0, count);
         vertices.clear();

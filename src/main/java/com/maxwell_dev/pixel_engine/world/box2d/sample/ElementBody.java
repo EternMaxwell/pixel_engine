@@ -17,13 +17,13 @@ public class ElementBody<T extends Element> extends Body {
     }
 
     @Override
-    public org.jbox2d.dynamics.Body createBox2dBody(World world, float x, float y, float angle, Collection<Vec2> verticesRetriever) {
+    public org.jbox2d.dynamics.Body createBox2dBody(World world, float x, float y, float angle, Collection<Vec2> verticesRetriever, float pixelSize) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.allowSleep = true;
         bodyDef.type = BodyType.DYNAMIC;
         PolygonShape shape = new PolygonShape();
-        float[][] outline = Util.mesh.marching_squares_outline_single(grid, 0.1f);
-        outline = Util.mesh.line_simplification(outline, 0.08f);
+        float[][] outline = Util.mesh.marching_squares_outline_single(grid, pixelSize);
+        outline = Util.mesh.line_simplification(outline, pixelSize);
         Vec2[] vertices = new Vec2[outline.length];
         for (int i = 0; i < outline.length; i++) {
             vertices[i] = new Vec2(outline[i][0], outline[i][1]);
