@@ -48,7 +48,7 @@ public class Test extends Application {
         });
         render = new Render();
         grid = new FallingGrid();
-        frameBuffer = new FrameBuffer();
+        frameBuffer = new FrameBuffer(512, 512);
         texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
         glTextureStorage2D(texture, 1, GL_RGBA8, 512, 512);
@@ -115,13 +115,15 @@ public class Test extends Application {
         pixelLightDrawer.setView(new Matrix4f().identity());
         pixelLightDrawer.setModel(new Matrix4f().identity());
 
+        glViewport(0, 0, 512, 512);
         pixelLightDrawer.drawLightMap(0,0,0,0,1,1,1,1,1);
         long fence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
         glClientWaitSync(fence, GL_SYNC_FLUSH_COMMANDS_BIT, 1_000_000_000);
         glDeleteSync(fence);
-        frameBuffer.bind();
-        frameBuffer.readBuffer(0);
+        frameBuffer.bindAsRead();
         glCopyTextureSubImage2D(texture2, 0, 0, 0, 0, 0, 512, 512);
+
+        frameBuffer.unbind(window);
         render.imageDrawer.draw(lightMap);
 //        frameBuffer.bindAsRead();
 //        glReadBuffer(GL_FRONT_RIGHT);
@@ -131,6 +133,7 @@ public class Test extends Application {
         render.end();
         glfwSwapBuffers(window.id());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        frameBuffer.clear(window);
     }
 
     @Override

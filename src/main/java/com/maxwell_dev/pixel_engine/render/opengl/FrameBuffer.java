@@ -10,15 +10,20 @@ public class FrameBuffer {
     private final Map<Integer,Integer> colorAttachments;
     private int depthAttachment;
     private boolean hasDepth;
+    private final int width;
+    private final int height;
 
-    public FrameBuffer() {
+    public FrameBuffer(int width, int height) {
         id = glCreateFramebuffers();
         colorAttachments = new HashMap<>();
         hasDepth = false;
+        this.width = width;
+        this.height = height;
     }
 
     public void bind() {
         glBindFramebuffer(GL_FRAMEBUFFER, id);
+        glViewport(0, 0, width, height);
     }
 
     public void bindAsRead() {
@@ -27,10 +32,12 @@ public class FrameBuffer {
 
     public void bindAsDraw() {
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, id);
+        glViewport(0, 0, width, height);
     }
 
-    public void unbind() {
+    public void unbind(Window window) {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, window.width(), window.height());
     }
 
     public int attachColor(int attachment, int texture) {
@@ -89,9 +96,17 @@ public class FrameBuffer {
         glDeleteFramebuffers(id);
     }
 
-    public void clear(){
+    public void clear(Window window){
         bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        unbind();
+        unbind(window);
+    }
+
+    public int width() {
+        return width;
+    }
+
+    public int height() {
+        return height;
     }
 }
