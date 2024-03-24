@@ -42,6 +42,5 @@ public class ImageDrawer extends Pipeline {
     @Override
     public void dispose() {
         super.dispose();
-        MemoryUtil.memFree(vertices);
     }
 }
