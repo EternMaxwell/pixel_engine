@@ -1,6 +1,7 @@
 import com.maxwell_dev.pixel_engine.core.Application;
 import com.maxwell_dev.pixel_engine.core.InputTool;
 import com.maxwell_dev.pixel_engine.render.opengl.Window;
+import com.maxwell_dev.pixel_engine.render.opengl.sample.LineDrawer;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
 import fallingsandsampletest.*;
 import org.joml.Matrix4f;
@@ -12,7 +13,6 @@ import static org.lwjgl.opengl.GL46.*;
 public class Test extends Application {
     Window window;
     InputTool inputTool;
-    LineDrawer lineDrawer;
     Render render;
 
     FallingGrid grid;
@@ -31,7 +31,6 @@ public class Test extends Application {
         glfwMakeContextCurrent(window.id());
         GL.createCapabilities();
         inputTool = new InputTool(window);
-        lineDrawer = new LineDrawer();
         glfwSetWindowSizeCallback(window.id(), (window, width, height) -> {
             glViewport(0, 0, width, height);
             render();
@@ -84,7 +83,7 @@ public class Test extends Application {
     @Override
     public void destroy() {
         window.dispose();
-        lineDrawer.dispose();
+        render.destroy();
         glfwTerminate();
     }
 

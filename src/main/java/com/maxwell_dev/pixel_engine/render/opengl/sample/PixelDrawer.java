@@ -1,4 +1,4 @@
-package fallingsandsampletest;
+package com.maxwell_dev.pixel_engine.render.opengl.sample;
 
 import com.maxwell_dev.pixel_engine.render.opengl.Pipeline;
 import com.maxwell_dev.pixel_engine.render.opengl.Shader;
@@ -25,8 +25,8 @@ public class PixelDrawer extends Pipeline {
      */
     @Override
     public void init() {
-        Shader vertex = new Shader(Shader.Type.VERTEX, "src/test/resources/shaders/pixel/shader.vsh");
-        Shader fragment = new Shader(Shader.Type.FRAGMENT, "src/test/resources/shaders/pixel/shader.fsh");
+        Shader vertex = new Shader(Shader.Type.VERTEX, "src/main/resources/shaders/pixel/shader.vsh");
+        Shader fragment = new Shader(Shader.Type.FRAGMENT, "src/main/resources/shaders/pixel/shader.fsh");
         program.attach(vertex);
         program.attach(fragment);
         program.link();

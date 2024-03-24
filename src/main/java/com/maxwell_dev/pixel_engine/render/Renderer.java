@@ -6,4 +6,6 @@ public abstract class Renderer {
     public abstract void begin();
 
     public abstract void end();
+
+    public abstract void destroy();
 }

@@ -1,9 +1,12 @@
 package com.maxwell_dev.pixel_engine.util;
 
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.IntFunction;
 
 public class Util {
+
+    public final static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     public static class mesh {
         public static float[][] line_simplification(float[][] vertices_in, float maxHeight) {

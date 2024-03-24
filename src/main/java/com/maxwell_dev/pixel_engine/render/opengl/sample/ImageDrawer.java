@@ -1,4 +1,4 @@
-package fallingsandsampletest;
+package com.maxwell_dev.pixel_engine.render.opengl.sample;
 
 import com.maxwell_dev.pixel_engine.render.opengl.*;
 import org.lwjgl.system.MemoryStack;
@@ -14,8 +14,8 @@ public class ImageDrawer extends Pipeline {
     ByteBuffer vertices;
     @Override
     public void init() {
-        Shader vertex = new Shader(Shader.Type.VERTEX, "src/test/resources/shaders/image/shader.vsh");
-        Shader fragment = new Shader(Shader.Type.FRAGMENT, "src/test/resources/shaders/image/shader.fsh");
+        Shader vertex = new Shader(Shader.Type.VERTEX, "src/main/resources/shaders/image/shader.vsh");
+        Shader fragment = new Shader(Shader.Type.FRAGMENT, "src/main/resources/shaders/image/shader.fsh");
         program.attach(vertex);
         program.attach(fragment);
         program.link();
