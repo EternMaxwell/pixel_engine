@@ -6,6 +6,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
 
     Element<ElementID>[][] grid;
     int tick = 0;
+    boolean inverse = false;
 
     public FallingGrid() {
         gravity_x = 0;
@@ -57,12 +58,21 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
     public double step() {
         long start = System.nanoTime();
         for (int y = 0; y < grid.length; y++) {
-            for (int x = 0; x < grid[y].length; x++) {
-                if (grid[x][y] != null) {
-                    grid[x][y].step(this, x, y, tick);
+            if(inverse){
+                for (int x = 0; x < grid[y].length; x++) {
+                    if (grid[x][y] != null) {
+                        grid[x][y].step(this, x, y, tick);
+                    }
+                }
+            }else {
+                for (int x = grid[y].length - 1; x >= 0; x--) {
+                    if (grid[x][y] != null) {
+                        grid[x][y].step(this, x, y, tick);
+                    }
                 }
             }
         }
+        inverse = !inverse;
         tick++;
         return (System.nanoTime() - start) / 1e6;
     }
