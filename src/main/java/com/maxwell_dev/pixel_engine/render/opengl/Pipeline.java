@@ -29,6 +29,33 @@ public abstract class Pipeline {
      */
     public final Program program;
 
+    /**
+     * create a new pipeline
+     *
+     * @param framebuffer the framebuffer, null for default
+     * @param vboSize     the size of the vertex buffer object
+     */
+    public Pipeline(FrameBuffer framebuffer, long vboSize) {
+        this.framebuffer = framebuffer;
+        program = new Program();
+        vao = glGenVertexArrays();
+        vbo = glGenBuffers();
+        glNamedBufferStorage(vbo, vboSize, GL_DYNAMIC_STORAGE_BIT);
+        init();
+    }
+
+    /**
+     * create a new pipeline
+     *
+     * @param framebuffer the framebuffer, null for default
+     */
+    public Pipeline(FrameBuffer framebuffer) {
+        this.framebuffer = framebuffer;
+        program = new Program();
+        vao = glGenVertexArrays();
+        vbo = glGenBuffers();
+        init();
+    }
 
     /**
      * create a new pipeline

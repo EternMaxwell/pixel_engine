@@ -33,9 +33,11 @@ public class FrameBuffer {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    public void attachColor(int attachment, int texture) {
+    public int attachColor(int attachment, int texture) {
+        int old = colorAttachments.get(attachment);
         colorAttachments.put(attachment, texture);
         glNamedFramebufferTexture(id, GL_COLOR_ATTACHMENT0 + attachment, texture, 0);
+        return old;
     }
 
     public void attachDepth(int texture) {
