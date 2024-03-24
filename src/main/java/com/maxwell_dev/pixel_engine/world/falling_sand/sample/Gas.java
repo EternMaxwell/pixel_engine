@@ -16,6 +16,9 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
     }
 
     public boolean step(Grid<?,?,ElementID> grid, int x, int y, int tick) {
+        if (lastStepTick == tick)
+            return false;
+
 //        grid.set(x, y, this);
 
         boolean moved = false;
@@ -25,9 +28,9 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
         if (above == null && (grid.valid(x, y + 1) || !grid.invalidAsWall())) {
             sinkingProcess += 1 - density() / grid.airDensity();
             sinkingTried = true;
+            lastStepTick = tick;
             if (sinkingProcess >= 1) {
                 sinkingProcess = 0;
-                lastStepTick = tick;
                 moved = true;
                 grid.set(x, y + 1, this);
                 grid.set(x, y, above);
@@ -38,10 +41,10 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
             if (above.density() > density()) {
                 sinkingProcess += (above.density() - density()) / above.density();
                 sinkingTried = true;
+                lastStepTick = tick;
                 if (sinkingProcess >= 1) {
                     sinkingProcess = 0;
                     moved = true;
-                    lastStepTick = tick;
                     grid.set(x, y + 1, this);
                     grid.set(x, y, above);
                 } else {
@@ -57,10 +60,10 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
         if (diagonal == null && (grid.valid(x + dir, y + 1) || !grid.invalidAsWall())) {
             sinkingProcess += 1 - density() / grid.airDensity();
             sinkingTried = true;
+            lastStepTick = tick;
             if (sinkingProcess >= 1) {
                 sinkingProcess = 0;
                 moved = true;
-                lastStepTick = tick;
                 grid.set(x + dir, y + 1, this);
                 grid.set(x, y, null);
             } else {
@@ -71,10 +74,10 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
             if (diagonal == null && (grid.valid(x - dir, y + 1) || !grid.invalidAsWall())) {
                 sinkingProcess += 1 - density() / grid.airDensity();
                 sinkingTried = true;
+                lastStepTick = tick;
                 if (sinkingProcess >= 1) {
                     sinkingProcess = 0;
                     moved = true;
-                    lastStepTick = tick;
                     grid.set(x - dir, y + 1, this);
                     grid.set(x, y, null);
                 } else {
@@ -105,10 +108,10 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                     if (diagonal.density() > density()) {
                         sinkingProcess += (diagonal.density() - density()) / diagonal.density();
                         sinkingTried = true;
+                        lastStepTick = tick;
                         if (sinkingProcess >= 1) {
                             sinkingProcess = 0;
                             moved = true;
-                            lastStepTick = tick;
                             grid.set(x - dir, y + 1, this);
                             grid.set(x, y, diagonal);
                         } else {
@@ -124,10 +127,10 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
             if (side == null && (grid.valid(x + dir, y) || !grid.invalidAsWall())) {
                 sinkingProcess += 1 - density() / 2 * grid.airDensity();
                 sinkingTried = true;
+                lastStepTick = tick;
                 if (sinkingProcess >= 1) {
                     sinkingProcess = 0;
                     moved = true;
-                    lastStepTick = tick;
                     grid.set(x + dir, y, this);
                     grid.set(x, y, null);
                 }
@@ -136,10 +139,10 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                 if (side == null && (grid.valid(x - dir, y) || !grid.invalidAsWall())) {
                     sinkingProcess += 1 - density() / 2 * grid.airDensity();
                     sinkingTried = true;
+                    lastStepTick = tick;
                     if (sinkingProcess >= 1) {
                         sinkingProcess = 0;
                         moved = true;
-                        lastStepTick = tick;
                         grid.set(x - dir, y, this);
                         grid.set(x, y, null);
                     }
@@ -152,10 +155,10 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                 if (side.density() > density()) {
                     sinkingProcess += 1 - density() / 2 * side.density();
                     sinkingTried = true;
+                    lastStepTick = tick;
                     if (sinkingProcess >= 1) {
                         sinkingProcess = 0;
                         moved = true;
-                        lastStepTick = tick;
                         grid.set(x + dir, y, this);
                         grid.set(x, y, side);
                     }
@@ -166,10 +169,10 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                     if (side.density() > density()) {
                         sinkingProcess += 1 - density() / 2 * side.density();
                         sinkingTried = true;
+                        lastStepTick = tick;
                         if (sinkingProcess >= 1) {
                             sinkingProcess = 0;
                             moved = true;
-                            lastStepTick = tick;
                             grid.set(x - dir, y, this);
                             grid.set(x, y, side);
                         }

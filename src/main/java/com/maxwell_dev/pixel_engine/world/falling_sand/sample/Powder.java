@@ -17,6 +17,9 @@ public abstract class Powder<ElementID> extends Element<ElementID>{
 
     @Override
     public boolean step(Grid<?, ?, ElementID> grid, int x, int y, int tick) {
+        if(lastTick == tick)
+            return false;
+
         boolean moved = false;
 
         int distance = velocity > 1 ? (int) velocity : 1;

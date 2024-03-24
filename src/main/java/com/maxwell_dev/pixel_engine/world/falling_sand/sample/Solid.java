@@ -16,6 +16,9 @@ public abstract class Solid<ElementID> extends Element<ElementID>{
      */
     @Override
     public boolean step(Grid<?,?, ElementID> grid, int x, int y, int tick){
+        if(lastTick == tick)
+            return false;
+        lastTick = tick;
         return false;
     }
 
