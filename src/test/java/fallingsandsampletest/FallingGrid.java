@@ -5,6 +5,7 @@ import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
 public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid<Render, Actions, ElementID>{
 
     Element<ElementID>[][] grid;
+    int tick = 0;
 
     public FallingGrid() {
         gravity_x = 0;
@@ -58,10 +59,11 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid[y].length; x++) {
                 if (grid[x][y] != null) {
-                    grid[x][y].step(this, x, y, 0);
+                    grid[x][y].step(this, x, y, tick);
                 }
             }
         }
+        tick++;
         return (System.nanoTime() - start) / 1e6;
     }
 
