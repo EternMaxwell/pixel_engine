@@ -37,7 +37,6 @@ public class ImageDrawer extends Pipeline {
         image.bind(0);
         use();
         glDrawArrays(GL_TRIANGLES, 0, 6);
-        vertices.clear();
     }
 
     @Override

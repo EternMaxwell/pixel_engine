@@ -201,7 +201,7 @@ public abstract class Pipeline {
         if (framebuffer == null) {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         } else {
-            framebuffer.bindAsDraw();
+            framebuffer.bind();
         }
         program.use();
     }

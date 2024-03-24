@@ -12,7 +12,7 @@ public class FrameBuffer {
     private boolean hasDepth;
 
     public FrameBuffer() {
-        id = glGenFramebuffers();
+        id = glCreateFramebuffers();
         colorAttachments = new HashMap<>();
         hasDepth = false;
     }
@@ -34,7 +34,7 @@ public class FrameBuffer {
     }
 
     public int attachColor(int attachment, int texture) {
-        int old = colorAttachments.get(attachment);
+        int old = colorAttachments.get(attachment) == null ? 0 : colorAttachments.get(attachment);
         colorAttachments.put(attachment, texture);
         glNamedFramebufferTexture(id, GL_COLOR_ATTACHMENT0 + attachment, texture, 0);
         return old;
@@ -66,6 +66,10 @@ public class FrameBuffer {
         glNamedFramebufferDrawBuffers(id, attachments);
     }
 
+    public void drawBuffer(int attachment) {
+        glNamedFramebufferDrawBuffer(id, GL_COLOR_ATTACHMENT0 + attachment);
+    }
+
     public void check() {
         int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if(status != GL_FRAMEBUFFER_COMPLETE) {
@@ -73,7 +77,21 @@ public class FrameBuffer {
         }
     }
 
+    public void renderBuffer(int attachment, int buffer){
+        glNamedFramebufferRenderbuffer(id, attachment, GL_RENDERBUFFER, buffer);
+    }
+
+    public void readBuffer(int attachment){
+        glNamedFramebufferReadBuffer(id, GL_COLOR_ATTACHMENT0 + attachment);
+    }
+
     public void dispose() {
         glDeleteFramebuffers(id);
+    }
+
+    public void clear(){
+        bind();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        unbind();
     }
 }

@@ -1,7 +1,10 @@
 import com.maxwell_dev.pixel_engine.core.Application;
 import com.maxwell_dev.pixel_engine.core.InputTool;
+import com.maxwell_dev.pixel_engine.render.opengl.FrameBuffer;
+import com.maxwell_dev.pixel_engine.render.opengl.Image;
 import com.maxwell_dev.pixel_engine.render.opengl.Window;
 import com.maxwell_dev.pixel_engine.render.opengl.sample.LineDrawer;
+import com.maxwell_dev.pixel_engine.render.opengl.sample.PixelLightDrawer;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
 import fallingsandsampletest.*;
 import org.joml.Matrix4f;
@@ -20,6 +23,14 @@ public class Test extends Application {
     Element<ElementID>[] elements = new Element[]{new Sand(), new Stone()};
     int index = 0;
 
+    PixelLightDrawer pixelLightDrawer;
+    Image lightMap;
+    Image test;
+    FrameBuffer frameBuffer;
+
+    int texture;
+    int texture2;
+
     @Override
     public void init() {
         if(!glfwInit())
@@ -37,6 +48,32 @@ public class Test extends Application {
         });
         render = new Render();
         grid = new FallingGrid();
+        frameBuffer = new FrameBuffer();
+        texture = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTextureStorage2D(texture, 1, GL_RGBA8, 512, 512);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        texture2 = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texture2);
+        glTextureStorage2D(texture2, 1, GL_RGBA8, 512, 512);
+        lightMap = new Image(texture2);
+        lightMap.samplerParameteri(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        lightMap.samplerParameteri(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        lightMap.samplerParameteri(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        lightMap.samplerParameteri(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        frameBuffer.attachColor(0, texture);
+        frameBuffer.drawBuffer(0);
+//        int depthRenderBuffer = glGenRenderbuffers();
+//        glBindRenderbuffer(GL_RENDERBUFFER, depthRenderBuffer);
+//        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 512, 512);
+//        frameBuffer.renderBuffer(GL_DEPTH_ATTACHMENT, depthRenderBuffer);
+
+        frameBuffer.check();
+
+        test = new Image("src/test/resources/textures/test.jpg", 0);
+
+        pixelLightDrawer = new PixelLightDrawer(frameBuffer);
     }
 
     @Override
@@ -74,6 +111,22 @@ public class Test extends Application {
         render.pixelDrawer.setProjection(new Matrix4f().ortho(-(window.ratio() - 1) * 512, (window.ratio() + 1) * 512, 0, 1 * 1024f, -1, 1));
         render.pixelDrawer.setView(new Matrix4f().identity());
         render.pixelDrawer.setModel(new Matrix4f().identity());
+        pixelLightDrawer.setProjection(new Matrix4f().identity());
+        pixelLightDrawer.setView(new Matrix4f().identity());
+        pixelLightDrawer.setModel(new Matrix4f().identity());
+
+        pixelLightDrawer.drawLightMap(0,0,0,0,1,1,1,1,1);
+        long fence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+        glClientWaitSync(fence, GL_SYNC_FLUSH_COMMANDS_BIT, 1_000_000_000);
+        glDeleteSync(fence);
+        frameBuffer.bind();
+        frameBuffer.readBuffer(0);
+        glCopyTextureSubImage2D(texture2, 0, 0, 0, 0, 0, 512, 512);
+        render.imageDrawer.draw(lightMap);
+//        frameBuffer.bindAsRead();
+//        glReadBuffer(GL_FRONT_RIGHT);
+//        render.imageDrawer.draw(test);
+
         grid.render(render);
         render.end();
         glfwSwapBuffers(window.id());
@@ -84,6 +137,7 @@ public class Test extends Application {
     public void destroy() {
         window.dispose();
         render.destroy();
+        frameBuffer.dispose();
         glfwTerminate();
     }
 
