@@ -4,27 +4,45 @@ layout(location = 0) in vec4 in_color;
 layout(location = 1) in vec2 in_pos;
 layout(location = 2) in vec2 in_dir;
 layout(location = 3) in float in_intensity;
+layout(location = 4) in vec2 in_real_pos;
 
 layout(location = 0) out vec4 out_color;
 
 float size(float intensity){
-    return intensity;
+    return 2 * intensity;
 }
 
-float lightness(float distance, float intensity){
+float cal_lightness(float distance, float intensity){
     return intensity * pow(clamp((1.0 - distance / size(intensity)), 0.0, 1.0), 2);
 }
 
 layout(std430, binding = 0) buffer NormalMap{
     vec2 normal[64][64];
+    float air_fog[64][64];
+    bool if_air[64][64];
 } normal_map;
-
-layout(binding = 1) uniform float air_fog;
 
 void main()
 {
     float distance = length(in_pos);
-    float lightness = lightness(distance, in_intensity);
+    float lightness;
+    ivec2 index = ivec2(in_real_pos * 32 + 32);
+    index.x = clamp(index.x, 0, 63);
+    index.y = clamp(index.y, 0, 63);
+
+    vec2 normal = normal_map.normal[index.x][index.y];
+//    vec2 normal = normal1 / max(normal1, normal1);
+//    normal = normal1 / length(normal);
+    float air_fog = normal_map.air_fog[index.x][index.y];
+    bool if_air = normal_map.if_air[index.x][index.y];
+
+    float ref = -normalize(in_pos).x * normal.x - normalize(in_pos).y * normal.y;
+    ref = ref / 2 + 0.5f;
+    ref = clamp(ref, 0.0, 1.0);
+
+    lightness = air_fog;
+    lightness += if_air? 0: ref * (1 - air_fog);
+    lightness *= cal_lightness(distance, in_intensity);
 
     out_color = in_color * lightness;
 }

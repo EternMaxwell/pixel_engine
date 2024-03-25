@@ -12,6 +12,7 @@ layout (location = 0) out vec4 out_color;
 layout (location = 1) out vec2 out_pos;
 layout (location = 2) out vec2 out_dir;
 layout (location = 3) out float out_intensity;
+layout (location = 4) out vec2 out_real_pos;
 
 layout (binding = 0) uniform Uniform{
     mat4 projection;
@@ -20,7 +21,7 @@ layout (binding = 0) uniform Uniform{
 } uniforms;
 
 float size(float intensity){
-    return intensity;
+    return 2 * intensity;
 }
 
 void main()
@@ -38,6 +39,7 @@ void main()
     out_dir = dir;
     out_intensity = intensity;
     gl_Position = mvp * vec4(pos + out_pos, 0.0, 1.0);
+    out_real_pos = pos + out_pos;
     EmitVertex();
 
     out_color = color;
@@ -45,6 +47,7 @@ void main()
     out_dir = dir;
     out_intensity = intensity;
     gl_Position = mvp * vec4(pos + out_pos, 0.0, 1.0);
+    out_real_pos = pos + out_pos;
     EmitVertex();
 
     out_color = color;
@@ -52,6 +55,7 @@ void main()
     out_dir = dir;
     out_intensity = intensity;
     gl_Position = mvp * vec4(pos + out_pos, 0.0, 1.0);
+    out_real_pos = pos + out_pos;
     EmitVertex();
 
     out_color = color;
@@ -59,6 +63,7 @@ void main()
     out_dir = dir;
     out_intensity = intensity;
     gl_Position = mvp * vec4(pos + out_pos, 0.0, 1.0);
+    out_real_pos = pos + out_pos;
     EmitVertex();
 
     EndPrimitive();

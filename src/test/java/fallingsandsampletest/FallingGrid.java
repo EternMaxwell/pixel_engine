@@ -12,7 +12,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         gravity_x = 0;
         gravity_y = -100f;
         pixelSize = 1;
-        grid = new Element[1024][1024];
+        grid = new Element[64][64];
     }
     @Override
     public Element<ElementID> get(int x, int y) {
@@ -83,7 +83,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
             for (int y = 0; y < grid[x].length; y++) {
                 if (grid[x][y] != null) {
                     float[] color = grid[x][y].color();
-                    renderer.pixelDrawer.draw(x * pixelSize, y * pixelSize, pixelSize, color[0], color[1], color[2], color[3]);
+                    renderer.pixelDrawer.draw(x * pixelSize + pixelSize / 2, y * pixelSize + pixelSize / 2, pixelSize, color[0], color[1], color[2], color[3]);
                 }
             }
         }

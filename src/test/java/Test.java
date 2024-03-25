@@ -7,7 +7,11 @@ import com.maxwell_dev.pixel_engine.render.opengl.sample.PixelLightDrawer;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
 import fallingsandsampletest.*;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.ByteBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
@@ -24,8 +28,8 @@ public class Test extends Application {
 
     PixelLightDrawer pixelLightDrawer;
     Image lightMap;
-    Image test;
     FrameBuffer frameBuffer;
+    ByteBuffer buffer;
 
     int texture;
     int texture2;
@@ -70,9 +74,30 @@ public class Test extends Application {
 
         frameBuffer.check();
 
-        test = new Image("src/test/resources/textures/test.jpg", 0);
-
         pixelLightDrawer = new PixelLightDrawer(frameBuffer);
+
+        buffer = MemoryUtil.memAlloc(64 * 64 * 4 * 4);
+        for(int i = 0; i < 64 * 64; i++) {
+            int x = i / 64;
+            int y = i % 64;
+            buffer.putFloat((x / 32f) * (x / 32f));
+            buffer.putFloat((y / 32f) * (y / 32f));
+        }
+        for(int i = 0; i < 64 * 64; i++){
+            buffer.putFloat((float) Math.random() * 0.01f + 0.04f);
+        }
+        for(int i = 0; i < 64 * 64; i++){
+            int x = i % 64;
+            int y = i / 64;
+            if(x > 32 || y > 32){
+                buffer.putInt(1);
+                continue;
+            }
+            buffer.putInt(0);
+        }
+        buffer.flip();
+
+        pixelLightDrawer.setNormalMap(buffer);
     }
 
     @Override
@@ -84,8 +109,8 @@ public class Test extends Application {
         if (inputTool.isMousePressed(GLFW_MOUSE_BUTTON_1)){
             double x = inputTool.mouseX();
             double y = inputTool.mouseY();
-            int gridX = (int) ((1 + x) * 512);
-            int gridY = (int) ((1 + y) * 512);
+            int gridX = (int) ((1 + x) * 32);
+            int gridY = (int) ((1 + y) * 32);
             for(int i = -5; i <= 5; i++)
                 for(int j = -5; j <= 5; j++)
                     grid.set(gridX + i, gridY + j, (Element<ElementID>) elements[index].newInstance());
@@ -107,14 +132,15 @@ public class Test extends Application {
     @Override
     public void render() {
         render.begin();
-        render.pixelDrawer.setProjection(new Matrix4f().ortho(-(window.ratio() - 1) * 512, (window.ratio() + 1) * 512, 0, 1 * 1024f, -1, 1));
+        render.pixelDrawer.setProjection(new Matrix4f().ortho(0, 64, 0, 64, -1, 1));
         render.pixelDrawer.setView(new Matrix4f().identity());
         render.pixelDrawer.setModel(new Matrix4f().identity());
         pixelLightDrawer.setProjection(new Matrix4f().identity());
         pixelLightDrawer.setView(new Matrix4f().identity());
         pixelLightDrawer.setModel(new Matrix4f().identity());
 
-        pixelLightDrawer.drawLightMap((float) inputTool.mouseX() / window.ratio(),(float) inputTool.mouseY(),0,0,1,1,1,1,0.5f);
+        pixelLightDrawer.drawLightMap((float) inputTool.mouseX() / window.ratio(),(float) inputTool.mouseY(),
+                0,0,1,1,1,1,1);
         frameBuffer.bindAsRead();
 //        glCopyTextureSubImage2D(texture2, 0, 0, 0, 0, 0, 64, 64);
 
