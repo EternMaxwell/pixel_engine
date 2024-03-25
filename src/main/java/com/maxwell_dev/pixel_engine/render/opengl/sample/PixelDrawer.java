@@ -35,8 +35,8 @@ public class PixelDrawer extends Pipeline {
         uniformBuffer = glGenBuffers();
         glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer);
         glBufferData(GL_UNIFORM_BUFFER, 16 * 4 * 3, GL_DYNAMIC_DRAW);
-        vertices = MemoryUtil.memAlloc(1024);
-        glNamedBufferData(vbo, 1024, GL_DYNAMIC_DRAW);
+        vertices = MemoryUtil.memAlloc(1024 * 1024 * 128);
+        glNamedBufferData(vbo, 1024 * 1024 * 128, GL_DYNAMIC_DRAW);
     }
 
     public void setProjection(Matrix4f projection){

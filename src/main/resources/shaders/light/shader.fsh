@@ -12,8 +12,14 @@ float size(float intensity){
 }
 
 float lightness(float distance, float intensity){
-    return pow(clamp((1.0 - distance / size(intensity)), 0.0, 1.0), 2);
+    return intensity * pow(clamp((1.0 - distance / size(intensity)), 0.0, 1.0), 2);
 }
+
+layout(std430, binding = 0) buffer NormalMap{
+    vec2 normal[64][64];
+} normal_map;
+
+layout(binding = 1) uniform float air_fog;
 
 void main()
 {

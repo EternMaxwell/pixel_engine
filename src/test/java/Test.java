@@ -3,7 +3,6 @@ import com.maxwell_dev.pixel_engine.core.InputTool;
 import com.maxwell_dev.pixel_engine.render.opengl.FrameBuffer;
 import com.maxwell_dev.pixel_engine.render.opengl.Image;
 import com.maxwell_dev.pixel_engine.render.opengl.Window;
-import com.maxwell_dev.pixel_engine.render.opengl.sample.LineDrawer;
 import com.maxwell_dev.pixel_engine.render.opengl.sample.PixelLightDrawer;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
 import fallingsandsampletest.*;
@@ -35,7 +34,7 @@ public class Test extends Application {
     public void init() {
         if(!glfwInit())
             throw new IllegalStateException("Failed to initialize GLFW!");
-        window = new Window(800, 600, "Test");
+        window = new Window(800, 800, "Test");
         window.setContextVersionMajor(4);
         window.setContextVersionMinor(6);
         window.createWindow();
@@ -48,16 +47,16 @@ public class Test extends Application {
         });
         render = new Render();
         grid = new FallingGrid();
-        frameBuffer = new FrameBuffer(512, 512);
+        frameBuffer = new FrameBuffer(64, 64);
         texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
-        glTextureStorage2D(texture, 1, GL_RGBA8, 512, 512);
+        glTextureStorage2D(texture, 1, GL_RGBA8, 64, 64);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         texture2 = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture2);
-        glTextureStorage2D(texture2, 1, GL_RGBA8, 512, 512);
-        lightMap = new Image(texture2);
+        glTextureStorage2D(texture2, 1, GL_RGBA8, 64, 64);
+        lightMap = new Image(texture);
         lightMap.samplerParameteri(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         lightMap.samplerParameteri(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         lightMap.samplerParameteri(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -115,19 +114,12 @@ public class Test extends Application {
         pixelLightDrawer.setView(new Matrix4f().identity());
         pixelLightDrawer.setModel(new Matrix4f().identity());
 
-        glViewport(0, 0, 512, 512);
-        pixelLightDrawer.drawLightMap(0,0,0,0,1,1,1,1,1);
-        long fence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-        glClientWaitSync(fence, GL_SYNC_FLUSH_COMMANDS_BIT, 1_000_000_000);
-        glDeleteSync(fence);
+        pixelLightDrawer.drawLightMap((float) inputTool.mouseX() / window.ratio(),(float) inputTool.mouseY(),0,0,1,1,1,1,0.5f);
         frameBuffer.bindAsRead();
-        glCopyTextureSubImage2D(texture2, 0, 0, 0, 0, 0, 512, 512);
+//        glCopyTextureSubImage2D(texture2, 0, 0, 0, 0, 0, 64, 64);
 
         frameBuffer.unbind(window);
         render.imageDrawer.draw(lightMap);
-//        frameBuffer.bindAsRead();
-//        glReadBuffer(GL_FRONT_RIGHT);
-//        render.imageDrawer.draw(test);
 
         grid.render(render);
         render.end();
