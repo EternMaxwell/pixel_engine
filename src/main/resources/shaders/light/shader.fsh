@@ -13,7 +13,8 @@ float size(float intensity){
 }
 
 float cal_lightness(float distance, float intensity){
-    return intensity * pow(clamp((1.0 - distance / size(intensity)), 0.0, 1.0), 2);
+    float ratio = 1 / (distance * distance);
+    return intensity * clamp(ratio, 0, 1);
 }
 
 layout(std430, binding = 0) buffer NormalMap{
@@ -30,18 +31,16 @@ void main()
     index.x = clamp(index.x, 0, 63);
     index.y = clamp(index.y, 0, 63);
 
-    vec2 normal = normal_map.normal[index.x][index.y];
-//    vec2 normal = normal1 / max(normal1, normal1);
-//    normal = normal1 / length(normal);
+    vec2 normal1 = normal_map.normal[index.x][index.y];
+    vec2 normal = normal1 * max(normal1.x, normal1.y) / length(normal1);
     float air_fog = normal_map.air_fog[index.x][index.y];
     bool if_air = normal_map.if_air[index.x][index.y];
 
     float ref = -normalize(in_pos).x * normal.x - normalize(in_pos).y * normal.y;
-    ref = ref / 2 + 0.5f;
+//    ref = ref / 2 + 0.5f;
     ref = clamp(ref, 0.0, 1.0);
 
-    lightness = air_fog;
-    lightness += if_air? 0: ref * (1 - air_fog);
+    lightness = if_air? air_fog: ref;
     lightness *= cal_lightness(distance, in_intensity);
 
     out_color = in_color * lightness;

@@ -20,8 +20,13 @@ layout (binding = 0) uniform Uniform{
     mat4 model;
 } uniforms;
 
+float cal_lightness(float distance, float intensity){
+    float ratio = 1 / (distance * distance);
+    return intensity * clamp(ratio, 0, 1); //pow(clamp((1.0 - distance / size(intensity)), 0.0, 1.0), 2);
+}
+
 float size(float intensity){
-    return 2 * intensity;
+    return 2 * intensity * 64;
 }
 
 void main()
