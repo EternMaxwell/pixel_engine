@@ -26,7 +26,7 @@ float cal_lightness(float distance, float intensity){
 }
 
 float size(float intensity){
-    return 2 * intensity * 64;
+    return 2 * intensity * 64 * 64;
 }
 
 void main()

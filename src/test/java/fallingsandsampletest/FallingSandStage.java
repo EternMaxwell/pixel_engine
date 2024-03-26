@@ -29,6 +29,8 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     FrameBuffer frameBuffer;
     ByteBuffer buffer;
 
+    float orientation = 0;
+
     int texture;
     int texture2;
 
@@ -68,7 +70,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
             buffer.putFloat((y / 32f) * (y / 32f));
         }
         for(int i = 0; i < 64 * 64; i++){
-            buffer.putFloat((float) Math.random() * 0.01f + 0.04f);
+            buffer.putFloat((float) Math.random() * 0.02f + 0.2f);
         }
         for(int i = 0; i < 64 * 64; i++){
             int x = i % 64;
@@ -97,8 +99,16 @@ public class FallingSandStage extends Stage<Render, InputTool> {
             index = (index + 1) % elements.length;
         if(inputTool.scrollY() < 0)
             index = (index - 1 + elements.length) % elements.length;
-        mouseX = (float) inputTool.mouseX()/ inputTool.window().ratio();
-        mouseY = (float) inputTool.mouseY();
+        mouseX = (float) inputTool.mouseX() / inputTool.window().ratio() / 2 + 0.5f;
+        mouseY = (float) inputTool.mouseY() / 2 + 0.5f;
+        if(inputTool.scrollX() > 0)
+            orientation += 0.05f;
+        if(inputTool.scrollX() < 0)
+            orientation -= 0.05f;
+        if(orientation < 0)
+            orientation = 0;
+        if(orientation > 1)
+            orientation = 1;
     }
 
     @Override
@@ -114,12 +124,12 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         render.pixelDrawer.setProjection(new Matrix4f().ortho(0, 64, 0, 64, -1, 1));
         render.pixelDrawer.setView(new Matrix4f().identity());
         render.pixelDrawer.setModel(new Matrix4f().identity());
-        render.pixelLightDrawer.setProjection(new Matrix4f().identity());
+        render.pixelLightDrawer.setProjection(new Matrix4f().ortho(0, 64, 0, 64, -1, 1));
         render.pixelLightDrawer.setView(new Matrix4f().identity());
         render.pixelLightDrawer.setModel(new Matrix4f().identity());
 
-        render.pixelLightDrawer.drawLightMap(mouseX, mouseY,
-                0,0,1,1,1,1,1);
+        render.pixelLightDrawer.drawLightMap(mouseX * 64, mouseY * 64,
+                (float) (Math.PI * 5 / 4),orientation,1,1,1,1,1);
         frameBuffer.bindAsRead();
 //        glCopyTextureSubImage2D(texture2, 0, 0, 0, 0, 0, 64, 64);
 

@@ -16,7 +16,7 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
 
-public class Test extends Application {
+public class Test extends Application<Render, InputTool> {
     Window window;
     InputTool inputTool;
     Render render;
