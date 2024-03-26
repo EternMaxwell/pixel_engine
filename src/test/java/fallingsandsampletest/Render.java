@@ -1,16 +1,21 @@
 package fallingsandsampletest;
 
 import com.maxwell_dev.pixel_engine.render.Renderer;
+import com.maxwell_dev.pixel_engine.render.Window;
 import com.maxwell_dev.pixel_engine.render.opengl.sample.ImageDrawer;
 import com.maxwell_dev.pixel_engine.render.opengl.sample.LineDrawer;
 import com.maxwell_dev.pixel_engine.render.opengl.sample.PixelDrawer;
+import com.maxwell_dev.pixel_engine.render.opengl.sample.PixelLightDrawer;
 
 public class Render extends Renderer {
     public PixelDrawer pixelDrawer;
     public LineDrawer lineDrawer;
     public ImageDrawer imageDrawer;
+    public PixelLightDrawer pixelLightDrawer;
+    public Window window;
 
-    public Render() {
+    public Render(Window window) {
+        this.window = window;
         init();
     }
 
@@ -19,6 +24,7 @@ public class Render extends Renderer {
         pixelDrawer = new PixelDrawer();
         lineDrawer = new LineDrawer();
         imageDrawer = new ImageDrawer();
+        pixelLightDrawer = new PixelLightDrawer();
     }
 
     @Override
@@ -36,5 +42,10 @@ public class Render extends Renderer {
         pixelDrawer.dispose();
         lineDrawer.dispose();
         imageDrawer.dispose();
+    }
+
+    @Override
+    public Window window() {
+        return window;
     }
 }

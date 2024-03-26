@@ -8,4 +8,6 @@ public abstract class Renderer {
     public abstract void end();
 
     public abstract void destroy();
+
+    public abstract Window window();
 }

@@ -20,8 +20,8 @@ public class PixelLightDrawer extends Pipeline {
 
     private int count = 0;
 
-    public PixelLightDrawer(FrameBuffer frameBuffer) {
-        super(frameBuffer);
+    public PixelLightDrawer() {
+        super();
     }
 
     /**

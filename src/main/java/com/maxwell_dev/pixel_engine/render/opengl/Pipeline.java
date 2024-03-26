@@ -22,7 +22,7 @@ public abstract class Pipeline {
     /**
      * the framebuffer
      */
-    public final FrameBuffer framebuffer;
+    protected FrameBuffer framebuffer;
 
     /**
      * the shader program
@@ -204,6 +204,18 @@ public abstract class Pipeline {
             framebuffer.bind();
         }
         program.use();
+    }
+
+    public FrameBuffer frameBuffer() {
+        return framebuffer;
+    }
+
+    public void frameBuffer(FrameBuffer framebuffer) {
+        this.framebuffer = framebuffer;
+    }
+
+    public void noFrameBuffer() {
+        this.framebuffer = null;
     }
 
     /**

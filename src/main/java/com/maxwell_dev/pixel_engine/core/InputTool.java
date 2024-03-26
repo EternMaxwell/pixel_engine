@@ -175,4 +175,8 @@ public class InputTool {
     public double scrollY(){
         return scroll[1];
     }
+
+    public Window window() {
+        return window;
+    }
 }
