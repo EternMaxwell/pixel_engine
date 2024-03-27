@@ -1,25 +1,24 @@
 package fallingsandsampletest;
 
 import com.maxwell_dev.pixel_engine.core.InputTool;
+import com.maxwell_dev.pixel_engine.render.Camera;
 import com.maxwell_dev.pixel_engine.render.opengl.FrameBuffer;
 import com.maxwell_dev.pixel_engine.render.opengl.Image;
 import com.maxwell_dev.pixel_engine.render.opengl.Window;
-import com.maxwell_dev.pixel_engine.render.opengl.sample.PixelLightDrawer;
 import com.maxwell_dev.pixel_engine.stage.Stage;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
-import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL45.glTextureStorage2D;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL46.*;
 
 public class FallingSandStage extends Stage<Render, InputTool> {
 
+    Camera camera = new Camera();
 
     FallingGrid grid;
 
@@ -62,6 +61,8 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
         frameBuffer.check();
 
+        camera.projectionOrtho(0, 64, 0, 64, -1, 1);
+
         buffer = MemoryUtil.memAlloc(64 * 64 * 4 * 4);
         for(int i = 0; i < 64 * 64; i++) {
             int x = i / 64;
@@ -99,8 +100,8 @@ public class FallingSandStage extends Stage<Render, InputTool> {
             index = (index + 1) % elements.length;
         if(inputTool.scrollY() < 0)
             index = (index - 1 + elements.length) % elements.length;
-        mouseX = (float) inputTool.mouseX() / inputTool.window().ratio() / 2 + 0.5f;
-        mouseY = (float) inputTool.mouseY() / 2 + 0.5f;
+        mouseX = (float) inputTool.mouseX() / inputTool.window().ratio();
+        mouseY = (float) inputTool.mouseY();
         if(inputTool.scrollX() > 0)
             orientation += 0.05f;
         if(inputTool.scrollX() < 0)
@@ -109,6 +110,18 @@ public class FallingSandStage extends Stage<Render, InputTool> {
             orientation = 0;
         if(orientation > 1)
             orientation = 1;
+        if(inputTool.isKeyPressed(GLFW_KEY_W)){
+            camera.move(0, 0.1f);
+        }
+        if(inputTool.isKeyPressed(GLFW_KEY_S)){
+            camera.move(0, -0.1f);
+        }
+        if(inputTool.isKeyPressed(GLFW_KEY_A)){
+            camera.move(-0.1f, 0);
+        }
+        if(inputTool.isKeyPressed(GLFW_KEY_D)){
+            camera.move(0.1f, 0);
+        }
     }
 
     @Override
@@ -121,14 +134,19 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         render.pixelLightDrawer.frameBuffer(frameBuffer);
         render.pixelLightDrawer.setNormalMap(buffer);
 
-        render.pixelDrawer.setProjection(new Matrix4f().ortho(0, 64, 0, 64, -1, 1));
+        render.pixelDrawer.setProjection(camera.cameraMatrix(new Matrix4f()));
         render.pixelDrawer.setView(new Matrix4f().identity());
         render.pixelDrawer.setModel(new Matrix4f().identity());
-        render.pixelLightDrawer.setProjection(new Matrix4f().ortho(0, 64, 0, 64, -1, 1));
+        render.pixelLightDrawer.setProjection(camera.cameraMatrix(new Matrix4f()));
         render.pixelLightDrawer.setView(new Matrix4f().identity());
         render.pixelLightDrawer.setModel(new Matrix4f().identity());
 
-        render.pixelLightDrawer.drawLightMap(mouseX * 64, mouseY * 64,
+        Vector4f mouseInWorld = new Vector4f(mouseX, mouseY, 0, 1);
+        camera.cameraMatrix(new Matrix4f()).invert().transform(mouseInWorld);
+        float inX = mouseInWorld.x;
+        float inY = mouseInWorld.y;
+
+        render.pixelLightDrawer.drawLightMap(inX, inY,
                 (float) (Math.PI * 5 / 4),orientation,1,1,1,1,1);
         frameBuffer.bindAsRead();
 //        glCopyTextureSubImage2D(texture2, 0, 0, 0, 0, 0, 64, 64);

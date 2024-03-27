@@ -13,7 +13,7 @@ float size(float intensity){
 }
 
 float cal_lightness(float distance, float intensity){
-    float ratio = 2 / sqrt(distance);
+    float ratio = 2 / pow(distance, 3/5f);
     return intensity * clamp(ratio, 0, 1);
 }
 
