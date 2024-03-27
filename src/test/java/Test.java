@@ -1,17 +1,8 @@
 import com.maxwell_dev.pixel_engine.core.Application;
 import com.maxwell_dev.pixel_engine.core.InputTool;
-import com.maxwell_dev.pixel_engine.render.opengl.FrameBuffer;
-import com.maxwell_dev.pixel_engine.render.opengl.Image;
 import com.maxwell_dev.pixel_engine.render.opengl.Window;
-import com.maxwell_dev.pixel_engine.render.opengl.sample.PixelLightDrawer;
-import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
 import fallingsandsampletest.*;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.ByteBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
@@ -37,7 +28,7 @@ public class Test extends Application<Render, InputTool> {
             render();
         });
         render = new Render(window);
-        stage = new FallingSandStage();
+        stage = new PixelLightStage();
         stage.init();
     }
 
@@ -80,8 +71,4 @@ public class Test extends Application<Render, InputTool> {
         return !glfwWindowShouldClose(window.id());
     }
 
-    @Override
-    public void pause() {
-
-    }
 }

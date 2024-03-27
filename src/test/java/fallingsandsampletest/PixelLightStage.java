@@ -16,7 +16,7 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
 
-public class FallingSandStage extends Stage<Render, InputTool> {
+public class PixelLightStage extends Stage<Render, InputTool> {
 
     Camera camera = new Camera();
 

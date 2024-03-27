@@ -1,8 +1,10 @@
 package com.maxwell_dev.pixel_engine.world.falling_sand;
 
+import com.maxwell_dev.pixel_engine.world.ElementBase;
+
 import java.nio.ByteBuffer;
 
-public abstract class Element <T extends Grid<?,?,?>, ElementType, ElementID>{
+public abstract class Element <T extends Grid<?,?,?>, ElementType, ElementID> implements ElementBase {
     //methods that must be implemented
     public abstract String name();
     public abstract Element<T, ElementType, ElementID> newInstance();

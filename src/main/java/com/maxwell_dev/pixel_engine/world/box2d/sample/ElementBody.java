@@ -1,6 +1,7 @@
 package com.maxwell_dev.pixel_engine.world.box2d.sample;
 
 import com.maxwell_dev.pixel_engine.util.Util;
+import com.maxwell_dev.pixel_engine.world.ElementBase;
 import com.maxwell_dev.pixel_engine.world.box2d.Body;
 import com.maxwell_dev.pixel_engine.world.falling_sand.Element;
 import org.jbox2d.collision.shapes.PolygonShape;
@@ -10,7 +11,7 @@ import org.jbox2d.pooling.arrays.Vec2Array;
 
 import java.util.Collection;
 
-public class ElementBody<T extends Element> extends Body {
+public class ElementBody<T extends ElementBase> extends Body {
     private T[][] grid;
     public ElementBody(T[][] grid) {
         this.grid = grid;
@@ -38,7 +39,8 @@ public class ElementBody<T extends Element> extends Body {
         fixtureDef.density = averageDensity();
         fixtureDef.friction = averageFriction();
         fixtureDef.restitution = averageRestitution();
-        body.createFixture(fixtureDef);
+        Fixture fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(this);
         this.body = body;
         return body;
     }
