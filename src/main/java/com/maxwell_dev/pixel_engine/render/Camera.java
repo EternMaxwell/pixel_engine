@@ -8,8 +8,8 @@ public class Camera {
     private Matrix4f projectionMatrix;
 
     public Camera() {
-        viewMatrix = new Matrix4f();
-        projectionMatrix = new Matrix4f();
+        viewMatrix = new Matrix4f().identity();
+        projectionMatrix = new Matrix4f().identity();
     }
 
     public void projectionOrtho(float left, float right, float bottom, float top, float near, float far) {

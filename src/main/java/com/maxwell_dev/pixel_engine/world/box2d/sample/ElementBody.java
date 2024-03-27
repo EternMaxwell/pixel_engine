@@ -24,7 +24,7 @@ public class ElementBody<T extends ElementBase> extends Body {
         bodyDef.type = BodyType.DYNAMIC;
         PolygonShape shape = new PolygonShape();
         float[][] outline = Util.mesh.marching_squares_outline_single(grid, pixelSize);
-        outline = Util.mesh.line_simplification(outline, pixelSize);
+        outline = Util.mesh.line_simplification(outline, pixelSize * .9f);
         Vec2[] vertices = new Vec2[outline.length];
         for (int i = 0; i < outline.length; i++) {
             vertices[i] = new Vec2(outline[i][0], outline[i][1]);

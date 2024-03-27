@@ -2,12 +2,11 @@ package spaceGameDemo.elements;
 
 import com.maxwell_dev.pixel_engine.world.DirectState;
 import com.maxwell_dev.pixel_engine.world.ElementBase;
+import org.jbox2d.dynamics.World;
 import spaceGameDemo.SpaceWorld;
 import spaceGameDemo.body.SpaceBody;
 
-public abstract class BodyElement implements ElementBase, DirectState {
-
-    private SpaceWorld spaceWorld;
+public class BodyElement implements ElementBase, DirectState {
     private final int x;
     private final int y;
     private SpaceBody body;
@@ -19,7 +18,12 @@ public abstract class BodyElement implements ElementBase, DirectState {
     private float health;
     private final float maxHealth;
 
-    public BodyElement(int x, int y, SpaceBody body, float[] color, float temperature, float meltPoint, float heatCapacity, float health) {
+    private final float density;
+    private final float friction;
+    private final float restitution;
+
+    public BodyElement(int x, int y, SpaceBody body, float[] color, float temperature, float meltPoint,
+                       float heatCapacity, float health, float density, float friction, float restitution) {
         this.x = x;
         this.y = y;
         this.body = body;
@@ -29,11 +33,29 @@ public abstract class BodyElement implements ElementBase, DirectState {
         this.heatCapacity = heatCapacity;
         this.health = health;
         this.maxHealth = health;
+        this.density = density;
+        this.friction = friction;
+        this.restitution = restitution;
     }
 
     @Override
     public float[] color() {
         return color;
+    }
+
+    @Override
+    public float density() {
+        return density;
+    }
+
+    @Override
+    public float friction() {
+        return friction;
+    }
+
+    @Override
+    public float restitution() {
+        return restitution;
     }
 
     @Override
@@ -59,7 +81,8 @@ public abstract class BodyElement implements ElementBase, DirectState {
     private void destroy(){
         body.getGrid()[x][y] = null;
         body.removeBox2dBody();
-        body.createBox2dBody(spaceWorld.box2dWorld, null, 0.1f);
+        SpaceWorld box2dWorld = body.getWorld();
+        body.createBox2dBody(box2dWorld, 0.1f);
     }
 
     @Override

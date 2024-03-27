@@ -1,8 +1,9 @@
 import com.maxwell_dev.pixel_engine.core.Application;
 import com.maxwell_dev.pixel_engine.core.InputTool;
 import com.maxwell_dev.pixel_engine.render.opengl.Window;
-import fallingsandsampletest.*;
 import org.lwjgl.opengl.GL;
+import spaceGameDemo.Render;
+import spaceGameDemo.SpaceGameStage;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
@@ -28,7 +29,7 @@ public class Test extends Application<Render, InputTool> {
             render();
         });
         render = new Render(window);
-        stage = new PixelLightStage();
+        stage = new SpaceGameStage();
         stage.init();
     }
 
