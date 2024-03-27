@@ -131,7 +131,6 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void render(Render render) {
-        render.pixelLightDrawer.frameBuffer(frameBuffer);
         render.pixelLightDrawer.setNormalMap(buffer);
 
         render.pixelDrawer.setProjection(camera.cameraMatrix(new Matrix4f()));
@@ -146,6 +145,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         float inX = mouseInWorld.x;
         float inY = mouseInWorld.y;
 
+        frameBuffer.bind();
         render.pixelLightDrawer.drawLightMap(inX, inY,
                 (float) (Math.PI * 5 / 4),orientation,1,1,1,1,1);
         frameBuffer.bindAsRead();

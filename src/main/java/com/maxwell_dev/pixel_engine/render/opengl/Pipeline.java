@@ -20,72 +20,9 @@ public abstract class Pipeline {
     public final int vbo;
 
     /**
-     * the framebuffer
-     */
-    protected FrameBuffer framebuffer;
-
-    /**
      * the shader program
      */
     public final Program program;
-
-    /**
-     * create a new pipeline
-     *
-     * @param framebuffer the framebuffer, null for default
-     * @param vboSize     the size of the vertex buffer object
-     */
-    public Pipeline(FrameBuffer framebuffer, long vboSize) {
-        this.framebuffer = framebuffer;
-        program = new Program();
-        vao = glGenVertexArrays();
-        vbo = glGenBuffers();
-        glNamedBufferStorage(vbo, vboSize, GL_DYNAMIC_STORAGE_BIT);
-        init();
-    }
-
-    /**
-     * create a new pipeline
-     *
-     * @param framebuffer the framebuffer, null for default
-     */
-    public Pipeline(FrameBuffer framebuffer) {
-        this.framebuffer = framebuffer;
-        program = new Program();
-        vao = glGenVertexArrays();
-        vbo = glGenBuffers();
-        init();
-    }
-
-    /**
-     * create a new pipeline
-     *
-     * @param program     the shader program
-     * @param framebuffer the framebuffer, null for default
-     * @param vboSize     the size of the vertex buffer object
-     */
-    public Pipeline(Program program, FrameBuffer framebuffer, long vboSize) {
-        this.program = program;
-        vao = glGenVertexArrays();
-        vbo = glGenBuffers();
-        this.framebuffer = framebuffer;
-        glNamedBufferStorage(vbo, vboSize, GL_DYNAMIC_STORAGE_BIT);
-        init();
-    }
-
-    /**
-     * create a new pipeline
-     *
-     * @param program     the shader program
-     * @param framebuffer the framebuffer, null for default
-     */
-    public Pipeline(Program program, FrameBuffer framebuffer) {
-        this.program = program;
-        vao = glGenVertexArrays();
-        vbo = glGenBuffers();
-        this.framebuffer = framebuffer;
-        init();
-    }
 
     /**
      * create a new pipeline
@@ -97,7 +34,6 @@ public abstract class Pipeline {
         this.program = program;
         vao = glGenVertexArrays();
         vbo = glGenBuffers();
-        this.framebuffer = null;
         glNamedBufferStorage(vbo, vboSize, GL_DYNAMIC_STORAGE_BIT);
         init();
     }
@@ -111,7 +47,6 @@ public abstract class Pipeline {
         this.program = program;
         vao = glGenVertexArrays();
         vbo = glGenBuffers();
-        this.framebuffer = null;
         init();
     }
 
@@ -124,7 +59,6 @@ public abstract class Pipeline {
         this.program = new Program();
         vao = glGenVertexArrays();
         vbo = glGenBuffers();
-        this.framebuffer = null;
         glNamedBufferStorage(vbo, vboSize, GL_DYNAMIC_STORAGE_BIT);
         init();
     }
@@ -136,7 +70,6 @@ public abstract class Pipeline {
         this.program = new Program();
         vao = glGenVertexArrays();
         vbo = glGenBuffers();
-        this.framebuffer = null;
         init();
     }
 
@@ -198,24 +131,7 @@ public abstract class Pipeline {
     public void use() {
         glBindVertexArray(vao);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        if (framebuffer == null) {
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        } else {
-            framebuffer.bind();
-        }
         program.use();
-    }
-
-    public FrameBuffer frameBuffer() {
-        return framebuffer;
-    }
-
-    public void frameBuffer(FrameBuffer framebuffer) {
-        this.framebuffer = framebuffer;
-    }
-
-    public void noFrameBuffer() {
-        this.framebuffer = null;
     }
 
     /**
