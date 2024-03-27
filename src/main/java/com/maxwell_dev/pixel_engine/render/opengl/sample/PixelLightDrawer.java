@@ -49,6 +49,9 @@ public class PixelLightDrawer extends Pipeline {
 
         normalMapBuffer = glCreateBuffers();
         glNamedBufferStorage(normalMapBuffer, 64 * 64 * 4 * 4, GL_DYNAMIC_STORAGE_BIT);
+
+        uniformBuffer(0, uniformBuffer);
+        shaderStorageBuffer(0, normalMapBuffer);
     }
 
     public void setProjection(Matrix4f projection){
@@ -93,8 +96,6 @@ public class PixelLightDrawer extends Pipeline {
         vertices.flip();
         use();
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
-        glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, normalMapBuffer);
         glDrawArrays(GL_POINTS, 0, count);
         count = 0;
         vertices.clear();

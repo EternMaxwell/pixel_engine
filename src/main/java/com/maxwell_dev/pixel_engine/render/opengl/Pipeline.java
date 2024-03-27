@@ -4,6 +4,8 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL46.*;
 
@@ -18,6 +20,21 @@ public abstract class Pipeline {
      * the vertex buffer object
      */
     public final int vbo;
+
+    /**
+     * the element buffer object
+     */
+    public final int ebo = 0;
+
+    /**
+     * the uniform buffers
+     */
+    public final Map<Integer,Integer> uniformBuffers = new HashMap<>();
+
+    /**
+     * the shader storage buffers
+     */
+    public final Map<Integer,Integer> shaderStorageBuffers = new HashMap<>();
 
     /**
      * the shader program
@@ -131,7 +148,46 @@ public abstract class Pipeline {
     public void use() {
         glBindVertexArray(vao);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        for(Map.Entry<Integer,Integer> entry : uniformBuffers.entrySet())
+            glBindBufferBase(GL_UNIFORM_BUFFER, entry.getKey(), entry.getValue());
+        for(Map.Entry<Integer,Integer> entry : shaderStorageBuffers.entrySet())
+            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, entry.getKey(), entry.getValue());
         program.use();
+    }
+
+    /**
+     * set the uniform buffer this pipeline uses
+     * @param index the index of the uniform buffer
+     * @param buffer the buffer
+     */
+    public void uniformBuffer(int index, int buffer){
+        uniformBuffers.put(index, buffer);
+    }
+
+    /**
+     * remove the uniform buffer at index this pipeline don't use
+     * @param index the index of the uniform buffer
+     */
+    public void noUniformBuffer(int index){
+        uniformBuffers.remove(index);
+    }
+
+    /**
+     * set the shader storage buffer at index this pipeline uses
+     * @param index the index of the shader storage buffer
+     * @param buffer the buffer
+     */
+    public void shaderStorageBuffer(int index, int buffer){
+        shaderStorageBuffers.put(index, buffer);
+    }
+
+    /**
+     * remove the shader storage buffer this pipeline don't use
+     * @param index the index of the shader storage buffer
+     */
+    public void noShaderStorageBuffer(int index){
+        shaderStorageBuffers.remove(index);
     }
 
     /**
