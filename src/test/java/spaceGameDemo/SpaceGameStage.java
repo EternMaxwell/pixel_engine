@@ -20,10 +20,10 @@ public class SpaceGameStage extends Stage<Render, InputTool>{
     public void init() {
         camera = new Camera();
         world = new SpaceWorld();
-        Set<SpaceBody> any = BodyFactory.randomAstroid(5, 0,0,0,new ArrayList<>());
+        Set<SpaceBody> any = BodyFactory.randomAstroid(20, 0,0,0,new ArrayList<>());
         for(SpaceBody body: any){
             body.createBox2dBody(world, .1f);
-            body.body.applyForceToCenter(new org.jbox2d.common.Vec2((float) (Math.random() - .5), (float) (Math.random() - .5)));
+            body.body.applyForceToCenter(new org.jbox2d.common.Vec2((float) (Math.random() - .5)*10, (float) (Math.random() - .5)*10));
 //            world.addBody(body);
         }
     }
@@ -43,6 +43,12 @@ public class SpaceGameStage extends Stage<Render, InputTool>{
         }
         if(inputTool.isKeyPressed(GLFW_KEY_D)){
             camera.move(.01f, 0);
+        }
+        if(inputTool.isKeyPressed(GLFW_KEY_Q)){
+            camera.scale(.99f);
+        }
+        if(inputTool.isKeyPressed(GLFW_KEY_E)){
+            camera.scale(1.01f);
         }
     }
 

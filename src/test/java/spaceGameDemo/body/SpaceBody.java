@@ -30,9 +30,9 @@ public class SpaceBody extends ElementBody<BodyElement> {
     private SpaceWorld world;
     private boolean shouldReset = false;
     private float pixelSize;
-    private List<Vec2> verticesRetriever;
+    private List<Vec2[]> verticesRetriever;
 
-    public SpaceBody(BodyElement[][] grid, float x, float y, float angle, List<Vec2> verticesRetriever) {
+    public SpaceBody(BodyElement[][] grid, float x, float y, float angle, List<Vec2[]> verticesRetriever) {
         super(grid);
         this.x = x;
         this.y = y;
@@ -81,7 +81,7 @@ public class SpaceBody extends ElementBody<BodyElement> {
         shouldReset = false;
     }
 
-    public List<Vec2> getLocalVertices() {
+    public List<Vec2[]> getLocalVertices() {
         return verticesRetriever;
     }
 
@@ -110,15 +110,16 @@ public class SpaceBody extends ElementBody<BodyElement> {
                 }
             }
         }
-        Vec2[] v = getLocalVertices().toArray(Vec2[]::new);
-        if(v != null && v.length > 0){
-            for(int i = 0; i < v.length; i++){
-                Vec2 v1 = v[i];
-                Vec2 v2 = v[(i+1)%v.length];
-                render.lineDrawer.draw(v1.x, v1.y, v2.x, v2.y, 1, 1, 1, 1);
+        render.pixelDrawer.flush();
+        for(Vec2[] v: getLocalVertices()){
+            if (v != null && v.length > 0) {
+                for (int i = 0; i < v.length; i++) {
+                    Vec2 v1 = v[i];
+                    Vec2 v2 = v[(i + 1) % v.length];
+                    render.lineDrawer.draw(v1.x, v1.y, v2.x, v2.y, 1, 1, 1, 1);
+                }
             }
         }
-        render.pixelDrawer.flush();
         render.lineDrawer.flush();
     }
 }

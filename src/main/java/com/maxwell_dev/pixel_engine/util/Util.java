@@ -1,5 +1,7 @@
 package com.maxwell_dev.pixel_engine.util;
 
+import earcut4j.Earcut;
+
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.IntFunction;
@@ -9,6 +11,39 @@ public class Util {
     public final static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     public static class mesh {
+
+        public static List<float[][]> ear_cut_triangulation(float[][] vertices, List<float[][]> holes){
+            int length = vertices.length * 2;
+            int[] holeIndices = new int[holes.size()];
+            int index = 0;
+            for(float[][] hole: holes){
+                holeIndices[index++] = length/2;
+                length += hole.length * 2;
+            }
+            double[] verticesInDouble = new double[length];
+            index = 0;
+            for(float[] vertex: vertices){
+                verticesInDouble[index++] = vertex[0];
+                verticesInDouble[index++] = vertex[1];
+            }
+            for(float[][] hole: holes){
+                for(float[] vertex: hole){
+                    verticesInDouble[index++] = vertex[0];
+                    verticesInDouble[index++] = vertex[1];
+                }
+            }
+            List<Integer> result = Earcut.earcut(verticesInDouble, holeIndices, 2);
+            List<float[][]> resultTriangles = new ArrayList<>();
+            for(int i = 0; i < result.size(); i+=3){
+                resultTriangles.add(new float[][]{
+                        new float[]{(float)verticesInDouble[result.get(i) * 2], (float)verticesInDouble[result.get(i) * 2+1]},
+                        new float[]{(float)verticesInDouble[result.get(i+1) * 2], (float)verticesInDouble[result.get(i+1) * 2+1]},
+                        new float[]{(float)verticesInDouble[result.get(i+2) * 2], (float)verticesInDouble[result.get(i+2) * 2+1]}
+                });
+            }
+            return resultTriangles;
+        }
+
         public static float[][] line_simplification(float[][] vertices_in, float maxHeight) {
             float[][] line = new float[][]{vertices_in[0], vertices_in[vertices_in.length - 1]};
             float height = 0;

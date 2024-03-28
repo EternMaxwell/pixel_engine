@@ -6,15 +6,21 @@ import org.joml.Vector2f;
 public class Camera {
     private Matrix4f viewMatrix;
     private Matrix4f projectionMatrix;
+    private float scale;
 
     public Camera() {
         viewMatrix = new Matrix4f().identity();
         projectionMatrix = new Matrix4f().identity();
+        scale = 1;
     }
 
     public void projectionOrtho(float left, float right, float bottom, float top, float near, float far) {
         projectionMatrix.identity();
         projectionMatrix.ortho(left, right, bottom, top, near, far);
+    }
+
+    public void scale(float scale) {
+        this.scale *= scale;
     }
 
     public void position(Vector2f position) {
@@ -39,6 +45,6 @@ public class Camera {
     }
 
     public Matrix4f cameraMatrix(Matrix4f dest) {
-        return projectionMatrix.mul(viewMatrix, dest);
+        return projectionMatrix.mul(viewMatrix.scaleLocal(scale,dest), dest);
     }
 }
