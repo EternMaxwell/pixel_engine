@@ -59,6 +59,20 @@ public class SpaceGameStage extends Stage<Render, InputTool>{
     @Override
     public void update() {
         world.update();
+        for(SpaceBody body: world.bodies){
+            for(SpaceBody body1: world.bodies){
+                if(body != body1){
+                    Vec2 diff = body.body.getWorldCenter().sub(body1.body.getWorldCenter());
+                    float distance = diff.length();
+                    if(distance < 1){
+                        diff.normalize();
+                        diff = diff.mul(1/distance/distance).mul(body.body.getMass() * body1.body.getMass());
+                        body.body.applyForceToCenter(diff.mul(-.05f));
+                        body1.body.applyForceToCenter(diff.mul(.05f));
+                    }
+                }
+            }
+        }
         target.body.setAngularDamping(.5f);
         target.body.setLinearDamping(.1f);
     }
