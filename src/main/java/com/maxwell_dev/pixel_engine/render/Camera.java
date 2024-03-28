@@ -7,6 +7,7 @@ public class Camera {
     private Matrix4f viewMatrix;
     private Matrix4f projectionMatrix;
     private float scale;
+    private float angle;
 
     public Camera() {
         viewMatrix = new Matrix4f().identity();
@@ -28,12 +29,16 @@ public class Camera {
         viewMatrix.translate(-position.x, -position.y, 0);
     }
 
+    public void rotate(float angle){
+        viewMatrix.rotateLocalZ(-angle);
+    }
+
     public void move(Vector2f position) {
-        viewMatrix.translate(-position.x, -position.y, 0);
+        viewMatrix.translateLocal(-position.x, -position.y, 0);
     }
 
     public void move(float x, float y) {
-        viewMatrix.translate(-x, -y, 0);
+        viewMatrix.translateLocal(-x, -y, 0);
     }
 
     public void reOrigin(Vector2f newOrigin) {
@@ -46,5 +51,13 @@ public class Camera {
 
     public Matrix4f cameraMatrix(Matrix4f dest) {
         return projectionMatrix.mul(viewMatrix.scaleLocal(scale,dest), dest);
+    }
+
+    public Matrix4f cameraMatrix(Matrix4f customViewMatrix, Matrix4f dest) {
+        return projectionMatrix.mul(customViewMatrix.scaleLocal(scale,dest), dest);
+    }
+
+    public Matrix4f cameraMatrix(float x, float y, float angle, float scale, Matrix4f dest) {
+        return projectionMatrix.mul(new Matrix4f().translate(-x, -y, 0).rotateLocalZ(-angle).scaleLocal(scale,dest), dest);
     }
 }

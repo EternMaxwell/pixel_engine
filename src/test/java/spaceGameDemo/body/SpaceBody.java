@@ -122,4 +122,21 @@ public class SpaceBody extends ElementBody<BodyElement> {
         }
         render.lineDrawer.flush();
     }
+
+    public float[] getPosition() {
+        Vec2 center = body.getWorldCenter();
+        return new float[]{center.x, center.y};
+    }
+
+    public float getCenterX() {
+        return body.getWorldCenter().x;
+    }
+
+    public float getCenterY() {
+        return body.getWorldCenter().y;
+    }
+
+    public float getAngle() {
+        return body.getAngle();
+    }
 }

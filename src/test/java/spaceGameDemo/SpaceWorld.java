@@ -29,8 +29,8 @@ public class SpaceWorld {
 
             @Override
             public void endContact(Contact contact) {
-                Object bodyA = contact.getFixtureA().getUserData();
-                Object bodyB = contact.getFixtureB().getUserData();
+                SpaceBody bodyA = (SpaceBody) contact.getFixtureA().getUserData();
+                SpaceBody bodyB = (SpaceBody) contact.getFixtureB().getUserData();
                 WorldManifold worldManifold = new WorldManifold();
                 contact.getWorldManifold(worldManifold);
                 Vec2[] points = worldManifold.points;

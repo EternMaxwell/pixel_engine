@@ -38,6 +38,10 @@ public class BodyElement implements ElementBase, DirectState {
         this.restitution = restitution;
     }
 
+    public void setBody(SpaceBody body) {
+        this.body = body;
+    }
+
     @Override
     public float[] color() {
         return color;
