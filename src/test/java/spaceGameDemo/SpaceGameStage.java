@@ -67,7 +67,6 @@ public class SpaceGameStage extends Stage<Render, InputTool>{
                     if(distance < 1){
                         diff.normalize();
                         diff = diff.mul(1/distance/distance).mul(body.body.getMass() * body1.body.getMass());
-                        body.body.applyForceToCenter(diff.mul(-.05f));
                         body1.body.applyForceToCenter(diff.mul(.05f));
                     }
                 }
