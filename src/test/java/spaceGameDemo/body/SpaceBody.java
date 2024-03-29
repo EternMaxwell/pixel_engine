@@ -116,7 +116,10 @@ public class SpaceBody extends ElementBody<BodyElement> {
                 for (int i = 0; i < v.length; i++) {
                     Vec2 v1 = v[i];
                     Vec2 v2 = v[(i + 1) % v.length];
-                    render.lineDrawer.draw(v1.x, v1.y, v2.x, v2.y, 1, 1, 1, 1);
+                    if(body.isAwake())
+                        render.lineDrawer.draw(v1.x, v1.y, v2.x, v2.y, 1, 1, 1, 1);
+                    else
+                        render.lineDrawer.draw(v1.x, v1.y, v2.x, v2.y, 1, 0, 0, 1);
                 }
             }
         }
