@@ -151,8 +151,8 @@ public class PixelLightStage extends Stage<Render, InputTool> {
         frameBuffer.bindAsRead();
 //        glCopyTextureSubImage2D(texture2, 0, 0, 0, 0, 0, 64, 64);
 
-        frameBuffer.unbind((Window) render.window());
-        render.imageDrawer.draw(lightMap);
+//        frameBuffer.unbind((Window) render.window());
+//        render.imageDrawer.draw(lightMap);
 
         grid.render(render);
         frameBuffer.clear((Window) render.window());
