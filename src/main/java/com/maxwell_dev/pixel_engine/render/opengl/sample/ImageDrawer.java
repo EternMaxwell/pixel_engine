@@ -37,7 +37,6 @@ public class ImageDrawer extends Pipeline {
     public void setProjection(Matrix4f projection){
         FloatBuffer buffer = MemoryUtil.memAllocFloat(16);
         projection.get(buffer);
-        buffer.flip();
         glNamedBufferSubData(uniformBuffer, 0, buffer);
         MemoryUtil.memFree(buffer);
     }
@@ -45,7 +44,6 @@ public class ImageDrawer extends Pipeline {
     public void setView(Matrix4f view){
         FloatBuffer buffer = MemoryUtil.memAllocFloat(16);
         view.get(buffer);
-        buffer.flip();
         glNamedBufferSubData(uniformBuffer, 16 * 4, buffer);
         MemoryUtil.memFree(buffer);
     }
@@ -53,7 +51,6 @@ public class ImageDrawer extends Pipeline {
     public void setModel(Matrix4f model){
         FloatBuffer buffer = MemoryUtil.memAllocFloat(16);
         model.get(buffer);
-        buffer.flip();
         glNamedBufferSubData(uniformBuffer, 16 * 4 * 2, buffer);
         MemoryUtil.memFree(buffer);
     }
