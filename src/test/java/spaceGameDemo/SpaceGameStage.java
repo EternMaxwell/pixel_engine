@@ -45,8 +45,8 @@ public class SpaceGameStage extends Stage<Render, InputTool>{
         ByteBuffer buffer = MemoryUtil.memAlloc(1024 * 1024 * 4);
         for (int i = 0; i < 1024; i++) {
             for (int j = 0; j < 1024; j++) {
-                buffer.put((byte) (Math.random() * 255));
-                buffer.put((byte) (Math.random() * 255));
+                buffer.put((byte) (Math.random() * 10));
+                buffer.put((byte) (Math.random() * 10));
                 buffer.put((byte) (Math.random() * 255));
                 buffer.put((byte) 255);
             }
@@ -54,8 +54,8 @@ public class SpaceGameStage extends Stage<Render, InputTool>{
         buffer.flip();
         glTextureSubImage2D(backgroundTexture, 0, 0, 0, 1024, 1024, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
         MemoryUtil.memFree(buffer);
-//        background = new Image(backgroundTexture);
-        background = new Image("src/test/resources/textures/test.jpg");
+        background = new Image(backgroundTexture);
+//        background = new Image("src/test/resources/textures/test.jpg");
         background.samplerParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         background.samplerParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         background.samplerParameteri(GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -114,10 +114,10 @@ public class SpaceGameStage extends Stage<Render, InputTool>{
         renderer.lineDrawer.setProjection(camera.cameraMatrix(target.getCenterX(), target.getCenterY(), target.getAngle(), 1, new Matrix4f()));
         renderer.lineDrawer.setView(new Matrix4f().identity());
         renderer.lineDrawer.setModel(new Matrix4f().identity());
-        renderer.imageDrawer.setProjection(new Matrix4f().identity());
+        renderer.imageDrawer.setProjection(camera.cameraMatrix(target.getCenterX(), target.getCenterY(), target.getAngle(), 1, new Matrix4f()));
         renderer.imageDrawer.setView(new Matrix4f().identity());
         renderer.imageDrawer.setModel(new Matrix4f().identity());
-        renderer.imageDrawer.draw(background, -1, -1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 1);
+        renderer.imageDrawer.draw(background, -1000, -1000, 2000, 2000, 0, 0, 10, 10, 0.2f, 0.2f, 0.2f, 1);
         for(SpaceBody body: world.bodies){
             body.render(renderer);
         }
