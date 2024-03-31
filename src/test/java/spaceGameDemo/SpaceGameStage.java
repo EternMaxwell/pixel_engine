@@ -65,18 +65,18 @@ public class SpaceGameStage extends Stage<Render, InputTool>{
     @Override
     public void input(InputTool inputTool) {
         float ratio = inputTool.window().ratio();
-        camera.projectionOrtho(-ratio * 4, ratio * 4, -4, 4, -1, 1);
+        camera.projectionOrtho(-ratio * 1, ratio * 1, -1, 1, -1, 1);
         if(inputTool.isKeyPressed(GLFW_KEY_W)){
-            target.body.applyForceToCenter(new Vec2((float) -Math.sin(target.body.getAngle()), (float) Math.cos(target.body.getAngle())));
+            target.body.applyForceToCenter(new Vec2((float) -Math.sin(target.body.getAngle()), (float) Math.cos(target.body.getAngle())).mul(2));
         }
         if(inputTool.isKeyPressed(GLFW_KEY_S)){
-            target.body.applyForceToCenter(new Vec2((float) Math.sin(target.body.getAngle()), (float) -Math.cos(target.body.getAngle())));
+            target.body.applyForceToCenter(new Vec2((float) Math.sin(target.body.getAngle()), (float) -Math.cos(target.body.getAngle())).mul(2));
         }
         if(inputTool.isKeyPressed(GLFW_KEY_A)){
-            target.body.applyForceToCenter(new Vec2((float) -Math.cos(target.body.getAngle()), (float) -Math.sin(target.body.getAngle())));
+            target.body.applyForceToCenter(new Vec2((float) -Math.cos(target.body.getAngle()), (float) -Math.sin(target.body.getAngle())).mul(2));
         }
         if(inputTool.isKeyPressed(GLFW_KEY_D)){
-            target.body.applyForceToCenter(new Vec2((float) Math.cos(target.body.getAngle()), (float) Math.sin(target.body.getAngle())));
+            target.body.applyForceToCenter(new Vec2((float) Math.cos(target.body.getAngle()), (float) Math.sin(target.body.getAngle())).mul(2));
         }
         if(inputTool.isKeyPressed(GLFW_KEY_Q)){
             target.body.applyTorque(1);
@@ -108,16 +108,18 @@ public class SpaceGameStage extends Stage<Render, InputTool>{
 
     @Override
     public void render(Render renderer) {
-        renderer.pixelDrawer.setProjection(camera.cameraMatrix(target.getCenterX(), target.getCenterY(), target.getAngle(), 1, new Matrix4f()));
+        camera.setScale(10);
+        Matrix4f cm = camera.cameraMatrixMix(target.getCenterX(), target.getCenterY(), target.getAngle(), new Matrix4f(), 0.1f);
+        renderer.pixelDrawer.setProjection(cm);
         renderer.pixelDrawer.setView(new Matrix4f().identity());
         renderer.pixelDrawer.setModel(new Matrix4f().identity());
-        renderer.lineDrawer.setProjection(camera.cameraMatrix(target.getCenterX(), target.getCenterY(), target.getAngle(), 1, new Matrix4f()));
+        renderer.lineDrawer.setProjection(cm);
         renderer.lineDrawer.setView(new Matrix4f().identity());
         renderer.lineDrawer.setModel(new Matrix4f().identity());
-        renderer.imageDrawer.setProjection(camera.cameraMatrix(target.getCenterX(), target.getCenterY(), target.getAngle(), 1, new Matrix4f()));
+        renderer.imageDrawer.setProjection(cm);
         renderer.imageDrawer.setView(new Matrix4f().identity());
         renderer.imageDrawer.setModel(new Matrix4f().identity());
-        renderer.imageDrawer.draw(background, -1000, -1000, 2000, 2000, 0, 0, 10, 10, 0.2f, 0.2f, 0.2f, 1);
+        renderer.imageDrawer.draw(background, -1000, -1000, 2000, 2000, 0, 0, 10, 10, 0.1f, 0.1f, 0.1f, 1);
         for(SpaceBody body: world.bodies){
             body.render(renderer);
         }
