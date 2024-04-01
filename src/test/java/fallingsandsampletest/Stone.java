@@ -6,7 +6,8 @@ import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Solid;
 
 public class Stone extends Solid<ElementID> {
 
-    public Stone() {
+    public Stone(Grid grid) {
+        super(grid);
         color = new float[]{0.5f, 0.5f, 0.5f, 1f};
     }
 
@@ -16,8 +17,8 @@ public class Stone extends Solid<ElementID> {
     }
 
     @Override
-    public Element<ElementID> newInstance() {
-        return new Stone();
+    public Element<ElementID> newInstance(Grid grid) {
+        return new Stone(grid);
     }
 
     @Override

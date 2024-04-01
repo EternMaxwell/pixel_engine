@@ -1,7 +1,11 @@
 package com.maxwell_dev.pixel_engine.world.falling_sand;
 
 public class ElementPlaceHolder extends Element{
-    public static final ElementPlaceHolder PLACEHOLDER = new ElementPlaceHolder();
+    public static final ElementPlaceHolder PLACEHOLDER = new ElementPlaceHolder(null);
+
+    public ElementPlaceHolder(Grid grid) {
+        super(grid);
+    }
 
     @Override
     public String name() {
@@ -9,7 +13,7 @@ public class ElementPlaceHolder extends Element{
     }
 
     @Override
-    public Element newInstance() {
+    public Element newInstance(Grid grid) {
         return PLACEHOLDER;
     }
 

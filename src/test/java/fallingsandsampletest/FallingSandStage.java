@@ -15,7 +15,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         grid = new FallingGrid();
         for(int i = 500; i < 600; i++){
             for(int j = 500; j < 600; j++){
-                grid.set(i, j, new Sand());
+                grid.set(i, j, new Sand(grid));
             }
         }
     }
@@ -24,12 +24,12 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     public void input(InputTool inputTool) {
         float x = (float) inputTool.mouseX();
         float y = (float) inputTool.mouseY();
-        int putX = (int) x * 512 + 512;
-        int putY = (int) y * 512 + 512;
+        int putX = (int) (x * 512 + 512);
+        int putY = (int) (y * 512 + 512);
         if (inputTool.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
             for(int i = -5; i < 5; i++){
                 for(int j = -5; j < 5; j++){
-                    grid.set(putX + i, putY + j, new Sand());
+                    grid.set(putX + i, putY + j, new Sand(grid));
                 }
             }
         }
@@ -43,6 +43,8 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     @Override
     public void render(Render renderer) {
         renderer.pixelDrawer.setProjection(new Matrix4f().ortho(0, 1024f, 0, 1024f, -1, 1));
+        renderer.pixelDrawer.setModel(new Matrix4f().identity());
+        renderer.pixelDrawer.setView(new Matrix4f().identity());
         grid.render(renderer);
     }
 

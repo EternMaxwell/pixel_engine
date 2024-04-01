@@ -5,9 +5,12 @@ import com.maxwell_dev.pixel_engine.world.ElementBase;
 import java.nio.ByteBuffer;
 
 public abstract class Element <T extends Grid<?,?,?>, ElementType, ElementID> implements ElementBase {
+
+    public Element(T grid){}
+
     //methods that must be implemented
     public abstract String name();
-    public abstract Element<T, ElementType, ElementID> newInstance();
+    public abstract Element<T, ElementType, ElementID> newInstance(T grid);
     public abstract ElementID id();
     public abstract ElementType type();
     public abstract boolean step(T grid, int x, int y, int tick);

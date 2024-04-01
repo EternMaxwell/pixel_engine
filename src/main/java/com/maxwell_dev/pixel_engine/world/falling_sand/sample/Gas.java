@@ -6,7 +6,8 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
     float sinkingProcess = 0.0f;
     boolean sinkingTried = false;
 
-    public Gas(int existenceTime) {
+    public Gas(Grid grid, int existenceTime) {
+        super(grid);
         this.existenceTime = existenceTime;
     }
 

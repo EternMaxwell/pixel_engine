@@ -10,6 +10,12 @@ public abstract class Powder<ElementID> extends Element<ElementID>{
     private float thresholdY = 0.0f;
     private boolean falling = true;
 
+    public Powder(Grid<?, ?, ElementID> grid) {
+        super(grid);
+        velocityY = grid.default_vy();
+        velocityX = grid.default_vx();
+    }
+
     @Override
     public ElementType type() {
         return ElementType.POWDER;
@@ -36,13 +42,16 @@ public abstract class Powder<ElementID> extends Element<ElementID>{
                 int[] blocked = new int[2];
                 int[] lastAvailable = new int[2];
                 if(tryGetTo(grid, x, y, xMove, yMove, xMod, yMod, blocked, lastAvailable)){
+                    grid.set(x, y, null);
                     grid.set(x + xMod * xMove, y + yMod * yMove, this);
-                    grid.set(x, y, null);
                 }else{
-                    grid.set(lastAvailable[0], lastAvailable[1], this);
                     grid.set(x, y, null);
+                    grid.set(lastAvailable[0], lastAvailable[1], this);
                     if(blockDirSameToGravity(grid, blocked[0] - lastAvailable[0], blocked[1] - lastAvailable[1])){
-                        falling = false;
+                        Element block = grid.get(blocked[0], blocked[1]);
+                        if(block == null || !block.freeFall()){
+                            falling = false;
+                        }
                     }
                 }
             }
@@ -63,24 +72,22 @@ public abstract class Powder<ElementID> extends Element<ElementID>{
             if(xLarger){
                 int shouldBeY = Math.round(y + (lastX - x) * ratio * yMod);
                 if(shouldBeY != lastY){
-                    int thisY = lastY + yMod;
-                    if(grid.get(lastX, thisY) == null || grid.get(lastX, thisY).type() == ElementType.GAS){
+                    lastY += yMod;
+                    if(grid.get(lastX, lastY) == null){
                         lastAvailable[0] = lastX;
-                        lastAvailable[1] = thisY;
-                        lastY = thisY;
+                        lastAvailable[1] = lastY;
                     }else {
                         blocked[0] = lastX;
-                        blocked[1] = thisY;
+                        blocked[1] = lastY;
                         return false;
                     }
                 }else{
-                    int thisX = lastX + xMod;
-                    if(grid.get(thisX, lastY) == null || grid.get(thisX, lastY).type() == ElementType.GAS){
-                        lastAvailable[0] = thisX;
+                    lastX += xMod;
+                    if(grid.get(lastX, lastY) == null){
+                        lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
-                        lastX = thisX;
                     }else {
-                        blocked[0] = thisX;
+                        blocked[0] = lastX;
                         blocked[1] = lastY;
                         return false;
                     }
@@ -88,25 +95,23 @@ public abstract class Powder<ElementID> extends Element<ElementID>{
             }else{
                 int shouldBeX = Math.round(x + (lastY - y) * ratio * xMod);
                 if(shouldBeX != lastX){
-                    int thisX = lastX + xMod;
-                    if(grid.get(thisX, lastY) == null || grid.get(thisX, lastY).type() == ElementType.GAS){
-                        lastAvailable[0] = thisX;
+                    lastX += xMod;
+                    if(grid.get(lastX, lastY) == null){
+                        lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
-                        lastX = thisX;
                     }else {
-                        blocked[0] = thisX;
+                        blocked[0] = lastX;
                         blocked[1] = lastY;
                         return false;
                     }
                 }else{
-                    int thisY = lastY + yMod;
-                    if(grid.get(lastX, thisY) == null || grid.get(lastX, thisY).type() == ElementType.GAS){
+                    lastY += yMod;
+                    if(grid.get(lastX, lastY) == null){
                         lastAvailable[0] = lastX;
-                        lastAvailable[1] = thisY;
-                        lastY = thisY;
+                        lastAvailable[1] = lastY;
                     }else {
                         blocked[0] = lastX;
-                        blocked[1] = thisY;
+                        blocked[1] = lastY;
                         return false;
                     }
                 }

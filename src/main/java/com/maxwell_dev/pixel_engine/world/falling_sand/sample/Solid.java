@@ -1,6 +1,10 @@
 package com.maxwell_dev.pixel_engine.world.falling_sand.sample;
 
 public abstract class Solid<ElementID> extends Element<ElementID>{
+    public Solid(Grid<?, ?, ElementID> grid) {
+        super(grid);
+    }
+
     @Override
     public ElementType type() {
         return ElementType.SOLID;

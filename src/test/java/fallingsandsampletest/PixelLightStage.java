@@ -22,7 +22,7 @@ public class PixelLightStage extends Stage<Render, InputTool> {
 
     FallingGrid grid;
 
-    Element<ElementID>[] elements = new Element[]{new Sand(), new Stone()};
+    Element<ElementID>[] elements = new Element[]{new Sand(grid), new Stone(grid)};
     int index = 0;
     Image lightMap;
     FrameBuffer frameBuffer;
@@ -94,7 +94,7 @@ public class PixelLightStage extends Stage<Render, InputTool> {
             int gridY = (int) ((1 + y) * 32);
             for(int i = -5; i <= 5; i++)
                 for(int j = -5; j <= 5; j++)
-                    grid.set(gridX + i, gridY + j, (Element<ElementID>) elements[index].newInstance());
+                    grid.set(gridX + i, gridY + j, (Element<ElementID>) elements[index].newInstance(grid));
         }
         if(inputTool.scrollY() > 0)
             index = (index + 1) % elements.length;

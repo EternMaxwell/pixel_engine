@@ -6,7 +6,8 @@ import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Powder;
 
 public class Sand extends Powder<ElementID> {
 
-    public Sand() {
+    public Sand(Grid grid) {
+        super(grid);
         color = new float[]{0.8f, 0.8f, 0.0f, 1f};
     }
 
@@ -16,8 +17,8 @@ public class Sand extends Powder<ElementID> {
     }
 
     @Override
-    public Element<ElementID> newInstance() {
-        return new Sand();
+    public Element<ElementID> newInstance(Grid grid) {
+        return new Sand(grid);
     }
 
     @Override
