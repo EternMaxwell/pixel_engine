@@ -4,7 +4,8 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
     boolean falling = true;
     int lastTick = -1;
     float sinkingProcess = 0.0f;
-    float velocity = 0.7f;
+    float velocityX = 0.0f;
+    float velocityY = 0.0f;
     int dir = Math.random() > 0.5? 1: -1;
     int lastBlocked = 0;
 
@@ -33,5 +34,13 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
     @Override
     public boolean step(Grid<?,?,ElementID> grid, int x, int y, int tick) {
         return false;
+    }
+
+    public float velocityX() {
+        return velocityX;
+    }
+
+    public float velocityY() {
+        return velocityY;
     }
 }

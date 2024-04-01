@@ -47,10 +47,63 @@ public abstract class Powder<ElementID> extends Element<ElementID>{
                 }else{
                     grid.set(x, y, null);
                     grid.set(lastAvailable[0], lastAvailable[1], this);
+                    Element block = grid.get(blocked[0], blocked[1]);
                     if(blockDirSameToGravity(grid, blocked[0] - lastAvailable[0], blocked[1] - lastAvailable[1])){
-                        Element block = grid.get(blocked[0], blocked[1]);
-                        if(block == null || !block.freeFall()){
+                        if(!block.freeFall()){
                             falling = false;
+                            float dot = grid.gravity_x() * velocityY - grid.gravity_y() * velocityX;
+                            //TODO: random spread speed when blocked and no longer free falling.
+                            if(dot == 0){
+
+                            }else if(dot > 0){
+
+                            }else{
+
+                            }
+                        }
+                    }else{
+                        if(block.type() == ElementType.SOLID){
+                            float restitution = (float) Math.sqrt(block.restitution() * restitution());
+                            float friction = (float) Math.sqrt(block.friction() * friction());
+                            if(blocked[0] == lastAvailable[0]) {
+                                velocityX = -velocityX * restitution;
+                                velocityY = velocityY * friction;
+                            }else{
+                                velocityY = -velocityY * restitution;
+                                velocityX = velocityX * friction;
+                            }
+                        }else if(block.type() == ElementType.POWDER){
+                            float restitution = (float) Math.sqrt(block.restitution() * restitution());
+                            float friction = (float) Math.sqrt(block.friction() * friction());
+                            if(blocked[0] == lastAvailable[0]) {
+                                float impulseY = ((restitution + 1) * density() * block.density() * (velocityY - ((Powder)block).velocityY())) / (density() + block.density());
+                                float impulseX = (velocityX - ((Powder)block).velocityX() > 0? 1: -1) * Math.max(Math.abs(friction * impulseY),
+                                        Math.abs(density() * block.density() * (velocityX - ((Powder)block).velocityX())) / (density() + block.density()));
+                                block.impulse(impulseX, impulseY, grid.pixelSize());
+                                impulse(-impulseX, -impulseY, grid.pixelSize());
+                            }else{
+                                float impulseX = ((restitution + 1) * density() * block.density() * (velocityX - ((Powder)block).velocityX())) / (density() + block.density());
+                                float impulseY = (velocityY - ((Powder)block).velocityY() > 0? 1: -1) * Math.max(Math.abs(friction * impulseX),
+                                        Math.abs(density() * block.density() * (velocityY - ((Powder)block).velocityY())) / (density() + block.density()));
+                                block.impulse(impulseX, impulseY, grid.pixelSize());
+                                impulse(-impulseX, -impulseY, grid.pixelSize());
+                            }
+                        }else if(block.type() == ElementType.LIQUID){
+                            float restitution = (float) Math.sqrt(block.restitution() * restitution());
+                            float friction = (float) Math.sqrt(block.friction() * friction());
+                            if(blocked[0] == lastAvailable[0]) {
+                                float impulseY = ((restitution + 1) * density() * block.density() * (velocityY - ((Liquid)block).velocityY())) / (density() + block.density());
+                                float impulseX = (velocityX - ((Liquid)block).velocityX() > 0? 1: -1) * Math.max(Math.abs(friction * impulseY),
+                                        Math.abs(density() * block.density() * (velocityX - ((Liquid)block).velocityX())) / (density() + block.density()));
+                                block.impulse(impulseX, impulseY, grid.pixelSize());
+                                impulse(-impulseX, -impulseY, grid.pixelSize());
+                            }else{
+                                float impulseX = ((restitution + 1) * density() * block.density() * (velocityX - ((Liquid)block).velocityX())) / (density() + block.density());
+                                float impulseY = (velocityY - ((Liquid)block).velocityY() > 0? 1: -1) * Math.max(Math.abs(friction * impulseX),
+                                        Math.abs(density() * block.density() * (velocityY - ((Liquid)block).velocityY())) / (density() + block.density()));
+                                block.impulse(impulseX, impulseY, grid.pixelSize());
+                                impulse(-impulseX, -impulseY, grid.pixelSize());
+                            }
                         }
                     }
                 }
@@ -133,8 +186,17 @@ public abstract class Powder<ElementID> extends Element<ElementID>{
         return falling;
     }
 
+    public float velocityX() {
+        return velocityX;
+    }
+
+    public float velocityY() {
+        return velocityY;
+    }
+
     @Override
     public void impulse(float x, float y, float pixel_size) {
-
+        velocityX += x / density();
+        velocityY += y / density();
     }
 }
