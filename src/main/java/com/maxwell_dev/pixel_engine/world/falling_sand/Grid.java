@@ -21,14 +21,13 @@ public abstract class Grid <T extends Element<?,?,?>,V extends Renderer, ActionE
     public float pixelSize() {
         return pixelSize;
     }
-
     public float gravity_y() {
         return gravity_y;
     }
-
     public float gravity_x() {
         return gravity_x;
     }
-
+    public abstract float default_vx();
+    public abstract float default_vy();
     public abstract float tickTime();
 }

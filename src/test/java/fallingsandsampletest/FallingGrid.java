@@ -10,9 +10,9 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
 
     public FallingGrid() {
         gravity_x = 0;
-        gravity_y = -100f;
+        gravity_y = -10f;
         pixelSize = 1;
-        grid = new Element[64][64];
+        grid = new Element[1024][1024];
     }
     @Override
     public Element<ElementID> get(int x, int y) {
@@ -87,6 +87,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
                 }
             }
         }
+        renderer.pixelDrawer.flush();
     }
 
     @Override
@@ -102,6 +103,16 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
     @Override
     public float airDensity() {
         return 0.028f;
+    }
+
+    @Override
+    public float default_vx() {
+        return 0;
+    }
+
+    @Override
+    public float default_vy() {
+        return -0.7f;
     }
 
     @Override

@@ -1,8 +1,9 @@
 import com.maxwell_dev.pixel_engine.core.Application;
 import com.maxwell_dev.pixel_engine.core.InputTool;
 import com.maxwell_dev.pixel_engine.render.opengl.Window;
+import fallingsandsampletest.FallingSandStage;
+import fallingsandsampletest.Render;
 import org.lwjgl.opengl.GL;
-import spaceGameDemo.Render;
 import spaceGameDemo.SpaceGameStage;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -17,7 +18,7 @@ public class Test extends Application<Render, InputTool> {
     public void init() {
         if(!glfwInit())
             throw new IllegalStateException("Failed to initialize GLFW!");
-        window = new Window(800, 800, "Test");
+        window = new Window(1024, 1024, "Test");
         window.setContextVersionMajor(4);
         window.setContextVersionMinor(6);
         window.createWindow();
@@ -29,7 +30,7 @@ public class Test extends Application<Render, InputTool> {
             render();
         });
         render = new Render(window);
-        stage = new SpaceGameStage();
+        stage = new FallingSandStage();
         stage.init();
     }
 
@@ -47,7 +48,7 @@ public class Test extends Application<Render, InputTool> {
         long start = System.nanoTime();
         stage.update();
         long end = System.nanoTime();
-//        System.out.println("Time: " + (end - start) / 1e6);
+        System.out.println("Time: " + (end - start) / 1e6);
     }
 
     @Override
