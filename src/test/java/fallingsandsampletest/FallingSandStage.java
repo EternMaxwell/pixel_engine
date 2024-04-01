@@ -2,22 +2,23 @@ package fallingsandsampletest;
 
 import com.maxwell_dev.pixel_engine.core.InputTool;
 import com.maxwell_dev.pixel_engine.stage.Stage;
+import com.maxwell_dev.pixel_engine.world.falling_sand.Element;
+import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid;
+import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Liquid;
 import org.joml.Matrix4f;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class FallingSandStage extends Stage<Render, InputTool> {
 
-    FallingGrid grid;
+    Grid grid;
+    Element[] elements;
+    int index = 0;
 
     @Override
     public void init() {
         grid = new FallingGrid();
-        for(int i = 500; i < 600; i++){
-            for(int j = 500; j < 600; j++){
-                grid.set(i, j, new Sand(grid));
-            }
-        }
+        elements = new Element[]{new Sand(grid), new Stone(grid)};
     }
 
     @Override
@@ -29,8 +30,20 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         if (inputTool.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
             for(int i = -5; i < 5; i++){
                 for(int j = -5; j < 5; j++){
-                    grid.set(putX + i, putY + j, new Sand(grid));
+                    grid.set(putX + i, putY + j, elements[index].newInstance(grid));
                 }
+            }
+        }
+        if(inputTool.scrollY() > 0){
+            index++;
+            if(index >= elements.length){
+                index = 0;
+            }
+        }
+        if(inputTool.scrollY() < 0){
+            index--;
+            if(index < 0){
+                index = elements.length - 1;
             }
         }
     }
