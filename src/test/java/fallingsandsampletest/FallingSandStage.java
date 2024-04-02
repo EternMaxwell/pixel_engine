@@ -25,8 +25,8 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     public void input(InputTool inputTool) {
         float x = (float) inputTool.mouseX();
         float y = (float) inputTool.mouseY();
-        int putX = (int) (x * 512 + 512);
-        int putY = (int) (y * 512 + 512);
+        int putX = (int) (x * 128 + 128);
+        int putY = (int) (y * 128 + 128);
         if (inputTool.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
             for(int i = -5; i < 5; i++){
                 for(int j = -5; j < 5; j++){
@@ -55,7 +55,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void render(Render renderer) {
-        renderer.pixelDrawer.setProjection(new Matrix4f().ortho(0, 1024f, 0, 1024f, -1, 1));
+        renderer.pixelDrawer.setProjection(new Matrix4f().ortho(0, 256, 0, 256, -1, 1));
         renderer.pixelDrawer.setModel(new Matrix4f().identity());
         renderer.pixelDrawer.setView(new Matrix4f().identity());
         grid.render(renderer);

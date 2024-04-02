@@ -16,6 +16,7 @@ public abstract class Element <T extends Grid<?,?,?>, ElementType, ElementID> im
     public abstract boolean step(T grid, int x, int y, int tick);
     public abstract boolean randomTick(T grid, int x, int y, int tick, int intensity);
     public abstract float[] color();
+    public abstract void touch(T grid, int x, int y);
 
     //functions that may not be needed
     public abstract float density();

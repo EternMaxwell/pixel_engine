@@ -31,4 +31,9 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
     }
 
     public abstract Element<ElementID> existTimeEndReplaceElement();
+
+    @Override
+    public void touch(Grid<?, ?, ElementID> grid, int x, int y) {
+        //do nothing
+    }
 }

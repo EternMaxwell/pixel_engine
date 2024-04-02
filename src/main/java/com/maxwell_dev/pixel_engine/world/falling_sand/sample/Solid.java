@@ -36,4 +36,9 @@ public abstract class Solid<ElementID> extends Element<ElementID>{
     public void impulse(float x, float y, float pixel_size) {
         //do nothing
     }
+
+    @Override
+    public void touch(Grid<?, ?, ElementID> grid, int x, int y) {
+        //do nothing
+    }
 }

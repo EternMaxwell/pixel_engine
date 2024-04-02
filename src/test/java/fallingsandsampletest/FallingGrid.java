@@ -10,9 +10,9 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
 
     public FallingGrid() {
         gravity_x = 0;
-        gravity_y = -10f;
+        gravity_y = -100f;
         pixelSize = 1;
-        grid = new Element[1024][1024];
+        grid = new Element[256][256];
     }
     @Override
     public Element<ElementID> get(int x, int y) {
@@ -38,6 +38,22 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
             return;
         }
         grid[x][y] = element;
+        Element<ElementID> side = get(x + 1, y);
+        if(side != null){
+            side.touch(this, x + 1, y);
+        }
+        side = get(x - 1, y);
+        if(side != null){
+            side.touch(this, x - 1, y);
+        }
+        side = get(x, y + 1);
+        if(side != null){
+            side.touch(this, x, y + 1);
+        }
+        side = get(x, y - 1);
+        if(side != null){
+            side.touch(this, x, y - 1);
+        }
     }
 
     @Override

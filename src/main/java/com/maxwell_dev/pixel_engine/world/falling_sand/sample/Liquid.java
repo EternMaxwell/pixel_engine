@@ -43,4 +43,9 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
     public float velocityY() {
         return velocityY;
     }
+
+    @Override
+    public void touch(Grid<?, ?, ElementID> grid, int x, int y) {
+        //do nothing
+    }
 }

@@ -1,11 +1,9 @@
 package com.maxwell_dev.pixel_engine.world.falling_sand.sample;
 
-import org.jetbrains.annotations.NotNull;
-
-public abstract class Powder<ElementID> extends Element<ElementID>{
+public abstract class Powder<ElementID> extends Element<ElementID> {
     private int lastTick = -1;
-    private float velocityX = 0.0f;
-    private float velocityY = 0.0f;
+    private float velocityX;
+    private float velocityY;
     private float thresholdX = 0.0f;
     private float thresholdY = 0.0f;
     private boolean falling = true;
@@ -23,93 +21,147 @@ public abstract class Powder<ElementID> extends Element<ElementID>{
 
     @Override
     public boolean step(Grid<?, ?, ElementID> grid, int x, int y, int tick) {
-        if(lastTick == tick)
+        if (lastTick == tick)
             return false;
         lastTick = tick;
 
-        if(falling) {
+        boolean moved = false;
+
+        if (falling) {
             velocityY += grid.gravity_y() * grid.tickTime();
             velocityX += grid.gravity_x() * grid.tickTime();
-            thresholdX += velocityX * grid.tickTime()/grid.pixelSize();
-            thresholdY += velocityY * grid.tickTime()/grid.pixelSize();
+            thresholdX += velocityX * grid.tickTime() / grid.pixelSize();
+            thresholdY += velocityY * grid.tickTime() / grid.pixelSize();
             int xMod = thresholdX > 0 ? 1 : -1;
             int yMod = thresholdY > 0 ? 1 : -1;
             int xMove = (int) Math.abs(thresholdX);
             int yMove = (int) Math.abs(thresholdY);
-            thresholdX = xMove == 0 ? thresholdX : 0;
-            thresholdY = yMove == 0 ? thresholdY : 0;
+//            thresholdX = xMove == 0 ? thresholdX : 0;
+//            thresholdY = yMove == 0 ? thresholdY : 0;
+            thresholdX -= xMove * xMod;
+            thresholdY -= yMove * yMod;
             if (xMove != 0 || yMove != 0) {
-                int[] blocked = new int[2];
                 int[] lastAvailable = new int[2];
-                if(tryGetTo(grid, x, y, xMove, yMove, xMod, yMod, blocked, lastAvailable)){
-                    grid.set(x, y, null);
-                    grid.set(x + xMod * xMove, y + yMod * yMove, this);
+                int[] blocked = new int[2];
+                if(tryGetTo(grid, x, y, xMove, yMove, xMod, yMod, blocked, lastAvailable)) {
+                    if(x != lastAvailable[0] || y != lastAvailable[1]){
+                        grid.set(x, y, null);
+                        grid.set(lastAvailable[0], lastAvailable[1], this);
+                        moved = true;
+                    }
                 }else{
-                    grid.set(x, y, null);
-                    grid.set(lastAvailable[0], lastAvailable[1], this);
-                    Element block = grid.get(blocked[0], blocked[1]);
+                    if(x != lastAvailable[0] || y != lastAvailable[1]){
+                        grid.set(x, y, null);
+                        grid.set(lastAvailable[0], lastAvailable[1], this);
+                        moved = true;
+                    }
+                    collideBlock(grid, blocked, lastAvailable);
                     if(blockDirSameToGravity(grid, blocked[0] - lastAvailable[0], blocked[1] - lastAvailable[1])){
-                        if(!block.freeFall()){
-                            falling = false;
-                            float dot = grid.gravity_x() * velocityY - grid.gravity_y() * velocityX;
-                            //TODO: random spread speed when blocked and no longer free falling.
-                            if(dot == 0){
-
-                            }else if(dot > 0){
-
-                            }else{
-
-                            }
+                        int[] shouldBe = new int[2];
+                        tryLBandRB(grid, lastAvailable[0], lastAvailable[1], shouldBe);
+                        if((lastAvailable[0] != shouldBe[0] || lastAvailable[1] != shouldBe[1]) && !grid.get(blocked[0], blocked[1]).freeFall()){
+                            grid.set(lastAvailable[0], lastAvailable[1], null);
+                            grid.set(shouldBe[0], shouldBe[1], this);
+                            moved = true;
                         }
-                    }else{
-                        if(block.type() == ElementType.SOLID){
-                            float restitution = (float) Math.sqrt(block.restitution() * restitution());
-                            float friction = (float) Math.sqrt(block.friction() * friction());
-                            if(blocked[0] == lastAvailable[0]) {
-                                velocityX = -velocityX * restitution;
-                                velocityY = velocityY * friction;
-                            }else{
-                                velocityY = -velocityY * restitution;
-                                velocityX = velocityX * friction;
-                            }
-                        }else if(block.type() == ElementType.POWDER){
-                            float restitution = (float) Math.sqrt(block.restitution() * restitution());
-                            float friction = (float) Math.sqrt(block.friction() * friction());
-                            if(blocked[0] == lastAvailable[0]) {
-                                float impulseY = ((restitution + 1) * density() * block.density() * (velocityY - ((Powder)block).velocityY())) / (density() + block.density());
-                                float impulseX = (velocityX - ((Powder)block).velocityX() > 0? 1: -1) * Math.max(Math.abs(friction * impulseY),
-                                        Math.abs(density() * block.density() * (velocityX - ((Powder)block).velocityX())) / (density() + block.density()));
-                                block.impulse(impulseX, impulseY, grid.pixelSize());
-                                impulse(-impulseX, -impulseY, grid.pixelSize());
-                            }else{
-                                float impulseX = ((restitution + 1) * density() * block.density() * (velocityX - ((Powder)block).velocityX())) / (density() + block.density());
-                                float impulseY = (velocityY - ((Powder)block).velocityY() > 0? 1: -1) * Math.max(Math.abs(friction * impulseX),
-                                        Math.abs(density() * block.density() * (velocityY - ((Powder)block).velocityY())) / (density() + block.density()));
-                                block.impulse(impulseX, impulseY, grid.pixelSize());
-                                impulse(-impulseX, -impulseY, grid.pixelSize());
-                            }
-                        }else if(block.type() == ElementType.LIQUID){
-                            float restitution = (float) Math.sqrt(block.restitution() * restitution());
-                            float friction = (float) Math.sqrt(block.friction() * friction());
-                            if(blocked[0] == lastAvailable[0]) {
-                                float impulseY = ((restitution + 1) * density() * block.density() * (velocityY - ((Liquid)block).velocityY())) / (density() + block.density());
-                                float impulseX = (velocityX - ((Liquid)block).velocityX() > 0? 1: -1) * Math.max(Math.abs(friction * impulseY),
-                                        Math.abs(density() * block.density() * (velocityX - ((Liquid)block).velocityX())) / (density() + block.density()));
-                                block.impulse(impulseX, impulseY, grid.pixelSize());
-                                impulse(-impulseX, -impulseY, grid.pixelSize());
-                            }else{
-                                float impulseX = ((restitution + 1) * density() * block.density() * (velocityX - ((Liquid)block).velocityX())) / (density() + block.density());
-                                float impulseY = (velocityY - ((Liquid)block).velocityY() > 0? 1: -1) * Math.max(Math.abs(friction * impulseX),
-                                        Math.abs(density() * block.density() * (velocityY - ((Liquid)block).velocityY())) / (density() + block.density()));
-                                block.impulse(impulseX, impulseY, grid.pixelSize());
-                                impulse(-impulseX, -impulseY, grid.pixelSize());
-                            }
+                        if(shouldBe[0] == lastAvailable[0] && shouldBe[1] == lastAvailable[1]){
+                            falling = grid.get(blocked[0], blocked[1]).freeFall();
                         }
                     }
                 }
             }
         }
+        return moved;
+    }
+
+    public boolean tryLBandRB(Grid<?, ?, ElementID> grid, int x, int y, int[] shouldBe){
+        shouldBe[0] = x;
+        shouldBe[1] = y;
+        float gravity = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
+        float downX = grid.gravity_x() / gravity;
+        float downY = grid.gravity_y() / gravity;
+        int belowX = Math.round(x + downX);
+        int belowY = Math.round(y + downY);
+        if(grid.get(belowX, belowY) == null){
+            shouldBe[0] = belowX;
+            shouldBe[1] = belowY;
+            return true;
+        }
+        int leftBelowX = Math.round(x + downX + downY);
+        int leftBelowY = Math.round(y + downY - downX);
+        int rightBelowX = Math.round(x + downX - downY);
+        int rightBelowY = Math.round(y + downY + downX);
+        if(Math.random() < 0.5){
+            if(grid.get(leftBelowX, leftBelowY) == null){
+                shouldBe[0] = leftBelowX;
+                shouldBe[1] = leftBelowY;
+                return false;
+            }
+            if(grid.get(rightBelowX, rightBelowY) == null){
+                shouldBe[0] = rightBelowX;
+                shouldBe[1] = rightBelowY;
+                return false;
+            }
+        }else {
+            if(grid.get(rightBelowX, rightBelowY) == null){
+                shouldBe[0] = rightBelowX;
+                shouldBe[1] = rightBelowY;
+                return false;
+            }
+            if(grid.get(leftBelowX, leftBelowY) == null){
+                shouldBe[0] = leftBelowX;
+                shouldBe[1] = leftBelowY;
+                return false;
+            }
+        }
         return false;
+    }
+
+    public void collideBlock(Grid<?, ?, ElementID> grid, int[] blocked, int[] lastAvailable) {
+        Element block = grid.get(blocked[0], blocked[1]);
+        if (block.type() == ElementType.SOLID) {
+            float restitution = (float) Math.sqrt(block.restitution() * restitution());
+            float friction = (float) Math.sqrt(block.friction() * friction());
+            if (blocked[0] == lastAvailable[0]) {
+                velocityX = -velocityX * restitution;
+                velocityY = velocityY * friction;
+            } else {
+                velocityY = -velocityY * restitution;
+                velocityX = velocityX * friction;
+            }
+        } else if (block.type() == ElementType.POWDER) {
+            float restitution = (float) Math.sqrt(block.restitution() * restitution());
+            float friction = (float) Math.sqrt(block.friction() * friction());
+            if (blocked[0] == lastAvailable[0]) {
+                float impulseY = ((restitution + 1) * density() * block.density() * (velocityY - ((Powder) block).velocityY())) / (density() + block.density());
+                float impulseX = (velocityX - ((Powder) block).velocityX() > 0 ? 1 : -1) * Math.max(Math.abs(friction * impulseY),
+                        Math.abs(density() * block.density() * (velocityX - ((Powder) block).velocityX())) / (density() + block.density()));
+                block.impulse(impulseX, impulseY, grid.pixelSize());
+                impulse(-impulseX, -impulseY, grid.pixelSize());
+            } else {
+                float impulseX = ((restitution + 1) * density() * block.density() * (velocityX - ((Powder) block).velocityX())) / (density() + block.density());
+                float impulseY = (velocityY - ((Powder) block).velocityY() > 0 ? 1 : -1) * Math.max(Math.abs(friction * impulseX),
+                        Math.abs(density() * block.density() * (velocityY - ((Powder) block).velocityY())) / (density() + block.density()));
+                block.impulse(impulseX, impulseY, grid.pixelSize());
+                impulse(-impulseX, -impulseY, grid.pixelSize());
+            }
+        } else if (block.type() == ElementType.LIQUID) {
+            float restitution = (float) Math.sqrt(block.restitution() * restitution());
+            float friction = (float) Math.sqrt(block.friction() * friction());
+            if (blocked[0] == lastAvailable[0]) {
+                float impulseY = ((restitution + 1) * density() * block.density() * (velocityY - ((Liquid) block).velocityY())) / (density() + block.density());
+                float impulseX = (velocityX - ((Liquid) block).velocityX() > 0 ? 1 : -1) * Math.max(Math.abs(friction * impulseY),
+                        Math.abs(density() * block.density() * (velocityX - ((Liquid) block).velocityX())) / (density() + block.density()));
+                block.impulse(impulseX, impulseY, grid.pixelSize());
+                impulse(-impulseX, -impulseY, grid.pixelSize());
+            } else {
+                float impulseX = ((restitution + 1) * density() * block.density() * (velocityX - ((Liquid) block).velocityX())) / (density() + block.density());
+                float impulseY = (velocityY - ((Liquid) block).velocityY() > 0 ? 1 : -1) * Math.max(Math.abs(friction * impulseX),
+                        Math.abs(density() * block.density() * (velocityY - ((Liquid) block).velocityY())) / (density() + block.density()));
+                block.impulse(impulseX, impulseY, grid.pixelSize());
+                impulse(-impulseX, -impulseY, grid.pixelSize());
+            }
+        }
     }
 
     public boolean tryGetTo(Grid<?, ?, ElementID> grid, int x, int y, int xMove, int yMove, int xMod, int yMod, int[] blocked, int[] lastAvailable){
@@ -121,7 +173,11 @@ public abstract class Powder<ElementID> extends Element<ElementID>{
         int targetY = y + yMod * yMove;
         boolean xLarger = xMove > yMove;
         float ratio = xLarger ? (float) yMove / xMove : (float) xMove / yMove;
-        while (lastX != targetX || lastY != targetY) {
+        int xMin = Math.min(x, targetX);
+        int xMax = Math.max(x, targetX);
+        int yMin = Math.min(y, targetY);
+        int yMax = Math.max(y, targetY);
+        while ((lastX != targetX || lastY != targetY) && (lastX >= xMin && lastX <= xMax && lastY >= yMin && lastY <= yMax)) {
             if(xLarger){
                 int shouldBeY = Math.round(y + (lastX - x) * ratio * yMod);
                 if(shouldBeY != lastY){
@@ -173,12 +229,85 @@ public abstract class Powder<ElementID> extends Element<ElementID>{
         return true;
     }
 
+    /**
+     * @return if need to be set to free falling.
+     */
+    public boolean shouldBe(Grid grid, int x, int y, int[] shouldBe){
+        velocityY += grid.gravity_y() * grid.tickTime();
+        velocityX += grid.gravity_x() * grid.tickTime();
+        thresholdX += velocityX * grid.tickTime()/grid.pixelSize();
+        thresholdY += velocityY * grid.tickTime()/grid.pixelSize();
+        int xMod = thresholdX > 0 ? 1 : -1;
+        int yMod = thresholdY > 0 ? 1 : -1;
+        int xMove = (int) Math.abs(thresholdX);
+        int yMove = (int) Math.abs(thresholdY);
+//        thresholdX = xMove == 0 ? thresholdX : 0;
+//        thresholdY = yMove == 0 ? thresholdY : 0;
+        thresholdX -= xMove * xMod;
+        thresholdY -= yMove * yMod;
+        if(xMove == 0 && yMove == 0){
+            shouldBe[0] = x;
+            shouldBe[1] = y;
+            return false;
+        }else{
+            int lastX = x;
+            int lastY = y;
+            shouldBe[0] = x;
+            shouldBe[1] = y;
+            int totalMove = Math.round((float) Math.sqrt(xMove * xMove + yMove * yMove));
+            float velocity = (float) Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+            float gravityLength = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
+            if(gravityLength == 0)
+                return true;
+            float normalizedVx = velocityX / velocity;
+            float normalizedVy = velocityY / velocity;
+            float downX = grid.gravity_x() / gravityLength;
+            float downY = grid.gravity_y() / gravityLength;
+            float currentX = x;
+            float currentY = y;
+            for(int i = 0; i < totalMove; i++){
+                int belowX = Math.round(currentX + downX);
+                int belowY = Math.round(currentY + downY);
+                if(grid.get(belowX, belowY) == null){
+                    shouldBe[0] = belowX;
+                    shouldBe[1] = belowY;
+                    currentY = belowY;
+                    currentX = belowX;
+                }
+                currentX += normalizedVx;
+                currentY += normalizedVy;
+                belowX = Math.round(currentX + downX);
+                belowY = Math.round(currentY + downY);
+                int roundX = Math.round(currentX);
+                int roundY = Math.round(currentY);
+                if(grid.get(belowX, belowY) == null){
+                    shouldBe[0] = belowX;
+                    shouldBe[1] = belowY;
+                    currentY = belowY;
+                    currentX = belowX;
+                    belowX = Math.round(currentX + downX);
+                    belowY = Math.round(currentY + downY);
+                    if(grid.get(belowX, belowY) == null){
+                        return true;
+                    }
+                }else if(grid.get(roundX, roundY) == null){
+                    shouldBe[0] = roundX;
+                    shouldBe[1] = roundY;
+                    return false;
+                }
+            }
+            return false;
+        }
+    }
+
     public boolean blockDirSameToGravity(Grid<?, ?, ElementID> grid, float blockX, float blockY){
         float gravity_x = grid.gravity_x();
         float gravity_y = grid.gravity_y();
+        if(gravity_x == 0 && gravity_y == 0)
+            return false;
         double angle = Math.atan2(gravity_y, gravity_x);
         double angle2 = Math.atan2(blockY, blockX);
-        return Math.abs(angle - angle2) < Math.PI / 4;
+        return Math.abs(angle - angle2) <= Math.PI / 4;
     }
 
     @Override
@@ -198,5 +327,10 @@ public abstract class Powder<ElementID> extends Element<ElementID>{
     public void impulse(float x, float y, float pixel_size) {
         velocityX += x / density();
         velocityY += y / density();
+    }
+
+    @Override
+    public void touch(Grid<?, ?, ElementID> grid, int x, int y) {
+        falling = true;
     }
 }

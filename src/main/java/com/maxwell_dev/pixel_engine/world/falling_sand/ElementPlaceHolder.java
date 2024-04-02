@@ -38,6 +38,11 @@ public class ElementPlaceHolder extends Element{
     }
 
     @Override
+    public void touch(Grid grid, int x, int y) {
+
+    }
+
+    @Override
     public float density() {
         return 1;
     }
