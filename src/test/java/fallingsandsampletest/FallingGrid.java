@@ -149,7 +149,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
 
     @Override
     public float default_vy() {
-        return -60f;
+        return 0;
     }
 
     @Override

@@ -8,7 +8,8 @@ public class Sand extends Powder<ElementID> {
 
     public Sand(Grid grid) {
         super(grid);
-        color = new float[]{0.8f, 0.8f, 0.0f, 1f};
+        float random = (float) Math.random() * 0.1f;
+        color = new float[]{0.7f + random, 0.7f + random, 0.0f, 1f};
     }
 
     @Override
