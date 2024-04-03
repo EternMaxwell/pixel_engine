@@ -38,12 +38,12 @@ public class Sand extends Powder<ElementID> {
 
     @Override
     public float friction() {
-        return 0.2f;
+        return 0.5f;
     }
 
     @Override
     public float restitution() {
-        return 0.2f;
+        return 0;
     }
 
     @Override
@@ -54,5 +54,10 @@ public class Sand extends Powder<ElementID> {
     @Override
     public boolean damage(Grid<?, ?, ElementID> grid, int x, int y, float damage) {
         return false;
+    }
+
+    @Override
+    public float freeFallPossibility() {
+        return 0.5f;
     }
 }

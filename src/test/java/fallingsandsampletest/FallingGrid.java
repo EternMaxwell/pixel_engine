@@ -54,6 +54,22 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         if(side != null){
             side.touch(this, x, y - 1);
         }
+        side = get(x + 1, y + 1);
+        if(side != null){
+            side.touch(this, x + 1, y + 1);
+        }
+        side = get(x - 1, y - 1);
+        if(side != null){
+            side.touch(this, x - 1, y - 1);
+        }
+        side = get(x - 1, y + 1);
+        if(side != null){
+            side.touch(this, x - 1, y + 1);
+        }
+        side = get(x + 1, y - 1);
+        if(side != null){
+            side.touch(this, x + 1, y - 1);
+        }
     }
 
     @Override
@@ -98,7 +114,12 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[x].length; y++) {
                 if (grid[x][y] != null) {
-                    float[] color = grid[x][y].color();
+                    float[] color = grid[x][y].color().clone();
+                    if(!grid[x][y].freeFall()){
+                        color[0] *= 0.5F;
+                        color[1] *= 0.5F;
+                        color[2] *= 0.5F;
+                    }
                     renderer.pixelDrawer.draw(x * pixelSize + pixelSize / 2, y * pixelSize + pixelSize / 2, pixelSize, color[0], color[1], color[2], color[3]);
                 }
             }
@@ -128,11 +149,16 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
 
     @Override
     public float default_vy() {
-        return -0.7f;
+        return -60f;
     }
 
     @Override
     public float tickTime() {
         return 1/60f;
+    }
+
+    @Override
+    public float airResistance() {
+        return 0.98f;
     }
 }

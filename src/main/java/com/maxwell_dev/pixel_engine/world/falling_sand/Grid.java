@@ -18,6 +18,7 @@ public abstract class Grid <T extends Element<?,?,?>,V extends Renderer, ActionE
     public abstract int[] basePos();
     public abstract void action(double x, double y, ActionEnum action, double[] arguments);
     public abstract float airDensity();
+    public abstract float airResistance();
     public float pixelSize() {
         return pixelSize;
     }

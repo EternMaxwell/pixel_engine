@@ -30,6 +30,8 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
         if (falling) {
             velocityY += grid.gravity_y() * grid.tickTime();
             velocityX += grid.gravity_x() * grid.tickTime();
+            velocityY *= grid.airResistance();
+            velocityX *= grid.airResistance();
             thresholdX += velocityX * grid.tickTime() / grid.pixelSize();
             thresholdY += velocityY * grid.tickTime() / grid.pixelSize();
             int xMod = thresholdX > 0 ? 1 : -1;
@@ -59,16 +61,70 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                     if(blockDirSameToGravity(grid, blocked[0] - lastAvailable[0], blocked[1] - lastAvailable[1])){
                         int[] shouldBe = new int[2];
                         tryLBandRB(grid, lastAvailable[0], lastAvailable[1], shouldBe);
-                        if((lastAvailable[0] != shouldBe[0] || lastAvailable[1] != shouldBe[1]) && !grid.get(blocked[0], blocked[1]).freeFall()){
+                        if((lastAvailable[0] != shouldBe[0] || lastAvailable[1] != shouldBe[1])){
                             grid.set(lastAvailable[0], lastAvailable[1], null);
                             grid.set(shouldBe[0], shouldBe[1], this);
                             moved = true;
-                        }
-                        if(shouldBe[0] == lastAvailable[0] && shouldBe[1] == lastAvailable[1]){
+                        }else{
                             falling = grid.get(blocked[0], blocked[1]).freeFall();
+                            if(!falling){
+                                velocityX = grid.default_vx();
+                                velocityY = grid.default_vy();
+                            }
+                            shouldBe(grid, lastAvailable[0], lastAvailable[1], shouldBe);
+                            if((lastAvailable[0] != shouldBe[0] || lastAvailable[1] != shouldBe[1])){
+                                grid.set(lastAvailable[0], lastAvailable[1], null);
+                                grid.set(shouldBe[0], shouldBe[1], this);
+                                moved = true;
+                            }
+                        }
+                        if(!grid.get(blocked[0], blocked[1]).freeFall()){
+                            //TODO: give spread speed here
+                            float gravityLength = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
+                            float velocity = (float) Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+                            float dot = (grid.gravity_x() * velocityY - grid.gravity_y() * velocityX) / (gravityLength * velocity);
+                            int[] dir = new int[2];
+                            float factor = 1/2f;
+                            if(dot <= 0.3f){
+                                if(Math.random() > 0.5) {
+                                    dir[0] = -1;
+                                    dir[1] = 1;
+                                }else{
+                                    dir[0] = 1;
+                                    dir[1] = -1;
+                                }
+                                float newVx = dir[0] * grid.gravity_y() / gravityLength * velocity;
+                                float newVy = dir[1] * grid.gravity_x() / gravityLength * velocity;
+                                velocityX = newVx * factor;
+                                velocityY = newVy * factor;
+                            }else {
+                                if (dot > 0) {
+                                    dir[0] = -1;
+                                    dir[1] = 1;
+                                } else {
+                                    dir[0] = 1;
+                                    dir[1] = -1;
+                                }
+                                velocityX = dir[0] * velocity * grid.gravity_y() / gravityLength * factor;
+                                velocityY = dir[1] * velocity * grid.gravity_x() / gravityLength * factor;
+                            }
                         }
                     }
                 }
+            }
+        }else{
+            float gravity = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
+            if(gravity == 0)
+                return false;
+            float downX = grid.gravity_x() / gravity;
+            float downY = grid.gravity_y() / gravity;
+            int belowX = Math.round(x + downX);
+            int belowY = Math.round(y + downY);
+            if(grid.get(belowX, belowY) == null){
+                grid.set(x, y, null);
+                grid.set(belowX, belowY, this);
+                moved = true;
+                falling = true;
             }
         }
         return moved;
@@ -185,6 +241,7 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                     if(grid.get(lastX, lastY) == null){
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
+                        grid.set(lastX, lastY, grid.get(lastX, lastY));
                     }else {
                         blocked[0] = lastX;
                         blocked[1] = lastY;
@@ -195,6 +252,7 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                     if(grid.get(lastX, lastY) == null){
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
+                        grid.set(lastX, lastY, grid.get(lastX, lastY));
                     }else {
                         blocked[0] = lastX;
                         blocked[1] = lastY;
@@ -208,6 +266,7 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                     if(grid.get(lastX, lastY) == null){
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
+                        grid.set(lastX, lastY, grid.get(lastX, lastY));
                     }else {
                         blocked[0] = lastX;
                         blocked[1] = lastY;
@@ -218,6 +277,7 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                     if(grid.get(lastX, lastY) == null){
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
+                        grid.set(lastX, lastY, grid.get(lastX, lastY));
                     }else {
                         blocked[0] = lastX;
                         blocked[1] = lastY;
@@ -331,6 +391,9 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
 
     @Override
     public void touch(Grid<?, ?, ElementID> grid, int x, int y) {
-        falling = true;
+        if(Math.random() < freeFallPossibility())
+            falling = true;
     }
+
+    public abstract float freeFallPossibility();
 }
