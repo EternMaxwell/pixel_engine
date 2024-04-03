@@ -12,7 +12,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         gravity_x = 0;
         gravity_y = -100f;
         pixelSize = 1;
-        grid = new Element[256][256];
+        grid = new Element[512][512];
     }
     @Override
     public Element<ElementID> get(int x, int y) {
