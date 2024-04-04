@@ -34,17 +34,23 @@ public class FallingSandStage extends Stage<Render, InputTool> {
                 }
             }
         }
-        if(inputTool.scrollY() > 0){
+        if(inputTool.isKeyJustPressed(GLFW_KEY_EQUAL)){
             index++;
             if(index >= elements.length){
                 index = 0;
             }
         }
-        if(inputTool.scrollY() < 0){
+        if(inputTool.isKeyJustPressed(GLFW_KEY_MINUS)){
             index--;
             if(index < 0){
                 index = elements.length - 1;
             }
+        }
+        if(inputTool.scrollY() > 0){
+            grid.setGravity_y(grid.gravity_y() * 1.1f);
+        }
+        if(inputTool.scrollY() < 0){
+            grid.setGravity_y(grid.gravity_y() * 0.9f);
         }
     }
 

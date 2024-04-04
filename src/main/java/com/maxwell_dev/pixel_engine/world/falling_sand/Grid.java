@@ -28,6 +28,12 @@ public abstract class Grid <T extends Element<?,?,?>,V extends Renderer, ActionE
     public float gravity_x() {
         return gravity_x;
     }
+    public void setGravity_x(float gravity_x) {
+        this.gravity_x = gravity_x;
+    }
+    public void setGravity_y(float gravity_y) {
+        this.gravity_y = gravity_y;
+    }
     public abstract float default_vx();
     public abstract float default_vy();
     public abstract float tickTime();

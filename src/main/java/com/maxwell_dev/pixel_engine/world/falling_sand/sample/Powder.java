@@ -82,7 +82,7 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                             //TODO: give spread speed here
                             float gravityLength = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
                             float random = (float) Math.random();
-                            float velocity = ((float) Math.sqrt(velocityX * velocityX * random + velocityY * velocityY) + 0.4f * grid.pixelSize() / grid.tickTime() * (1 - random));
+                            float velocity = ((float) Math.sqrt(velocityX * velocityX + velocityY * velocityY) * random + 0.4f * grid.pixelSize() / grid.tickTime() * (1 - random));
                             float dot = (grid.gravity_x() * velocityY - grid.gravity_y() * velocityX) / (gravityLength * velocity);
                             int[] dir = new int[2];
                             float factor = 1f;
