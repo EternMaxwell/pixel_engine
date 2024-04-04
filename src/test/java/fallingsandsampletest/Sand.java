@@ -59,6 +59,6 @@ public class Sand extends Powder<ElementID> {
 
     @Override
     public float freeFallPossibility() {
-        return 0.5f;
+        return 1;
     }
 }

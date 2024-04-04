@@ -81,10 +81,11 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                         if(!grid.get(blocked[0], blocked[1]).freeFall()){
                             //TODO: give spread speed here
                             float gravityLength = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
-                            float velocity = (float) Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+                            float random = (float) Math.random();
+                            float velocity = ((float) Math.sqrt(velocityX * velocityX * random + velocityY * velocityY) + 0.4f * grid.pixelSize() / grid.tickTime() * (1 - random));
                             float dot = (grid.gravity_x() * velocityY - grid.gravity_y() * velocityX) / (gravityLength * velocity);
                             int[] dir = new int[2];
-                            float factor = 1/2f;
+                            float factor = 1f;
                             if(dot <= 0.3f){
                                 if(Math.random() > 0.5) {
                                     dir[0] = -1;
@@ -353,6 +354,8 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                 }else if(grid.get(roundX, roundY) == null){
                     shouldBe[0] = roundX;
                     shouldBe[1] = roundY;
+                    return false;
+                }else{
                     return false;
                 }
             }
