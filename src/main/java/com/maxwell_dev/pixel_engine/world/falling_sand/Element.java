@@ -19,6 +19,8 @@ public abstract class Element <T extends Grid<?,?,?>, ElementType, ElementID> im
     public abstract void touch(T grid, int x, int y);
 
     //functions that may not be needed
+    public abstract float velocityX();
+    public abstract float velocityY();
     public abstract float density();
     public abstract float friction();
     public abstract float restitution();

@@ -38,6 +38,16 @@ public class ElementPlaceHolder extends Element{
     }
 
     @Override
+    public float velocityX() {
+        return 0;
+    }
+
+    @Override
+    public float velocityY() {
+        return 0;
+    }
+
+    @Override
     public void touch(Grid grid, int x, int y) {
 
     }

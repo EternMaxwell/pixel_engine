@@ -32,6 +32,16 @@ public class Stone extends Solid<ElementID> {
     }
 
     @Override
+    public float velocityX() {
+        return 0;
+    }
+
+    @Override
+    public float velocityY() {
+        return 0;
+    }
+
+    @Override
     public float density() {
         return 5;
     }
