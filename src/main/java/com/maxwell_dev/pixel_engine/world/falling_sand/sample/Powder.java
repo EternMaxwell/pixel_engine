@@ -91,12 +91,12 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                                 }
                             }
                         }
-                    }
-                    Element block = grid.get(blocked[0], blocked[1]);
-                    if (!block.freeFall() && !moved) {
-                        falling = false;
-                        velocityY = grid.default_vy();
-                        velocityX = grid.default_vx();
+                        Element block = grid.get(blocked[0], blocked[1]);
+                        if (!block.freeFall() && !moved) {
+                            falling = false;
+                            velocityY = grid.default_vy();
+                            velocityX = grid.default_vx();
+                        }
                     }
                 }
             }
