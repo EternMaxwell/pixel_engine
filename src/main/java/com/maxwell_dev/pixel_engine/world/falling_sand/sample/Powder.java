@@ -28,7 +28,6 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
         boolean moved = false;
 
         if(falling){
-            boolean blockedBool = false;
             velocityY += grid.gravity_y() * grid.tickTime();
             velocityX += grid.gravity_x() * grid.tickTime();
             velocityY *= grid.airResistance();
@@ -46,9 +45,7 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
             if (xMove != 0 || yMove != 0) {
                 if (try_move_to(grid, x, y, xMove, yMove, xMod, yMod, blocked, lastAvailable)) {
                     moved = true;
-                    blockedBool = false;
                 } else {
-                    blockedBool = true;
                     collideBlock(grid, blocked, lastAvailable);
                     if(blockDirSameToGravity(grid, blocked[0] - lastAvailable[0], blocked[1] - lastAvailable[1])){
                         int shouldBe[] = new int[2];
@@ -100,8 +97,6 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                         falling = false;
                         velocityY = grid.default_vy();
                         velocityX = grid.default_vx();
-                    }
-                    if(!moved || blockedBool) {
                     }
                 }
             }
