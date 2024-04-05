@@ -188,7 +188,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
     public void collideBlock(Grid<?, ?, ElementID> grid, int[] blocked, int[] lastAvailable) {
         Element block = grid.get(blocked[0], blocked[1]);
         if (block.type() == ElementType.SOLID) {
-            float restitution = (float) Math.sqrt(block.restitution() * restitution());
+            float restitution = (float)(1 - Math.sqrt((1 - block.restitution()) * (1 - restitution())));
             float friction = (float) Math.sqrt(block.friction() * friction());
             if (blocked[0] == lastAvailable[0]) {
                 velocityX = -velocityX * restitution;
@@ -198,7 +198,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                 velocityX = velocityX * friction;
             }
         } else if (block.type() == ElementType.POWDER || block.type() == ElementType.LIQUID) {
-            float restitution = (float) Math.sqrt(block.restitution() * restitution());
+            float restitution = (float)(1 - Math.sqrt((1 - block.restitution()) * (1 - restitution())));
             float friction = (float) Math.sqrt(block.friction() * friction());
             float impulseR;
             float impulseN;
