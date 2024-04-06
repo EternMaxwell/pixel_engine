@@ -2,9 +2,8 @@ package com.maxwell_dev.pixel_engine.world.falling_sand.sample;
 
 public abstract class Liquid<ElementID> extends Element<ElementID>{
     int lastTick = -1;
-    float velocityX = 0.0f;
-    float velocityY = 0.0f;
-    int dir = Math.random() > 0.5? 1: -1;
+    float velocityX;
+    float velocityY;
     int lastBlocked = 0;
     boolean falling = true;
     boolean left;
@@ -68,7 +67,8 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                     int shouldBe[] = new int[2];
                     tryLBandRB(grid, lastAvailable[0], lastAvailable[1], shouldBe);
                     if (shouldBe[0] != lastAvailable[0] || shouldBe[1] != lastAvailable[1]) {
-                        grid.set(lastAvailable[0], lastAvailable[1], null);
+                        Element target = grid.get(shouldBe[0], shouldBe[1]);
+                        grid.set(lastAvailable[0], lastAvailable[1], target);
                         grid.set(shouldBe[0], shouldBe[1], this);
                         moved = true;
                         lastAvailable[0] = shouldBe[0];
@@ -88,7 +88,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                     int belowX = Math.round(lastAvailable[0] + downX);
                     int belowY = Math.round(lastAvailable[1] + downY);
                     Element below = grid.get(belowX, belowY);
-                    if (below != null) {
+                    if (below != null && below.type() != ElementType.GAS) {
                         float dirX;
                         float dirY;
                         if(!left) {
@@ -106,13 +106,14 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                             if(targetY == lastAvailable[1] && targetX == lastAvailable[0]){
                                 continue;
                             }
-                            if(grid.get(targetX, targetY) == null) {
-                                grid.set(lastAvailable[0], lastAvailable[1], null);
+                            Element target = grid.get(targetX, targetY);
+                            if(target == null || target.type() == ElementType.GAS){
+                                grid.set(lastAvailable[0], lastAvailable[1], target);
                                 grid.set(targetX, targetY, this);
                                 lastAvailable[0] = targetX;
                                 lastAvailable[1] = targetY;
                             }else{
-                                if(lastBlocked > 0){
+                                if(lastBlocked > 1){
                                     left = !left;
                                     lastBlocked = 0;
                                 }
@@ -132,9 +133,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                 int belowX = Math.round(lastAvailable[0] + downX);
                 int belowY = Math.round(lastAvailable[1] + downY);
                 Element below = grid.get(belowX, belowY);
-                if (below == null) {
-                    grid.set(lastAvailable[0], lastAvailable[1], null);
-                    grid.set(belowX, belowY, this);
+                if (below == null || below.type() == ElementType.GAS) {
                     falling = true;
                 }
             }
@@ -150,7 +149,8 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
         float downY = grid.gravity_y() / gravity / grid.pixelSize();
         int belowX = Math.round(x + downX);
         int belowY = Math.round(y + downY);
-        if(grid.get(belowX, belowY) == null){
+        Element below = grid.get(belowX, belowY);
+        if(below == null || below.type() == ElementType.GAS){
             shouldBe[0] = belowX;
             shouldBe[1] = belowY;
             return true;
@@ -159,24 +159,26 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
         int leftBelowY = Math.round(y + downY - downX);
         int rightBelowX = Math.round(x + downX - downY);
         int rightBelowY = Math.round(y + downY + downX);
+        Element leftBelow = grid.get(leftBelowX, leftBelowY);
+        Element rightBelow = grid.get(rightBelowX, rightBelowY);
         if(Math.random() < 0.5){
-            if(grid.get(leftBelowX, leftBelowY) == null){
+            if(leftBelow == null || leftBelow.type() == ElementType.GAS){
                 shouldBe[0] = leftBelowX;
                 shouldBe[1] = leftBelowY;
                 return false;
             }
-            if(grid.get(rightBelowX, rightBelowY) == null){
+            if(rightBelow == null || rightBelow.type() == ElementType.GAS){
                 shouldBe[0] = rightBelowX;
                 shouldBe[1] = rightBelowY;
                 return false;
             }
         }else {
-            if(grid.get(rightBelowX, rightBelowY) == null){
+            if(rightBelow == null || rightBelow.type() == ElementType.GAS){
                 shouldBe[0] = rightBelowX;
                 shouldBe[1] = rightBelowY;
                 return false;
             }
-            if(grid.get(leftBelowX, leftBelowY) == null){
+            if(leftBelow == null || leftBelow.type() == ElementType.GAS){
                 shouldBe[0] = leftBelowX;
                 shouldBe[1] = leftBelowY;
                 return false;
@@ -248,8 +250,9 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                 int shouldBeY = Math.round(y + (lastX - x) * ratio * yMod);
                 if(shouldBeY != lastY){
                     lastY += yMod;
-                    if(grid.get(lastX, lastY) == null){
-                        grid.set(lastAvailable[0], lastAvailable[1], null);
+                    Element target = grid.get(lastX, lastY);
+                    if(target == null || target.type() == ElementType.GAS){
+                        grid.set(lastAvailable[0], lastAvailable[1], target);
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
                         grid.set(lastX, lastY, this);
@@ -260,8 +263,9 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                     }
                 }else{
                     lastX += xMod;
-                    if(grid.get(lastX, lastY) == null){
-                        grid.set(lastAvailable[0], lastAvailable[1], null);
+                    Element target = grid.get(lastX, lastY);
+                    if(target == null || target.type() == ElementType.GAS){
+                        grid.set(lastAvailable[0], lastAvailable[1], target);
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
                         grid.set(lastX, lastY, this);
@@ -275,8 +279,9 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                 int shouldBeX = Math.round(x + (lastY - y) * ratio * xMod);
                 if(shouldBeX != lastX){
                     lastX += xMod;
-                    if(grid.get(lastX, lastY) == null){
-                        grid.set(lastAvailable[0], lastAvailable[1], null);
+                    Element target = grid.get(lastX, lastY);
+                    if(target == null || target.type() == ElementType.GAS){
+                        grid.set(lastAvailable[0], lastAvailable[1], target);
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
                         grid.set(lastX, lastY, this);
@@ -287,8 +292,9 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                     }
                 }else{
                     lastY += yMod;
-                    if(grid.get(lastX, lastY) == null){
-                        grid.set(lastAvailable[0], lastAvailable[1], null);
+                    Element target = grid.get(lastX, lastY);
+                    if(target == null || target.type() == ElementType.GAS){
+                        grid.set(lastAvailable[0], lastAvailable[1], target);
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
                         grid.set(lastX, lastY, this);
@@ -303,48 +309,48 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
         return true;
     }
 
-    public boolean try_slide_to(Grid<?, ?, ElementID> grid, int x, int y, int xMove, int yMove, int xMod, int yMod, int[] blocked, int[] lastAvailable){
-        int lastX = x;
-        int lastY = y;
-        lastAvailable[0] = x;
-        lastAvailable[1] = y;
-        int targetX = x + xMod * xMove;
-        int targetY = y + yMod * yMove;
-        boolean xLarger = xMove > yMove;
-        float ratio = xLarger ? (float) yMove / xMove : (float) xMove / yMove;
-        int xMin = Math.min(x, targetX);
-        int xMax = Math.max(x, targetX);
-        int yMin = Math.min(y, targetY);
-        int yMax = Math.max(y, targetY);
-        while ((lastX != targetX || lastY != targetY) && (lastX >= xMin && lastX <= xMax && lastY >= yMin && lastY <= yMax)) {
-            if(xLarger) {
-                lastY = Math.round(y + (lastX - x) * ratio * yMod);
-                lastX += xMod;
-                if (grid.get(lastX, lastY) == null) {
-                    lastAvailable[0] = lastX;
-                    lastAvailable[1] = lastY;
-                    grid.set(lastX, lastY, this);
-                } else {
-                    blocked[0] = lastX;
-                    blocked[1] = lastY;
-                    return false;
-                }
-            }else {
-                lastX = Math.round(x + (lastY - y) * ratio * xMod);
-                lastY += yMod;
-                if (grid.get(lastX, lastY) == null) {
-                    lastAvailable[0] = lastX;
-                    lastAvailable[1] = lastY;
-                    grid.set(lastX, lastY, this);
-                } else {
-                    blocked[0] = lastX;
-                    blocked[1] = lastY;
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+//    public boolean try_slide_to(Grid<?, ?, ElementID> grid, int x, int y, int xMove, int yMove, int xMod, int yMod, int[] blocked, int[] lastAvailable){
+//        int lastX = x;
+//        int lastY = y;
+//        lastAvailable[0] = x;
+//        lastAvailable[1] = y;
+//        int targetX = x + xMod * xMove;
+//        int targetY = y + yMod * yMove;
+//        boolean xLarger = xMove > yMove;
+//        float ratio = xLarger ? (float) yMove / xMove : (float) xMove / yMove;
+//        int xMin = Math.min(x, targetX);
+//        int xMax = Math.max(x, targetX);
+//        int yMin = Math.min(y, targetY);
+//        int yMax = Math.max(y, targetY);
+//        while ((lastX != targetX || lastY != targetY) && (lastX >= xMin && lastX <= xMax && lastY >= yMin && lastY <= yMax)) {
+//            if(xLarger) {
+//                lastY = Math.round(y + (lastX - x) * ratio * yMod);
+//                lastX += xMod;
+//                if (grid.get(lastX, lastY) == null) {
+//                    lastAvailable[0] = lastX;
+//                    lastAvailable[1] = lastY;
+//                    grid.set(lastX, lastY, this);
+//                } else {
+//                    blocked[0] = lastX;
+//                    blocked[1] = lastY;
+//                    return false;
+//                }
+//            }else {
+//                lastX = Math.round(x + (lastY - y) * ratio * xMod);
+//                lastY += yMod;
+//                if (grid.get(lastX, lastY) == null) {
+//                    lastAvailable[0] = lastX;
+//                    lastAvailable[1] = lastY;
+//                    grid.set(lastX, lastY, this);
+//                } else {
+//                    blocked[0] = lastX;
+//                    blocked[1] = lastY;
+//                    return false;
+//                }
+//            }
+//        }
+//        return true;
+//    }
 
     public boolean blockDirSameToGravity(Grid<?, ?, ElementID> grid, float blockX, float blockY){
         float gravity_x = grid.gravity_x();

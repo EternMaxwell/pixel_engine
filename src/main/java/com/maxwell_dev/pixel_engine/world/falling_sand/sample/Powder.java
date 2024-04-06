@@ -127,7 +127,7 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                                     }
                                 }
                             }
-                            if (below != null && !below.freeFall() && !sinkTried) {
+                            if ((below != null && below.type() != ElementType.GAS) && !below.freeFall() && !sinkTried) {
                                 float slideV = velocityX * downY - velocityY * downX;
                                 if (Math.abs(slideV) > 0.001f * grid.pixelSize() / grid.tickTime()) {
                                     if (slideV > 0) {
@@ -135,8 +135,9 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                                         int extraXInt = Math.round(extraX);
                                         int extraYInt = Math.round(shouldBe[1] + downX);
                                         if (extraXInt != shouldBe[0] || extraYInt != shouldBe[1]) {
-                                            if (grid.get(extraXInt, extraYInt) == null) {
-                                                grid.set(shouldBe[0], shouldBe[1], null);
+                                            Element extra = grid.get(extraXInt, extraYInt);
+                                            if (extra == null || extra.type() == ElementType.GAS) {
+                                                grid.set(shouldBe[0], shouldBe[1], extra);
                                                 grid.set(extraXInt, extraYInt, this);
                                                 moved = true;
                                             }
@@ -146,8 +147,9 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                                         int extraXInt = Math.round(extraX);
                                         int extraYInt = Math.round(shouldBe[1] - downX);
                                         if (extraXInt != shouldBe[0] || extraYInt != shouldBe[1]) {
-                                            if (grid.get(extraXInt, extraYInt) == null) {
-                                                grid.set(shouldBe[0], shouldBe[1], null);
+                                            Element extra = grid.get(extraXInt, extraYInt);
+                                            if (extra == null || extra.type() == ElementType.GAS) {
+                                                grid.set(shouldBe[0], shouldBe[1], extra);
                                                 grid.set(extraXInt, extraYInt, this);
                                                 moved = true;
                                             }
