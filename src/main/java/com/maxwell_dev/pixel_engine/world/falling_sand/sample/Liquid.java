@@ -112,6 +112,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                                 grid.set(targetX, targetY, this);
                                 lastAvailable[0] = targetX;
                                 lastAvailable[1] = targetY;
+                                moved = true;
                             }else{
                                 if(lastBlocked > 1){
                                     left = !left;
