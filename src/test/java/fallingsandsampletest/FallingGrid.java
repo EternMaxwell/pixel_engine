@@ -24,7 +24,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
 
     @Override
     public boolean valid(int x, int y) {
-        return true;
+        return x >= 0 && y >= 0 && x < grid.length && y < grid[0].length;
     }
 
     @Override

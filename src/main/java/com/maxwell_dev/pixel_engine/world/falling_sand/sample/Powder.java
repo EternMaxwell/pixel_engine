@@ -8,7 +8,6 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
     private float thresholdY = 0.0f;
     private boolean falling = true;
     private float sinkProcess = 0.0f;
-    private boolean sinkTried = false;
 
     public Powder(Grid<?, ?, ElementID> grid) {
         super(grid);
@@ -28,7 +27,7 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
         lastTick = tick;
 
         boolean moved = false;
-        sinkTried = false;
+        boolean sinkTried = false;
 
         if(falling){
             velocityY += grid.gravity_y() * grid.tickTime();
@@ -48,7 +47,7 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
             if (xMove != 0 || yMove != 0) {
                 if (try_move_to(grid, x, y, xMove, yMove, xMod, yMod, blocked, lastAvailable)) {
                     moved = true;
-                } else {
+                } else if(grid.valid(blocked[0], blocked[1])){
                     collideBlock(grid, blocked, lastAvailable);
                     if(blockDirSameToGravity(grid, blocked[0] - lastAvailable[0], blocked[1] - lastAvailable[1])){
                         float gravity = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
@@ -134,7 +133,7 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                                         float extraX = shouldBe[0] - downY;
                                         int extraXInt = Math.round(extraX);
                                         int extraYInt = Math.round(shouldBe[1] + downX);
-                                        if (extraXInt != shouldBe[0] || extraYInt != shouldBe[1]) {
+                                        if ((extraXInt != shouldBe[0] || extraYInt != shouldBe[1]) && (grid.valid(extraXInt, extraYInt) || !grid.invalidAsWall())) {
                                             Element extra = grid.get(extraXInt, extraYInt);
                                             if (extra == null || extra.type() == ElementType.GAS) {
                                                 grid.set(shouldBe[0], shouldBe[1], extra);
@@ -146,7 +145,7 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                                         float extraX = shouldBe[0] + downY;
                                         int extraXInt = Math.round(extraX);
                                         int extraYInt = Math.round(shouldBe[1] - downX);
-                                        if (extraXInt != shouldBe[0] || extraYInt != shouldBe[1]) {
+                                        if ((extraXInt != shouldBe[0] || extraYInt != shouldBe[1]) && (grid.valid(extraXInt, extraYInt) || !grid.invalidAsWall())) {
                                             Element extra = grid.get(extraXInt, extraYInt);
                                             if (extra == null || extra.type() == ElementType.GAS) {
                                                 grid.set(shouldBe[0], shouldBe[1], extra);
@@ -191,7 +190,7 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
         float downY = grid.gravity_y() / gravity / grid.pixelSize();
         int belowX = Math.round(x + downX);
         int belowY = Math.round(y + downY);
-        if(grid.get(belowX, belowY) == null){
+        if((grid.get(belowX, belowY) == null || grid.get(belowX, belowY).type() == ElementType.GAS) && (grid.valid(belowX, belowY) || !grid.invalidAsWall())){
             shouldBe[0] = belowX;
             shouldBe[1] = belowY;
             return true;
@@ -203,23 +202,23 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
         Element leftBelow = grid.get(leftBelowX, leftBelowY);
         Element rightBelow = grid.get(rightBelowX, rightBelowY);
         if(Math.random() < 0.5){
-            if(leftBelow == null || leftBelow.type() == ElementType.GAS){
+            if((leftBelow == null || leftBelow.type() == ElementType.GAS) && (grid.valid(leftBelowX, leftBelowY) || !grid.invalidAsWall())){
                 shouldBe[0] = leftBelowX;
                 shouldBe[1] = leftBelowY;
                 return false;
             }
-            if(rightBelow == null || rightBelow.type() == ElementType.GAS){
+            if((rightBelow == null || rightBelow.type() == ElementType.GAS) && (grid.valid(rightBelowX, rightBelowY) || !grid.invalidAsWall())){
                 shouldBe[0] = rightBelowX;
                 shouldBe[1] = rightBelowY;
                 return false;
             }
         }else {
-            if(rightBelow == null || rightBelow.type() == ElementType.GAS){
+            if((rightBelow == null || rightBelow.type() == ElementType.GAS) && (grid.valid(rightBelowX, rightBelowY) || !grid.invalidAsWall())){
                 shouldBe[0] = rightBelowX;
                 shouldBe[1] = rightBelowY;
                 return false;
             }
-            if(leftBelow == null || leftBelow.type() == ElementType.GAS){
+            if((leftBelow == null || leftBelow.type() == ElementType.GAS) && (grid.valid(leftBelowX, leftBelowY) || !grid.invalidAsWall())){
                 shouldBe[0] = leftBelowX;
                 shouldBe[1] = leftBelowY;
                 return false;
@@ -292,7 +291,16 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                 if(shouldBeY != lastY){
                     lastY += yMod;
                     Element target = grid.get(lastX, lastY);
-                    if(target == null || target.type() == ElementType.GAS){
+                    if(!grid.valid(lastX, lastY)) {
+                        if(grid.invalidAsWall()){
+                            blocked[0] = lastX;
+                            blocked[1] = lastY;
+                            return false;
+                        }else{
+                            grid.set(lastAvailable[0], lastAvailable[1], null);
+                            return true;
+                        }
+                    }else if(target == null || target.type() == ElementType.GAS){
                         grid.set(lastAvailable[0], lastAvailable[1], target);
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
@@ -305,7 +313,16 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                 }else{
                     lastX += xMod;
                     Element target = grid.get(lastX, lastY);
-                    if(target == null || target.type() == ElementType.GAS){
+                    if(!grid.valid(lastX, lastY)) {
+                        if (grid.invalidAsWall()) {
+                            blocked[0] = lastX;
+                            blocked[1] = lastY;
+                            return false;
+                        } else {
+                            grid.set(lastAvailable[0], lastAvailable[1], null);
+                            return true;
+                        }
+                    }else if(target == null || target.type() == ElementType.GAS){
                         grid.set(lastAvailable[0], lastAvailable[1], target);
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
@@ -321,7 +338,16 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                 if(shouldBeX != lastX){
                     lastX += xMod;
                     Element target = grid.get(lastX, lastY);
-                    if(target == null || target.type() == ElementType.GAS){
+                    if(!grid.valid(lastX, lastY)) {
+                        if (grid.invalidAsWall()) {
+                            blocked[0] = lastX;
+                            blocked[1] = lastY;
+                            return false;
+                        } else {
+                            grid.set(lastAvailable[0], lastAvailable[1], null);
+                            return true;
+                        }
+                    }else if(target == null || target.type() == ElementType.GAS){
                         grid.set(lastAvailable[0], lastAvailable[1], target);
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
@@ -334,7 +360,16 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
                 }else{
                     lastY += yMod;
                     Element target = grid.get(lastX, lastY);
-                    if(target == null || target.type() == ElementType.GAS){
+                    if(!grid.valid(lastX, lastY)) {
+                        if (grid.invalidAsWall()) {
+                            blocked[0] = lastX;
+                            blocked[1] = lastY;
+                            return false;
+                        } else {
+                            grid.set(lastAvailable[0], lastAvailable[1], null);
+                            return true;
+                        }
+                    }else if(target == null || target.type() == ElementType.GAS){
                         grid.set(lastAvailable[0], lastAvailable[1], target);
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;

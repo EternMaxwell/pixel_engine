@@ -61,7 +61,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
         if (xMove != 0 || yMove != 0) {
             if (try_move_to(grid, x, y, xMove, yMove, xMod, yMod, blocked, lastAvailable)) {
                 moved = true;
-            } else {
+            } else if(grid.valid(blocked[0], blocked[1])){
                 collideBlock(grid, blocked, lastAvailable);
                 if (blockDirSameToGravity(grid, blocked[0] - lastAvailable[0], blocked[1] - lastAvailable[1])) {
                     int shouldBe[] = new int[2];
@@ -107,7 +107,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                                 continue;
                             }
                             Element target = grid.get(targetX, targetY);
-                            if(target == null || target.type() == ElementType.GAS){
+                            if((target == null || target.type() == ElementType.GAS) && (grid.valid(targetX, targetY) || !grid.invalidAsWall())){
                                 grid.set(lastAvailable[0], lastAvailable[1], target);
                                 grid.set(targetX, targetY, this);
                                 lastAvailable[0] = targetX;
@@ -150,8 +150,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
         float downY = grid.gravity_y() / gravity / grid.pixelSize();
         int belowX = Math.round(x + downX);
         int belowY = Math.round(y + downY);
-        Element below = grid.get(belowX, belowY);
-        if(below == null || below.type() == ElementType.GAS){
+        if((grid.get(belowX, belowY) == null || grid.get(belowX, belowY).type() == ElementType.GAS) && (grid.valid(belowX, belowY) || !grid.invalidAsWall())){
             shouldBe[0] = belowX;
             shouldBe[1] = belowY;
             return true;
@@ -163,23 +162,23 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
         Element leftBelow = grid.get(leftBelowX, leftBelowY);
         Element rightBelow = grid.get(rightBelowX, rightBelowY);
         if(Math.random() < 0.5){
-            if(leftBelow == null || leftBelow.type() == ElementType.GAS){
+            if((leftBelow == null || leftBelow.type() == ElementType.GAS) && (grid.valid(leftBelowX, leftBelowY) || !grid.invalidAsWall())){
                 shouldBe[0] = leftBelowX;
                 shouldBe[1] = leftBelowY;
                 return false;
             }
-            if(rightBelow == null || rightBelow.type() == ElementType.GAS){
+            if((rightBelow == null || rightBelow.type() == ElementType.GAS) && (grid.valid(rightBelowX, rightBelowY) || !grid.invalidAsWall())){
                 shouldBe[0] = rightBelowX;
                 shouldBe[1] = rightBelowY;
                 return false;
             }
         }else {
-            if(rightBelow == null || rightBelow.type() == ElementType.GAS){
+            if((rightBelow == null || rightBelow.type() == ElementType.GAS) && (grid.valid(rightBelowX, rightBelowY) || !grid.invalidAsWall())){
                 shouldBe[0] = rightBelowX;
                 shouldBe[1] = rightBelowY;
                 return false;
             }
-            if(leftBelow == null || leftBelow.type() == ElementType.GAS){
+            if((leftBelow == null || leftBelow.type() == ElementType.GAS) && (grid.valid(leftBelowX, leftBelowY) || !grid.invalidAsWall())){
                 shouldBe[0] = leftBelowX;
                 shouldBe[1] = leftBelowY;
                 return false;
@@ -252,7 +251,16 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                 if(shouldBeY != lastY){
                     lastY += yMod;
                     Element target = grid.get(lastX, lastY);
-                    if(target == null || target.type() == ElementType.GAS){
+                    if(!grid.valid(lastX, lastY)) {
+                        if(grid.invalidAsWall()){
+                            blocked[0] = lastX;
+                            blocked[1] = lastY;
+                            return false;
+                        }else{
+                            grid.set(lastAvailable[0], lastAvailable[1], null);
+                            return true;
+                        }
+                    }else if(target == null || target.type() == ElementType.GAS){
                         grid.set(lastAvailable[0], lastAvailable[1], target);
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
@@ -265,7 +273,16 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                 }else{
                     lastX += xMod;
                     Element target = grid.get(lastX, lastY);
-                    if(target == null || target.type() == ElementType.GAS){
+                    if(!grid.valid(lastX, lastY)) {
+                        if (grid.invalidAsWall()) {
+                            blocked[0] = lastX;
+                            blocked[1] = lastY;
+                            return false;
+                        } else {
+                            grid.set(lastAvailable[0], lastAvailable[1], null);
+                            return true;
+                        }
+                    }else if(target == null || target.type() == ElementType.GAS){
                         grid.set(lastAvailable[0], lastAvailable[1], target);
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
@@ -281,7 +298,16 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                 if(shouldBeX != lastX){
                     lastX += xMod;
                     Element target = grid.get(lastX, lastY);
-                    if(target == null || target.type() == ElementType.GAS){
+                    if(!grid.valid(lastX, lastY)) {
+                        if (grid.invalidAsWall()) {
+                            blocked[0] = lastX;
+                            blocked[1] = lastY;
+                            return false;
+                        } else {
+                            grid.set(lastAvailable[0], lastAvailable[1], null);
+                            return true;
+                        }
+                    }else if(target == null || target.type() == ElementType.GAS){
                         grid.set(lastAvailable[0], lastAvailable[1], target);
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
@@ -294,7 +320,16 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                 }else{
                     lastY += yMod;
                     Element target = grid.get(lastX, lastY);
-                    if(target == null || target.type() == ElementType.GAS){
+                    if(!grid.valid(lastX, lastY)) {
+                        if (grid.invalidAsWall()) {
+                            blocked[0] = lastX;
+                            blocked[1] = lastY;
+                            return false;
+                        } else {
+                            grid.set(lastAvailable[0], lastAvailable[1], null);
+                            return true;
+                        }
+                    }else if(target == null || target.type() == ElementType.GAS){
                         grid.set(lastAvailable[0], lastAvailable[1], target);
                         lastAvailable[0] = lastX;
                         lastAvailable[1] = lastY;
