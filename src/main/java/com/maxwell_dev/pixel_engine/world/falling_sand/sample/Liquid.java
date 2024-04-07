@@ -114,7 +114,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                                 lastAvailable[1] = targetY;
                                 moved = true;
                             }else{
-                                if(lastBlocked > 1){
+                                if(lastBlocked >= 0){
                                     left = !left;
                                     lastBlocked = 0;
                                 }
