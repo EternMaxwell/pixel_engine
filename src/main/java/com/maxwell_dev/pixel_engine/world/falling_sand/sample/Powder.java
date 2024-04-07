@@ -34,8 +34,8 @@ public abstract class Powder<ElementID> extends Element<ElementID> {
             velocityX += grid.gravity_x() * grid.tickTime();
             velocityY *= grid.airResistance();
             velocityX *= grid.airResistance();
-            thresholdY += velocityY * grid.tickTime();
-            thresholdX += velocityX * grid.tickTime();
+            thresholdY += velocityY * grid.tickTime() / grid.pixelSize();
+            thresholdX += velocityX * grid.tickTime() / grid.pixelSize();
             int xMod = thresholdX > 0 ? 1 : -1;
             int yMod = thresholdY > 0 ? 1 : -1;
             int xMove = (int) Math.abs(thresholdX);
