@@ -1,5 +1,5 @@
 package fallingsandsampletest;
 
 public enum ElementID {
-    STONE,SAND,WATER
+    STONE,SAND,WATER,OIL
 }

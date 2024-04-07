@@ -10,6 +10,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
 
     float thresholdX = 0;
     float thresholdY = 0;
+    float sinkProcess = 0;
 
     public Liquid(Grid<?, ?, ElementID> grid) {
         super(grid);
@@ -43,6 +44,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
         lastTick = tick;
 
         boolean moved = false;
+        boolean sinkTried = false;
 
         velocityY += grid.gravity_y() * grid.tickTime();
         velocityX += grid.gravity_x() * grid.tickTime();
@@ -63,6 +65,9 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                 moved = true;
             } else if(grid.valid(blocked[0], blocked[1])){
                 collideBlock(grid, blocked, lastAvailable);
+                float gravity = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
+                float downX = grid.gravity_x() / gravity / grid.pixelSize();
+                float downY = grid.gravity_y() / gravity / grid.pixelSize();
                 if (blockDirSameToGravity(grid, blocked[0] - lastAvailable[0], blocked[1] - lastAvailable[1])) {
                     int shouldBe[] = new int[2];
                     tryLBandRB(grid, lastAvailable[0], lastAvailable[1], shouldBe);
@@ -74,6 +79,73 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                         lastAvailable[0] = shouldBe[0];
                         lastAvailable[1] = shouldBe[1];
                     }
+                    if (gravity != 0) {
+                        int belowX = Math.round(shouldBe[0] + downX);
+                        int belowY = Math.round(shouldBe[1] + downY);
+                        Element below = grid.get(belowX, belowY);
+                        if (below != null && below.type() == ElementType.LIQUID) {
+                            if (below.density() < density()) {
+                                sinkProcess += gravity * grid.tickTime() / grid.pixelSize() * (density() - below.density()) / density() / 2;
+                                if (sinkProcess > 1) {
+                                    grid.set(shouldBe[0], shouldBe[1], below);
+                                    grid.set(belowX, belowY, this);
+                                    moved = true;
+                                    sinkProcess = 0;
+                                }
+                                sinkTried = true;
+                            }
+                        } else {
+                            if (Math.random() < 0.5) {
+                                Element side = grid.get(Math.round(shouldBe[0] + downX - downY), Math.round(shouldBe[1] + downY + downX));
+                                if (side != null && side.type() == ElementType.LIQUID && side.density() < density()) {
+                                    sinkProcess += (density() - side.density()) / density() * grid.tickTime() / grid.pixelSize() * gravity / 2;
+                                    if (sinkProcess > 1) {
+                                        grid.set(shouldBe[0], shouldBe[1], side);
+                                        grid.set(Math.round(shouldBe[0] + downX - downY), Math.round(shouldBe[1] + downY + downX), this);
+                                        moved = true;
+                                        sinkProcess = 0;
+                                    }
+                                    sinkTried = true;
+                                } else {
+                                    side = grid.get(Math.round(shouldBe[0] + downX + downY), Math.round(shouldBe[1] + downY - downX));
+                                    if (side != null && side.type() == ElementType.LIQUID && side.density() < density()) {
+                                        sinkProcess += (density() - side.density()) / density() * grid.tickTime() / grid.pixelSize() * gravity / 2;
+                                        if (sinkProcess > 1) {
+                                            grid.set(shouldBe[0], shouldBe[1], side);
+                                            grid.set(Math.round(shouldBe[0] + downX + downY), Math.round(shouldBe[1] + downY - downX), this);
+                                            moved = true;
+                                            sinkProcess = 0;
+                                        }
+                                        sinkTried = true;
+                                    }
+                                }
+                            } else {
+                                Element side = grid.get(Math.round(shouldBe[0] + downX + downY), Math.round(shouldBe[1] + downY - downX));
+                                if (side != null && side.type() == ElementType.LIQUID && side.density() < density()) {
+                                    sinkProcess += (density() - side.density()) / density() * grid.tickTime() / grid.pixelSize() * gravity / 2;
+                                    if (sinkProcess > 1) {
+                                        grid.set(shouldBe[0], shouldBe[1], side);
+                                        grid.set(Math.round(shouldBe[0] + downX + downY), Math.round(shouldBe[1] + downY - downX), this);
+                                        moved = true;
+                                        sinkProcess = 0;
+                                    }
+                                    sinkTried = true;
+                                } else {
+                                    side = grid.get(Math.round(shouldBe[0] + downX - downY), Math.round(shouldBe[1] + downY + downX));
+                                    if (side != null && side.type() == ElementType.LIQUID && side.density() < density()) {
+                                        sinkProcess += (density() - side.density()) / density() * grid.tickTime() / grid.pixelSize() * gravity / 2;
+                                        if (sinkProcess > 1) {
+                                            grid.set(shouldBe[0], shouldBe[1], side);
+                                            grid.set(Math.round(shouldBe[0] + downX - downY), Math.round(shouldBe[1] + downY + downX), this);
+                                            moved = true;
+                                            sinkProcess = 0;
+                                        }
+                                        sinkTried = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     Element block = grid.get(blocked[0], blocked[1]);
                     if (!block.freeFall()) {
                         velocityY = grid.default_vy();
@@ -81,10 +153,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                         falling = false;
                     }
                 }
-                float gravity = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
-                if (gravity != 0) {
-                    float downX = grid.gravity_x() / gravity / grid.pixelSize();
-                    float downY = grid.gravity_y() / gravity / grid.pixelSize();
+                if (gravity != 0 && !sinkTried) {
                     int belowX = Math.round(lastAvailable[0] + downX);
                     int belowY = Math.round(lastAvailable[1] + downY);
                     Element below = grid.get(belowX, belowY);
@@ -120,6 +189,44 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                                 }
                                 lastBlocked++;
                                 break;
+                            }
+                        }
+                    }
+                    if(!moved){
+                        float dirX;
+                        float dirY;
+                        if(Math.random() < 0.5){
+                            dirX = -downY;
+                            dirY = downX;
+                        }else{
+                            dirX = downY;
+                            dirY = -downX;
+                        }
+                        Element target = grid.get(Math.round(lastAvailable[0] + dirX), Math.round(lastAvailable[1] + dirY));
+                        if(target != null && target.type() == ElementType.LIQUID){
+                            if(target.density() < density()){
+                                sinkTried = true;
+                                sinkProcess += gravity * grid.tickTime() / grid.pixelSize() * (density() - target.density()) / density() / 2 * dispersionRate();
+                                if(sinkProcess > 1){
+                                    grid.set(lastAvailable[0], lastAvailable[1], target);
+                                    grid.set(Math.round(lastAvailable[0] + dirX), Math.round(lastAvailable[1] + dirY), this);
+                                    moved = true;
+                                    sinkProcess = 0;
+                                }
+                            }
+                        }else{
+                            target = grid.get(Math.round(lastAvailable[0] - dirX), Math.round(lastAvailable[1] - dirY));
+                            if(target != null && target.type() == ElementType.LIQUID){
+                                if(target.density() < density()){
+                                    sinkTried = true;
+                                    sinkProcess += gravity * grid.tickTime() / grid.pixelSize() * (density() - target.density()) / density() / 2 * dispersionRate();
+                                    if(sinkProcess > 1){
+                                        grid.set(lastAvailable[0], lastAvailable[1], target);
+                                        grid.set(Math.round(lastAvailable[0] - dirX), Math.round(lastAvailable[1] - dirY), this);
+                                        moved = true;
+                                        sinkProcess = 0;
+                                    }
+                                }
                             }
                         }
                     }
