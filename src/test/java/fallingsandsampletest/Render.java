@@ -7,6 +7,8 @@ import com.maxwell_dev.pixel_engine.render.opengl.sample.LineDrawer;
 import com.maxwell_dev.pixel_engine.render.opengl.sample.PixelDrawer;
 import com.maxwell_dev.pixel_engine.render.opengl.sample.PixelLightDrawer;
 
+import static org.lwjgl.opengl.GL46.*;
+
 public class Render extends Renderer {
     public PixelDrawer pixelDrawer;
     public LineDrawer lineDrawer;
@@ -25,6 +27,7 @@ public class Render extends Renderer {
         lineDrawer = new LineDrawer();
         imageDrawer = new ImageDrawer();
         pixelLightDrawer = new PixelLightDrawer();
+        glEnable(GL_BLEND);
     }
 
     @Override
