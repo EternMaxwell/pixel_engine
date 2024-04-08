@@ -18,7 +18,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     @Override
     public void init() {
         grid = new FallingGrid();
-        elements = new Element[]{new Sand(grid), new Stone(grid), new Water(grid), new Oil(grid), new Smoke(grid, 2500)};
+        elements = new Element[]{new Sand(grid), new Stone(grid), new Water(grid), new Oil(grid), new Smoke(grid, 2500), new Steam(grid, 2500)};
     }
 
     @Override

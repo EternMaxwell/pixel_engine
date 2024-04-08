@@ -5,11 +5,10 @@ import com.maxwell_dev.pixel_engine.world.falling_sand.sample.ElementType;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Gas;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid;
 
-public class Smoke extends Gas<ElementID> {
-
-    public Smoke(Grid grid, int existenceTime) {
+public class Steam extends Gas<ElementID> {
+    public Steam(Grid grid, int existenceTime) {
         super(grid, existenceTime);
-        color = new float[]{0.3f, 0.3f, 0.3f, 0.5f};
+        color = new float[]{0.5f, 0.5f, 0.5f, 0.5f};
     }
 
     @Override
@@ -19,27 +18,27 @@ public class Smoke extends Gas<ElementID> {
 
     @Override
     public String name() {
-        return "element:test:smoke";
+        return "element:test:steam";
     }
 
     @Override
     public com.maxwell_dev.pixel_engine.world.falling_sand.Element<Grid<?, ?, ElementID>, ElementType, ElementID> newInstance(Grid<?, ?, ElementID> grid) {
-        return new Smoke(grid, 2500);
+        return new Steam(grid, 2500);
     }
 
     @Override
     public ElementID id() {
-        return ElementID.SMOKE;
+        return ElementID.STEAM;
     }
 
     @Override
     public float density() {
-        return 0.014f;
+        return 0.020f;
     }
 
     @Override
     public float friction() {
-        return 0.1f;
+        return 0.01f;
     }
 
     @Override
