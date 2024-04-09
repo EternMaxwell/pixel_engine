@@ -86,6 +86,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                         if (below != null && below.type() == ElementType.LIQUID) {
                             if (below.density() < density()) {
                                 sinkProcess += gravity * grid.tickTime() / grid.pixelSize() * (density() - below.density()) / density() / 2;
+                                grid.set(shouldBe[0], shouldBe[1], this);
                                 if (sinkProcess > 1) {
                                     grid.set(shouldBe[0], shouldBe[1], below);
                                     grid.set(belowX, belowY, this);
@@ -99,6 +100,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                                 Element side = grid.get(Math.round(shouldBe[0] + downX - downY), Math.round(shouldBe[1] + downY + downX));
                                 if (side != null && side.type() == ElementType.LIQUID && side.density() < density()) {
                                     sinkProcess += (density() - side.density()) / density() * grid.tickTime() / grid.pixelSize() * gravity / 2;
+                                    grid.set(shouldBe[0], shouldBe[1], this);
                                     if (sinkProcess > 1) {
                                         grid.set(shouldBe[0], shouldBe[1], side);
                                         grid.set(Math.round(shouldBe[0] + downX - downY), Math.round(shouldBe[1] + downY + downX), this);
@@ -110,6 +112,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                                     side = grid.get(Math.round(shouldBe[0] + downX + downY), Math.round(shouldBe[1] + downY - downX));
                                     if (side != null && side.type() == ElementType.LIQUID && side.density() < density()) {
                                         sinkProcess += (density() - side.density()) / density() * grid.tickTime() / grid.pixelSize() * gravity / 2;
+                                        grid.set(shouldBe[0], shouldBe[1], this);
                                         if (sinkProcess > 1) {
                                             grid.set(shouldBe[0], shouldBe[1], side);
                                             grid.set(Math.round(shouldBe[0] + downX + downY), Math.round(shouldBe[1] + downY - downX), this);
@@ -123,6 +126,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                                 Element side = grid.get(Math.round(shouldBe[0] + downX + downY), Math.round(shouldBe[1] + downY - downX));
                                 if (side != null && side.type() == ElementType.LIQUID && side.density() < density()) {
                                     sinkProcess += (density() - side.density()) / density() * grid.tickTime() / grid.pixelSize() * gravity / 2;
+                                    grid.set(shouldBe[0], shouldBe[1], this);
                                     if (sinkProcess > 1) {
                                         grid.set(shouldBe[0], shouldBe[1], side);
                                         grid.set(Math.round(shouldBe[0] + downX + downY), Math.round(shouldBe[1] + downY - downX), this);
@@ -134,6 +138,7 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                                     side = grid.get(Math.round(shouldBe[0] + downX - downY), Math.round(shouldBe[1] + downY + downX));
                                     if (side != null && side.type() == ElementType.LIQUID && side.density() < density()) {
                                         sinkProcess += (density() - side.density()) / density() * grid.tickTime() / grid.pixelSize() * gravity / 2;
+                                        grid.set(shouldBe[0], shouldBe[1], this);
                                         if (sinkProcess > 1) {
                                             grid.set(shouldBe[0], shouldBe[1], side);
                                             grid.set(Math.round(shouldBe[0] + downX - downY), Math.round(shouldBe[1] + downY + downX), this);
@@ -148,90 +153,92 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                     }
                     Element block = grid.get(blocked[0], blocked[1]);
                     if (!block.freeFall()) {
-                        velocityY = grid.default_vy();
-                        velocityX = grid.default_vx();
-                        falling = false;
+//                        velocityY = grid.default_vy();
+//                        velocityX = grid.default_vx();
+//                        falling = false;
                     }
-                }
-                if (gravity != 0 && !sinkTried) {
-                    int belowX = Math.round(lastAvailable[0] + downX);
-                    int belowY = Math.round(lastAvailable[1] + downY);
-                    Element below = grid.get(belowX, belowY);
-                    if (below != null && below.type() != ElementType.GAS) {
-                        float dirX;
-                        float dirY;
-                        if(!left) {
-                            dirX = -downY;
-                            dirY = downX;
-                        }else{
-                            dirX = downY;
-                            dirY = -downX;
-                        }
-                        int i = 0;
-                        while(i < dispersionRate()){
-                            i++;
-                            int targetX = Math.round(lastAvailable[0] + dirX);
-                            int targetY = Math.round(lastAvailable[1] + dirY);
-                            if(targetY == lastAvailable[1] && targetX == lastAvailable[0]){
-                                continue;
-                            }
-                            Element target = grid.get(targetX, targetY);
-                            if((target == null || target.type() == ElementType.GAS) && (grid.valid(targetX, targetY) || !grid.invalidAsWall())){
-                                grid.set(lastAvailable[0], lastAvailable[1], target);
-                                grid.set(targetX, targetY, this);
-                                lastAvailable[0] = targetX;
-                                lastAvailable[1] = targetY;
-                                moved = true;
+                    if (gravity != 0 && !sinkTried) {
+                        int belowX = Math.round(lastAvailable[0] + downX);
+                        int belowY = Math.round(lastAvailable[1] + downY);
+                        Element below = grid.get(belowX, belowY);
+                        if (below != null && below.type() != ElementType.GAS) {
+                            float dirX;
+                            float dirY;
+                            if(!left) {
+                                dirX = -downY;
+                                dirY = downX;
                             }else{
-                                if(lastBlocked >= 0){
-                                    left = !left;
-                                    lastBlocked = 0;
-                                }
-                                lastBlocked++;
-                                break;
+                                dirX = downY;
+                                dirY = -downX;
                             }
-                        }
-                    }
-                    if(!moved){
-                        float dirX;
-                        float dirY;
-                        if(Math.random() < 0.5){
-                            dirX = -downY;
-                            dirY = downX;
-                        }else{
-                            dirX = downY;
-                            dirY = -downX;
-                        }
-                        Element target = grid.get(Math.round(lastAvailable[0] + dirX), Math.round(lastAvailable[1] + dirY));
-                        if(target != null && target.type() == ElementType.LIQUID){
-                            if(target.density() < density()){
-                                sinkTried = true;
-                                sinkProcess += gravity * grid.tickTime() / grid.pixelSize() * (density() - target.density()) / density() / 2 * dispersionRate();
-                                if(sinkProcess > 1){
+                            int i = 0;
+                            while(i < dispersionRate()){
+                                i++;
+                                int targetX = Math.round(lastAvailable[0] + dirX);
+                                int targetY = Math.round(lastAvailable[1] + dirY);
+                                if(targetY == lastAvailable[1] && targetX == lastAvailable[0]){
+                                    continue;
+                                }
+                                Element target = grid.get(targetX, targetY);
+                                if((target == null || target.type() == ElementType.GAS) && (grid.valid(targetX, targetY) || !grid.invalidAsWall())){
                                     grid.set(lastAvailable[0], lastAvailable[1], target);
-                                    grid.set(Math.round(lastAvailable[0] + dirX), Math.round(lastAvailable[1] + dirY), this);
+                                    grid.set(targetX, targetY, this);
+                                    lastAvailable[0] = targetX;
+                                    lastAvailable[1] = targetY;
                                     moved = true;
-                                    sinkProcess = 0;
+                                }else{
+                                    if(lastBlocked >= 0){
+                                        left = !left;
+                                        lastBlocked = 0;
+                                    }
+                                    lastBlocked++;
+                                    break;
                                 }
                             }
-                        }else{
-                            target = grid.get(Math.round(lastAvailable[0] - dirX), Math.round(lastAvailable[1] - dirY));
+                        }
+                        if(!moved){
+                            float dirX;
+                            float dirY;
+                            if(Math.random() < 0.5){
+                                dirX = -downY;
+                                dirY = downX;
+                            }else{
+                                dirX = downY;
+                                dirY = -downX;
+                            }
+                            Element target = grid.get(Math.round(lastAvailable[0] + dirX), Math.round(lastAvailable[1] + dirY));
                             if(target != null && target.type() == ElementType.LIQUID){
                                 if(target.density() < density()){
                                     sinkTried = true;
                                     sinkProcess += gravity * grid.tickTime() / grid.pixelSize() * (density() - target.density()) / density() / 2 * dispersionRate();
+                                    grid.set(lastAvailable[0], lastAvailable[1], this);
                                     if(sinkProcess > 1){
                                         grid.set(lastAvailable[0], lastAvailable[1], target);
-                                        grid.set(Math.round(lastAvailable[0] - dirX), Math.round(lastAvailable[1] - dirY), this);
+                                        grid.set(Math.round(lastAvailable[0] + dirX), Math.round(lastAvailable[1] + dirY), this);
                                         moved = true;
                                         sinkProcess = 0;
+                                    }
+                                }
+                            }else{
+                                target = grid.get(Math.round(lastAvailable[0] - dirX), Math.round(lastAvailable[1] - dirY));
+                                if(target != null && target.type() == ElementType.LIQUID){
+                                    if(target.density() < density()){
+                                        sinkTried = true;
+                                        sinkProcess += gravity * grid.tickTime() / grid.pixelSize() * (density() - target.density()) / density() / 2 * dispersionRate();
+                                        grid.set(lastAvailable[0], lastAvailable[1], this);
+                                        if(sinkProcess > 1){
+                                            grid.set(lastAvailable[0], lastAvailable[1], target);
+                                            grid.set(Math.round(lastAvailable[0] - dirX), Math.round(lastAvailable[1] - dirY), this);
+                                            moved = true;
+                                            sinkProcess = 0;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
+                }
         }
         if(!falling){
             float gravity = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());

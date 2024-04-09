@@ -75,6 +75,7 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                             if(top.density() > density()){
                                 sinkingProcess += (top.density() - density()) / density() * grid.tickTime() * gravity / grid.pixelSize();
                                 sinkingTried = true;
+                                grid.set(shouldBe[0], shouldBe[1], this);
                                 if(sinkingProcess >= 1){
                                     grid.set(shouldBe[0], shouldBe[1], top);
                                     grid.set(topX, topY, this);
@@ -92,6 +93,7 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                                     if (side.density() > density()) {
                                         sinkingProcess += (side.density() - density()) / density() * grid.tickTime() * gravity / grid.pixelSize();
                                         sinkingTried = true;
+                                        grid.set(shouldBe[0], shouldBe[1], this);
                                         if (sinkingProcess >= 1) {
                                             grid.set(shouldBe[0], shouldBe[1], side);
                                             grid.set(leftTopX, leftTopY, this);
@@ -104,6 +106,7 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                                         if (side.density() > density()) {
                                             sinkingProcess += (side.density() - density()) / density() * grid.tickTime() * gravity / grid.pixelSize();
                                             sinkingTried = true;
+                                            grid.set(shouldBe[0], shouldBe[1], this);
                                             if (sinkingProcess >= 1) {
                                                 grid.set(shouldBe[0], shouldBe[1], side);
                                                 grid.set(rightTopX, rightTopY, this);
@@ -118,6 +121,7 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                                     if (side.density() > density()) {
                                         sinkingProcess += (side.density() - density()) / density() * grid.tickTime() * gravity / grid.pixelSize();
                                         sinkingTried = true;
+                                        grid.set(shouldBe[0], shouldBe[1], this);
                                         if (sinkingProcess >= 1) {
                                             grid.set(shouldBe[0], shouldBe[1], side);
                                             grid.set(rightTopX, rightTopY, this);
@@ -130,6 +134,7 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                                         if (side.density() > density()) {
                                             sinkingProcess += (side.density() - density()) / density() * grid.tickTime() * gravity / grid.pixelSize();
                                             sinkingTried = true;
+                                            grid.set(shouldBe[0], shouldBe[1], this);
                                             if (sinkingProcess >= 1) {
                                                 grid.set(shouldBe[0], shouldBe[1], side);
                                                 grid.set(leftTopX, leftTopY, this);
@@ -178,6 +183,7 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                                         if (left.density() > density()) {
                                             sinkingProcess += (left.density() - density()) / density() * grid.tickTime() * gravity / grid.pixelSize();
                                             sinkingTried = true;
+                                            grid.set(shouldBe[0], shouldBe[1], this);
                                             if (sinkingProcess >= 1) {
                                                 grid.set(shouldBe[0], shouldBe[1], left);
                                                 grid.set(leftXInt, leftYInt, this);
@@ -188,6 +194,7 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                                         if (right.density() > density()) {
                                             sinkingProcess += (right.density() - density()) / density() * grid.tickTime() * gravity / grid.pixelSize();
                                             sinkingTried = true;
+                                            grid.set(shouldBe[0], shouldBe[1], this);
                                             if (sinkingProcess >= 1) {
                                                 grid.set(shouldBe[0], shouldBe[1], right);
                                                 grid.set(rightXInt, rightYInt, this);
@@ -200,6 +207,7 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                                         if (right.density() > density()) {
                                             sinkingProcess += (right.density() - density()) / density() * grid.tickTime() * gravity / grid.pixelSize();
                                             sinkingTried = true;
+                                            grid.set(shouldBe[0], shouldBe[1], this);
                                             if (sinkingProcess >= 1) {
                                                 grid.set(shouldBe[0], shouldBe[1], right);
                                                 grid.set(rightXInt, rightYInt, this);
@@ -210,6 +218,7 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                                         if (left.density() > density()) {
                                             sinkingProcess += (left.density() - density()) / density() * grid.tickTime() * gravity / grid.pixelSize();
                                             sinkingTried = true;
+                                            grid.set(shouldBe[0], shouldBe[1], this);
                                             if (sinkingProcess >= 1) {
                                                 grid.set(shouldBe[0], shouldBe[1], left);
                                                 grid.set(leftXInt, leftYInt, this);

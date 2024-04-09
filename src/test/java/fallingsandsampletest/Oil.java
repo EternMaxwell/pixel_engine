@@ -47,7 +47,7 @@ public class Oil extends Liquid<ElementID> {
 
     @Override
     public float friction() {
-        return 0.02f;
+        return 0.1f;
     }
 
     @Override
