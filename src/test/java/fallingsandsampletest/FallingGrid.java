@@ -9,7 +9,8 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
     int tick = 0;
     boolean inverse = false;
     int resetTag = 0;
-    int resetThreshold = 30;
+    int resetThreshold = 16;
+    int flag = 0x3f;
 
     public class Chunk{
         Element<ElementID>[][] elements;
@@ -108,11 +109,11 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         if(x < 0 || y < 0 || x >= chunks.length * 64 || y >= chunks[0].length * 64){
             return null;
         }
-        Chunk chunk = chunks[x / 64][y / 64];
+        Chunk chunk = chunks[x >> 6][y >> 6];
         if(chunk == null){
             return null;
         }
-        return chunk.get(x % 64, y % 64);
+        return chunk.get(x & flag, y & flag);
     }
 
     @Override
@@ -129,12 +130,12 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         if(x < 0 || y < 0 || x >= chunks.length * 64 || y >= chunks[0].length * 64){
             return;
         }
-        Chunk chunk = chunks[x / 64][y / 64];
+        Chunk chunk = chunks[x >> 6][y >> 6];
         if(chunk == null){
-            chunk = new Chunk(x / 64, y / 64);
-            chunks[x / 64][y / 64] = chunk;
+            chunk = new Chunk(x >> 6, y >> 6);
+            chunks[x >> 6][y >> 6] = chunk;
         }
-        chunk.awake(x % 64, y % 64);
+        chunk.awake(x & flag, y & flag);
     }
 
     @Override
@@ -142,12 +143,12 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         if(x < 0 || y < 0 || x >= chunks.length * 64 || y >= chunks[0].length * 64){
             return;
         }
-        Chunk chunk = chunks[x / 64][y / 64];
+        Chunk chunk = chunks[x >> 6][y >> 6];
         if(chunk == null){
-            chunk = new Chunk(x / 64, y / 64);
-            chunks[x / 64][y / 64] = chunk;
+            chunk = new Chunk(x >> 6, y >> 6);
+            chunks[x >> 6][y >> 6] = chunk;
         }
-        chunk.set(x % 64, y % 64, element);
+        chunk.set(x & flag, y & flag, element);
 
         Element<ElementID> side = get(x + 1, y);
         awake(x + 1, y);
@@ -196,11 +197,11 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         if(x < 0 || y < 0 || x >= chunks.length * 64 || y >= chunks[0].length * 64){
             return;
         }
-        Chunk chunk = chunks[x / 64][y / 64];
+        Chunk chunk = chunks[x >> 6][y >> 6];
         if(chunk == null){
             return;
         }
-        chunk.set(x % 64, y % 64, null);
+        chunk.set(x & flag, y & flag, null);
     }
 
     @Override
@@ -208,12 +209,12 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         if(x < 0 || y < 0 || x >= chunks.length * 64 || y >= chunks[0].length * 64){
             return null;
         }
-        Chunk chunk = chunks[x / 64][y / 64];
+        Chunk chunk = chunks[x >> 6][y >> 6];
         if(chunk == null){
             return null;
         }
-        Element<ElementID> element = chunk.get(x % 64, y % 64);
-        chunk.set(x % 64, y % 64, null);
+        Element<ElementID> element = chunk.get(x & flag, y & flag);
+        chunk.set(x & flag, y & flag, null);
         return element;
     }
 
@@ -231,17 +232,17 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         for (int y = 0; y < chunks[0].length * 64; y++) {
             if(inverse){
                 for (int x = 0; x < chunks.length * 64; x++) {
-                    Chunk chunk = chunks[x / 64][y / 64];
+                    Chunk chunk = chunks[x >> 6][y >> 6];
                     Element<ElementID> element = get(x, y);
-                    if (element != null && chunk.in_rect(x % 64, y % 64)) {
+                    if (element != null && chunk.in_rect(x & flag, y & flag)) {
                         element.step(this, x, y, tick);
                     }
                 }
             }else {
                 for (int x = chunks.length * 64 - 1; x >= 0; x--) {
-                    Chunk chunk = chunks[x / 64][y / 64];
+                    Chunk chunk = chunks[x >> 6][y >> 6];
                     Element<ElementID> element = get(x, y);
-                    if (element != null && chunk.in_rect(x % 64, y % 64)) {
+                    if (element != null && chunk.in_rect(x & flag, y & flag)) {
                         element.step(this, x, y, tick);
                     }
                 }
@@ -254,6 +255,11 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
 
     @Override
     public void render(Render renderer) {
+        renderElements(renderer);
+        renderLine(renderer);
+    }
+
+    private void renderElements(Render renderer){
         for (int x = 0; x < chunks.length * 64; x++) {
             for (int y = 0; y < chunks[0].length * 64; y++) {
                 Element<ElementID> element = get(x, y);
@@ -273,6 +279,40 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
             }
         }
         renderer.pixelDrawer.flush();
+    }
+
+    private void renderLine(Render renderer){
+        for(int x = 0; x < chunks.length; x++){
+            for(int y = 0; y < chunks[0].length; y++){
+                Chunk chunk = chunks[x][y];
+                if(chunk != null){
+                    float alpha = 0.2f;
+                    float alpha2 = 0.4f;
+
+                    float lb_x = x * 64 * pixelSize;
+                    float lb_y = y * 64 * pixelSize;
+                    float rt_x = (x + 1) * 64 * pixelSize;
+                    float rt_y = (y + 1) * 64 * pixelSize;
+
+                    float rect_x = chunk.rect_x * pixelSize + lb_x;
+                    float rect_y = chunk.rect_y * pixelSize + lb_y;
+                    float rect_xm = (chunk.rect_xm + 1) * pixelSize + lb_x;
+                    float rect_ym = (chunk.rect_ym + 1) * pixelSize + lb_y;
+
+                    renderer.lineDrawer.draw(lb_x, lb_y, rt_x, lb_y, 1, 1, 1, alpha);
+                    renderer.lineDrawer.draw(lb_x, lb_y, lb_x, rt_y, 1, 1, 1, alpha);
+                    renderer.lineDrawer.draw(rt_x, lb_y, rt_x, rt_y, 1, 1, 1, alpha);
+                    renderer.lineDrawer.draw(lb_x, rt_y, rt_x, rt_y, 1, 1, 1, alpha);
+
+                    if(chunk.rect_x != 64 && chunk.rect_y != 64 && chunk.rect_xm != 0 && chunk.rect_ym != 0){
+                        renderer.lineDrawer.draw(rect_x, rect_y, rect_xm, rect_y, 0, 0, 1, alpha2);
+                        renderer.lineDrawer.draw(rect_x, rect_y, rect_x, rect_ym, 0, 0, 1, alpha2);
+                        renderer.lineDrawer.draw(rect_xm, rect_y, rect_xm, rect_ym, 0, 0, 1, alpha2);
+                        renderer.lineDrawer.draw(rect_x, rect_ym, rect_xm, rect_ym, 0, 0, 1, alpha2);
+                    }
+                }
+            }
+        }
     }
 
     @Override

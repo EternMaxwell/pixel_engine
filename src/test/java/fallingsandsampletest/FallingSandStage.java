@@ -64,6 +64,9 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         renderer.pixelDrawer.setProjection(new Matrix4f().ortho(0, 512, 0, 512, -1, 1));
         renderer.pixelDrawer.setModel(new Matrix4f().identity());
         renderer.pixelDrawer.setView(new Matrix4f().identity());
+        renderer.lineDrawer.setProjection(new Matrix4f().ortho(0, 512, 0, 512, -1, 1));
+        renderer.lineDrawer.setModel(new Matrix4f().identity());
+        renderer.lineDrawer.setView(new Matrix4f().identity());
         grid.render(renderer);
     }
 

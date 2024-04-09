@@ -28,6 +28,8 @@ public class Render extends Renderer {
         imageDrawer = new ImageDrawer();
         pixelLightDrawer = new PixelLightDrawer();
         glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glLineWidth(1);
     }
 
     @Override
