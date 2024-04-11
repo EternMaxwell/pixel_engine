@@ -8,7 +8,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
     Chunk[][] chunks;
     int tick = 0;
     boolean inverse = false;
-    int resetTag = 0;
+    double resetTag = 0;
     int resetThreshold = 16;
     int flag = 0x3f;
 
@@ -221,7 +221,8 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
     @Override
     public double step() {
         long start = System.nanoTime();
-        if(resetTag++ > resetThreshold){
+        double gravity = Math.sqrt(gravity_x * gravity_x + gravity_y * gravity_y);
+        if((resetTag += gravity / 100) > resetThreshold){
             resetTag = 0;
             for (Chunk[] row : chunks) {
                 for (Chunk chunk : row) {
