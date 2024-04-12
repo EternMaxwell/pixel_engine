@@ -222,13 +222,15 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
     public double step() {
         long start = System.nanoTime();
         double gravity = Math.sqrt(gravity_x * gravity_x + gravity_y * gravity_y);
-        if((resetTag += gravity / 100) > resetThreshold){
+        if(resetTag > resetThreshold){
             resetTag = 0;
             for (Chunk[] row : chunks) {
                 for (Chunk chunk : row) {
                     chunk.reset();
                 }
             }
+        }else{
+            resetTag += gravity / 100;
         }
         for (int y = 0; y < chunks[0].length * 64; y++) {
             if(inverse){
