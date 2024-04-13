@@ -1,4 +1,4 @@
-package fallingsandsampletest;
+package render;
 
 import com.maxwell_dev.pixel_engine.render.Renderer;
 import com.maxwell_dev.pixel_engine.render.Window;

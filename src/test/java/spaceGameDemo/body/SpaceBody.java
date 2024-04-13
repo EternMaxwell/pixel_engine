@@ -13,7 +13,7 @@ import org.jbox2d.dynamics.contacts.Contact;
 import org.joml.Matrix2f;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
-import spaceGameDemo.Render;
+import render.Render;
 import spaceGameDemo.SpaceWorld;
 import spaceGameDemo.elements.BodyElement;
 

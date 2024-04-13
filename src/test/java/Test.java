@@ -2,9 +2,8 @@ import com.maxwell_dev.pixel_engine.core.Application;
 import com.maxwell_dev.pixel_engine.core.InputTool;
 import com.maxwell_dev.pixel_engine.render.opengl.Window;
 import fallingsandsampletest.FallingSandStage;
-import fallingsandsampletest.Render;
+import render.Render;
 import org.lwjgl.opengl.GL;
-import spaceGameDemo.SpaceGameStage;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;

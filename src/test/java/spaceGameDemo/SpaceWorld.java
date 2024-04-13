@@ -10,6 +10,7 @@ import org.jbox2d.collision.WorldManifold;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
+import render.Render;
 import spaceGameDemo.body.SpaceBody;
 
 import java.util.HashSet;

@@ -1,7 +1,7 @@
 package fallingsandsampletest;
 
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
-import com.maxwell_dev.pixel_engine.world.falling_sand.sample.ElementType;
+import render.Render;
 
 public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid<Render, Actions, ElementID>{
 
