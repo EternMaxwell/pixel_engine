@@ -179,7 +179,9 @@ public class Util {
             Object any = new Object();
             for (int i = 0; i < grid.length; i++) {
                 for (int j = 0; j < grid[i].length; j++) {
-                    negated[i][j] = grid[i][j] == null ? any : null;
+                    if(grid[i][j] == null){
+                        negated[i][j] = any;
+                    }
                 }
             }
             Set<Object[][]> result = splitWithDiagonal(negated, Object[][]::new, Object[]::new);
