@@ -4,6 +4,7 @@ import com.maxwell_dev.pixel_engine.render.opengl.Window;
 import fallingsandsampletest.FallingSandStage;
 import render.Render;
 import org.lwjgl.opengl.GL;
+import spaceGameDemo.SpaceGameStage;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
@@ -29,7 +30,7 @@ public class Test extends Application<Render, InputTool> {
             render();
         });
         render = new Render(window);
-        stage = new FallingSandStage();
+        stage = new SpaceGameStage();
         stage.init();
     }
 
