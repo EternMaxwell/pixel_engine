@@ -27,6 +27,7 @@ public class Render extends Renderer {
         lineDrawer = new LineDrawer();
         imageDrawer = new ImageDrawer();
         pixelLightDrawer = new PixelLightDrawer();
+        glDisable(GL_MULTISAMPLE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 //        glLineWidth(0f);

@@ -72,6 +72,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void render(Render renderer) {
+        camera.projectionOrtho(-renderer.window().ratio(), renderer.window().ratio(), -1, 1, -1, 1);
         renderer.pixelDrawer.setProjection(camera.projectionMatrix(new Matrix4f()));
         renderer.pixelDrawer.setModel(camera.viewMatrix(new Matrix4f()));
         renderer.pixelDrawer.setView(new Matrix4f().identity());

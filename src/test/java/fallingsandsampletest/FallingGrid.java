@@ -292,10 +292,10 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
                     float alpha = 0.2f;
                     float alpha2 = 0.4f;
 
-                    float lb_x = x * 64 * pixelSize + pixelSize / 4;
-                    float lb_y = y * 64 * pixelSize + pixelSize / 4;
-                    float rt_x = (x + 1) * 64 * pixelSize + pixelSize / 4;
-                    float rt_y = (y + 1) * 64 * pixelSize + pixelSize / 4;
+                    float lb_x = x * 64 * pixelSize;
+                    float lb_y = y * 64 * pixelSize;
+                    float rt_x = (x + 1) * 64 * pixelSize;
+                    float rt_y = (y + 1) * 64 * pixelSize;
 
                     float rect_x = chunk.rect_x * pixelSize + lb_x;
                     float rect_y = chunk.rect_y * pixelSize + lb_y;
