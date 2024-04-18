@@ -1,10 +1,12 @@
 package fallingsandsampletest;
 
 import com.maxwell_dev.pixel_engine.core.InputTool;
+import com.maxwell_dev.pixel_engine.render.Camera;
 import com.maxwell_dev.pixel_engine.stage.Stage;
 import com.maxwell_dev.pixel_engine.world.falling_sand.Element;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import render.Render;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -14,19 +16,28 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     Grid grid;
     Element[] elements;
     int index = 0;
+    Camera camera;
 
     @Override
     public void init() {
         grid = new FallingGrid();
         elements = new Element[]{new Sand(grid), new Stone(grid), new Water(grid), new Oil(grid), new Smoke(grid, 2500), new Steam(grid, 2500)};
+        camera = new Camera();
+        camera.projectionOrtho(-1, 1, -1, 1, -1, 1);
+        camera.setScale(256f);
+        camera.move(256,256);
     }
 
     @Override
     public void input(InputTool inputTool) {
-        float x = (float) inputTool.mouseX();
+        camera.projectionOrtho(-inputTool.window().ratio(), inputTool.window().ratio(), -1, 1, -1, 1);
+        float x = (float) inputTool.mouseX() / inputTool.window().ratio();
         float y = (float) inputTool.mouseY();
-        int putX = (int) (x * 256 + 256);
-        int putY = (int) (y * 256 + 256);
+        Vector4f pos = new Vector4f(x, y, 0, 1);
+        pos.mul(camera.projectionMatrix(new Matrix4f()).invert());
+        pos.mul(camera.viewMatrix(new Matrix4f()).invert());
+        int putX = (int) pos.x;
+        int putY = (int) pos.y;
         if (inputTool.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
             for(int i = -5; i < 5; i++){
                 for(int j = -5; j < 5; j++){
@@ -61,11 +72,11 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void render(Render renderer) {
-        renderer.pixelDrawer.setProjection(new Matrix4f().ortho(0, 512, 0, 512, -1, 1));
-        renderer.pixelDrawer.setModel(new Matrix4f().identity());
+        renderer.pixelDrawer.setProjection(camera.projectionMatrix(new Matrix4f()));
+        renderer.pixelDrawer.setModel(camera.viewMatrix(new Matrix4f()));
         renderer.pixelDrawer.setView(new Matrix4f().identity());
-        renderer.lineDrawer.setProjection(new Matrix4f().ortho(0, 512, 0, 512, -1, 1));
-        renderer.lineDrawer.setModel(new Matrix4f().identity());
+        renderer.lineDrawer.setProjection(camera.projectionMatrix(new Matrix4f()));
+        renderer.lineDrawer.setModel(camera.viewMatrix(new Matrix4f()));
         renderer.lineDrawer.setView(new Matrix4f().identity());
         grid.render(renderer);
     }

@@ -76,4 +76,23 @@ public class Camera {
     public Matrix4f cameraMatrix(float x, float y, float angle, float scale, Matrix4f dest) {
         return projectionMatrix.mul(new Matrix4f().translate(-x, -y, 0).rotateLocalZ(-angle).scaleLocal(1/scale,dest), dest);
     }
+
+    public Matrix4f viewMatrix(Matrix4f dest) {
+        return new Matrix4f().translate(-x, -y, 0).rotateLocalZ(-angle, dest);
+    }
+
+    public Matrix4f viewMatrix(float x, float y, float angle, float scale, Matrix4f dest) {
+        return new Matrix4f().translate(-x, -y, 0).rotateLocalZ(-angle).scaleLocal(1/scale,dest);
+    }
+
+    public Matrix4f viewMatrixMix(float x, float y, float angle, Matrix4f dest, float mix) {
+        this.x = x * mix + this.x * (1 - mix);
+        this.y = y * mix + this.y * (1 - mix);
+        this.angle = angle * mix + this.angle * (1 - mix);
+        return new Matrix4f().translate(-this.x, -this.y, 0).rotateLocalZ(-this.angle,dest);
+    }
+
+    public Matrix4f projectionMatrix(Matrix4f dest) {
+        return projectionMatrix.scale(1/scale, dest);
+    }
 }

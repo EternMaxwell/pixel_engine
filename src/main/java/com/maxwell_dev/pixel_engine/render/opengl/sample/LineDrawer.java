@@ -37,6 +37,7 @@ public class LineDrawer extends Pipeline {
         glBufferData(GL_UNIFORM_BUFFER, 16 * 4 * 3, GL_DYNAMIC_DRAW);
         vertices = MemoryUtil.memAlloc(1024);
         glNamedBufferData(vbo, 1024, GL_DYNAMIC_DRAW);
+        uniformBuffer(0, uniformBuffer);
     }
 
     public void setProjection(Matrix4f projection){
@@ -76,7 +77,6 @@ public class LineDrawer extends Pipeline {
         vertices.flip();
         use();
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
-        glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer);
         glDrawArrays(GL_LINES, 0, count);
         vertices.clear();
         count = 0;

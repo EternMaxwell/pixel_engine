@@ -268,11 +268,11 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
                 Element<ElementID> element = get(x, y);
                 if (element != null) {
                     float[] color = element.color().clone();
-                    if(!element.freeFall()){
-                        color[0] *= 0.5F;
-                        color[1] *= 0.5F;
-                        color[2] *= 0.5F;
-                    }
+//                    if(!element.freeFall()){
+//                        color[0] *= 0.5F;
+//                        color[1] *= 0.5F;
+//                        color[2] *= 0.5F;
+//                    }
 //                    if(element.type() == ElementType.LIQUID){
 //                        color[0] = -element.velocityY() * 0.01f + 0.5f;
 //                        color[2] = element.velocityX() * 0.01f + 0.5f;
@@ -292,10 +292,10 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
                     float alpha = 0.2f;
                     float alpha2 = 0.4f;
 
-                    float lb_x = x * 64 * pixelSize;
-                    float lb_y = y * 64 * pixelSize;
-                    float rt_x = (x + 1) * 64 * pixelSize;
-                    float rt_y = (y + 1) * 64 * pixelSize;
+                    float lb_x = x * 64 * pixelSize + pixelSize / 4;
+                    float lb_y = y * 64 * pixelSize + pixelSize / 4;
+                    float rt_x = (x + 1) * 64 * pixelSize + pixelSize / 4;
+                    float rt_y = (y + 1) * 64 * pixelSize + pixelSize / 4;
 
                     float rect_x = chunk.rect_x * pixelSize + lb_x;
                     float rect_y = chunk.rect_y * pixelSize + lb_y;
