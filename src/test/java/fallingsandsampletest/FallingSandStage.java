@@ -31,7 +31,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     @Override
     public void input(InputTool inputTool) {
         camera.projectionOrtho(-inputTool.window().ratio(), inputTool.window().ratio(), -1, 1, -1, 1);
-        float x = (float) inputTool.mouseX() / inputTool.window().ratio();
+        float x = (float) inputTool.mouseX();
         float y = (float) inputTool.mouseY();
         Vector4f pos = new Vector4f(x, y, 0, 1);
         pos.mul(camera.projectionMatrix(new Matrix4f()).invert());

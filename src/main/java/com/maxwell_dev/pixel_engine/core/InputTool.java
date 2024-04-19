@@ -19,10 +19,10 @@ public class InputTool {
     private static final int STATE_JUST_RELEASED = 2;
     private static final int STATE_JUST_PRESSED = 3;
 
-    private Map<Integer, Integer> keyMap;
-    private Map<Integer, Integer> mouseMap;
-    private Set<Integer> keyJustPressed;
-    private Set<Integer> mouseJustPressed;
+    private final Map<Integer, Integer> keyMap;
+    private final Map<Integer, Integer> mouseMap;
+    private final Set<Integer> keyJustPressed;
+    private final Set<Integer> mouseJustPressed;
     private final double[] mousePos = new double[2];
     private final double[] mousePosLast = new double[2];
     private final double[] scroll = new double[2];
@@ -88,7 +88,7 @@ public class InputTool {
         glfwGetCursorPos(window.id(), posX, posY);
         mousePosLast[0] = mousePos[0];
         mousePosLast[1] = mousePos[1];
-        mousePos[0] = (posX[0] / window.width() * 2 - 1) * window.ratio();
+        mousePos[0] = posX[0] / window.width() * 2 - 1;
         mousePos[1] = 1 - posY[0] / window.height() * 2;
     }
 
@@ -132,12 +132,12 @@ public class InputTool {
         return mouseMap.get(key) == STATE_JUST_RELEASED;
     }
 
-    public int[] keyJustPressed(){
-        return keyJustPressed.stream().mapToInt(i -> i).toArray();
+    public Set<Integer> keyJustPressed(){
+        return keyJustPressed;
     }
 
-    public int[] mouseJustPressed(){
-        return mouseJustPressed.stream().mapToInt(i -> i).toArray();
+    public Set<Integer> mouseJustPressed(){
+        return mouseJustPressed;
     }
 
     public double[] mousePos(){
@@ -146,6 +146,10 @@ public class InputTool {
 
     public double mouseX(){
         return mousePos[0];
+    }
+
+    public double mouseXRatio(){
+        return mousePos[0] * window.ratio();
     }
 
     public double mouseY(){
