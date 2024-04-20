@@ -153,9 +153,9 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                     }
                     Element block = grid.get(blocked[0], blocked[1]);
                     if (!block.freeFall()) {
-//                        velocityY = grid.default_vy();
-//                        velocityX = grid.default_vx();
-//                        falling = false;
+                        velocityY = grid.default_vy();
+                        velocityX = grid.default_vx();
+                        falling = false;
                     }
                     if (gravity != 0 && !sinkTried) {
                         int belowX = Math.round(lastAvailable[0] + downX);
