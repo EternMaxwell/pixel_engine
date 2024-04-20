@@ -47,7 +47,7 @@ public class Test extends Application<Render, InputTool> {
         long start = System.nanoTime();
         stage.update();
         long end = System.nanoTime();
-        System.out.println("Time: " + (end - start) / 1e6);
+        System.out.println("Time: " + String.format("%2.4f",(end - start) / 1e6) + "ms");
     }
 
     @Override
