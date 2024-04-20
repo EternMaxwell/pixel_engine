@@ -172,20 +172,32 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                                 dirY = -downX;
                             }
                             int i = 0;
-                            while(i < dispersionRate()){
+                            int downTime = 0;
+                            while(i < Math.max(dispersionRate() * gravity / 100f, 1)){
                                 i++;
-                                int targetX = Math.round(lastAvailable[0] + dirX);
-                                int targetY = Math.round(lastAvailable[1] + dirY);
+                                int targetX = Math.round(lastAvailable[0] + dirX + downX * downTime);
+                                int targetY = Math.round(lastAvailable[1] + dirY + downY * downTime);
                                 if(targetY == lastAvailable[1] && targetX == lastAvailable[0]){
                                     continue;
                                 }
                                 Element target = grid.get(targetX, targetY);
                                 if((target == null || target.type() == ElementType.GAS) && (grid.valid(targetX, targetY) || !grid.invalidAsWall())){
-                                    grid.set(lastAvailable[0], lastAvailable[1], target);
-                                    grid.set(targetX, targetY, this);
-                                    lastAvailable[0] = targetX;
-                                    lastAvailable[1] = targetY;
-                                    moved = true;
+                                    Element targetBelow = grid.get(Math.round(lastAvailable[0] + dirX + downX + downX * downTime),
+                                            Math.round(lastAvailable[1] + dirY + downY + downY * downTime));
+                                    if(targetBelow == null || targetBelow.type() == ElementType.GAS){
+                                        grid.set(lastAvailable[0], lastAvailable[1], target);
+                                        grid.set(targetX, targetY, this);
+                                        lastAvailable[0] = targetX;
+                                        lastAvailable[1] = targetY;
+                                        moved = true;
+                                        downTime++;
+                                    }else{
+                                        grid.set(lastAvailable[0], lastAvailable[1], target);
+                                        grid.set(targetX, targetY, this);
+                                        lastAvailable[0] = targetX;
+                                        lastAvailable[1] = targetY;
+                                        moved = true;
+                                    }
                                 }else{
                                     if(lastBlocked >= 0){
                                         left = !left;
