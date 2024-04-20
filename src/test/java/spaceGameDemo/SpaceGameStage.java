@@ -30,12 +30,12 @@ public class SpaceGameStage extends Stage<Render, InputTool>{
     public void init() {
         camera = new Camera();
         world = new SpaceWorld();
-//        Set<SpaceBody> any = BodyFactory.random(200, -1,-1,0,new ArrayList<>(), 0.5f);
-//        for(SpaceBody body: any){
-//            body.createBox2dBody(world, .1f);
-//            body.body.applyForceToCenter(new org.jbox2d.common.Vec2((float) (Math.random() - .5)*10, (float) (Math.random() - .5)*10));
-////            world.addBody(body);
-//        }
+        Set<SpaceBody> any = BodyFactory.random(50, -10,-10,0,new ArrayList<>(), 0.5f);
+        for(SpaceBody body: any){
+            body.createBox2dBody(world, .1f);
+            body.body.applyForceToCenter(new org.jbox2d.common.Vec2((float) (Math.random() - .5)*10, (float) (Math.random() - .5)*10));
+//            world.addBody(body);
+        }
         SpaceBody asteroid = BodyFactory.circleStone(10, 0, 0, 0, new ArrayList<>());
         asteroid.createBox2dBody(world, .1f);
         target = BodyFactory.square(10, -2, -2, 0, new ArrayList<>());
@@ -90,12 +90,13 @@ public class SpaceGameStage extends Stage<Render, InputTool>{
     @Override
     public void update() {
         world.update();
+        //TODO: maybe better to use gravity field with QuadTree.
         for(SpaceBody body: world.bodies){
             for(SpaceBody body1: world.bodies){
                 if(body != body1){
                     Vec2 diff = body.body.getWorldCenter().sub(body1.body.getWorldCenter());
                     float distance = diff.length();
-                    if(body.body.getMass() > body1.body.getMass()/1000){
+                    if(body.body.getMass() > body1.body.getMass()/100){
                         diff.normalize();
                         diff = diff.mul(1/distance/distance).mul(body.body.getMass() * body1.body.getMass());
                         body1.body.applyForceToCenter(diff.mul(.05f));
