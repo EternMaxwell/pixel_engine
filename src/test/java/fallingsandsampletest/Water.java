@@ -56,6 +56,10 @@ public class Water extends Liquid<ElementID> {
 
     @Override
     public boolean heat(Grid<?, ?, ElementID> grid, int x, int y, float heat) {
+        if(heat >= 100f){
+            grid.set(x, y, new Steam(grid, 5192));
+            return true;
+        }
         return false;
     }
 

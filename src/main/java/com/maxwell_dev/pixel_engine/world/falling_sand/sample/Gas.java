@@ -457,7 +457,7 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
     public boolean randomTick(Grid<?,?,ElementID> grid, int x, int y, int tick, int intensity) {
         existenceTime -= 32;
         if (existenceTime <= 0) {
-            grid.set(x, y, existTimeEndReplaceElement());
+            grid.set(x, y, existTimeEndReplaceElement(grid));
             return true;
         }
         return false;
@@ -473,7 +473,7 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
         return velocityY;
     }
 
-    public abstract Element<ElementID> existTimeEndReplaceElement();
+    public abstract Element<ElementID> existTimeEndReplaceElement(Grid grid);
 
     @Override
     public void touch(Grid<?, ?, ElementID> grid, int x, int y) {

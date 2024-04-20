@@ -13,7 +13,7 @@ public class Smoke extends Gas<ElementID> {
     }
 
     @Override
-    public Element<ElementID> existTimeEndReplaceElement() {
+    public Element<ElementID> existTimeEndReplaceElement(Grid grid) {
         return null;
     }
 

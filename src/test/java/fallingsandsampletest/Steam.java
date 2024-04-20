@@ -12,7 +12,9 @@ public class Steam extends Gas<ElementID> {
     }
 
     @Override
-    public Element<ElementID> existTimeEndReplaceElement() {
+    public Element<ElementID> existTimeEndReplaceElement(Grid grid) {
+        if(Math.random() > 0.8f)
+            return new Water(grid);
         return null;
     }
 
@@ -23,7 +25,7 @@ public class Steam extends Gas<ElementID> {
 
     @Override
     public com.maxwell_dev.pixel_engine.world.falling_sand.Element<Grid<?, ?, ElementID>, ElementType, ElementID> newInstance(Grid<?, ?, ElementID> grid) {
-        return new Steam(grid, 2500);
+        return new Steam(grid, 5192);
     }
 
     @Override

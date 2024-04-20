@@ -45,6 +45,16 @@ public class FallingSandStage extends Stage<Render, InputTool> {
                 }
             }
         }
+        if(inputTool.isMousePressed(GLFW_MOUSE_BUTTON_RIGHT)){
+            for (int i = -5; i < 5; i++) {
+                for (int j = -5; j < 5; j++) {
+                    Element element = grid.get(putX + i, putY + j);
+                    if(element != null){
+                        element.heat(grid, putX + i, putY + j, 100);
+                    }
+                }
+            }
+        }
         if (inputTool.isKeyJustPressed(GLFW_KEY_EQUAL)) {
             index++;
             if (index >= elements.length) {

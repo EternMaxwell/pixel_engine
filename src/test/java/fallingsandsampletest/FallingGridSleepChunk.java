@@ -3,6 +3,8 @@ package fallingsandsampletest;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
 import render.Render;
 
+import java.util.Random;
+
 public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid<Render, Actions, ElementID>{
 
     Chunk[][] chunks;
@@ -218,9 +220,68 @@ public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.fa
                 }
             }
         }
+        randomTick();
         inverse = !inverse;
         tick++;
         return (System.nanoTime() - start) / 1e6;
+    }
+
+    private void randomTick() {
+        Random random = new Random();
+        for (Chunk[] row : chunks) {
+            for (Chunk chunk : row) {
+                if (chunk != null) {
+                    for (int i = 0; i < 64; i++) {
+                        int targetX = random.nextInt(64);
+                        int targetY = random.nextInt(64);
+                        Element<ElementID> element = chunk.get(targetX, targetY);
+                        if (element != null) {
+                            element.randomTick(this, targetX + chunk.x * 64, targetY + chunk.y * 64, tick, 1);
+                        }
+                    }
+                    for (int i = 0; i < 32; i++) {
+                        int targetX = random.nextInt(64);
+                        int targetY = random.nextInt(64);
+                        Element<ElementID> element = chunk.get(targetX, targetY);
+                        if (element != null) {
+                            element.randomTick(this, targetX + chunk.x * 64, targetY + chunk.y * 64, tick, 2);
+                        }
+                    }
+                    for (int i = 0; i < 16; i++) {
+                        int targetX = random.nextInt(64);
+                        int targetY = random.nextInt(64);
+                        Element<ElementID> element = chunk.get(targetX, targetY);
+                        if (element != null) {
+                            element.randomTick(this, targetX + chunk.x * 64, targetY + chunk.y * 64, tick, 3);
+                        }
+                    }
+                    for (int i = 0; i < 8; i++) {
+                        int targetX = random.nextInt(64);
+                        int targetY = random.nextInt(64);
+                        Element<ElementID> element = chunk.get(targetX, targetY);
+                        if (element != null) {
+                            element.randomTick(this, targetX + chunk.x * 64, targetY + chunk.y * 64, tick, 4);
+                        }
+                    }
+                    for (int i = 0; i < 4; i++) {
+                        int targetX = random.nextInt(64);
+                        int targetY = random.nextInt(64);
+                        Element<ElementID> element = chunk.get(targetX, targetY);
+                        if (element != null) {
+                            element.randomTick(this, targetX + chunk.x * 64, targetY + chunk.y * 64, tick, 5);
+                        }
+                    }
+                    for (int i = 0; i < 2; i++) {
+                        int targetX = random.nextInt(64);
+                        int targetY = random.nextInt(64);
+                        Element<ElementID> element = chunk.get(targetX, targetY);
+                        if (element != null) {
+                            element.randomTick(this, targetX + chunk.x * 64, targetY + chunk.y * 64, tick, 6);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
