@@ -184,20 +184,20 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                                 if((target == null || target.type() == ElementType.GAS) && (grid.valid(targetX, targetY) || !grid.invalidAsWall())){
                                     Element targetBelow = grid.get(Math.round(lastAvailable[0] + dirX + downX + downX * downTime),
                                             Math.round(lastAvailable[1] + dirY + downY + downY * downTime));
-                                    if(targetBelow == null || targetBelow.type() == ElementType.GAS){
+//                                    if(targetBelow == null || targetBelow.type() == ElementType.GAS){
+//                                        grid.set(lastAvailable[0], lastAvailable[1], target);
+//                                        grid.set(targetX, targetY, this);
+//                                        lastAvailable[0] = targetX;
+//                                        lastAvailable[1] = targetY;
+//                                        moved = true;
+//                                        downTime++;
+//                                    }else{
                                         grid.set(lastAvailable[0], lastAvailable[1], target);
                                         grid.set(targetX, targetY, this);
                                         lastAvailable[0] = targetX;
                                         lastAvailable[1] = targetY;
                                         moved = true;
-                                        downTime++;
-                                    }else{
-                                        grid.set(lastAvailable[0], lastAvailable[1], target);
-                                        grid.set(targetX, targetY, this);
-                                        lastAvailable[0] = targetX;
-                                        lastAvailable[1] = targetY;
-                                        moved = true;
-                                    }
+//                                    }
                                 }else{
                                     if(lastBlocked >= 0){
                                         left = !left;

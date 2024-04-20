@@ -39,29 +39,43 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         int putX = (int) pos.x;
         int putY = (int) pos.y;
         if (inputTool.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
-            for(int i = -5; i < 5; i++){
-                for(int j = -5; j < 5; j++){
+            for (int i = -5; i < 5; i++) {
+                for (int j = -5; j < 5; j++) {
                     grid.set(putX + i, putY + j, elements[index].newInstance(grid));
                 }
             }
         }
-        if(inputTool.isKeyJustPressed(GLFW_KEY_EQUAL)){
+        if (inputTool.isKeyJustPressed(GLFW_KEY_EQUAL)) {
             index++;
-            if(index >= elements.length){
+            if (index >= elements.length) {
                 index = 0;
             }
         }
-        if(inputTool.isKeyJustPressed(GLFW_KEY_MINUS)){
+        if (inputTool.isKeyJustPressed(GLFW_KEY_MINUS)) {
             index--;
-            if(index < 0){
+            if (index < 0) {
                 index = elements.length - 1;
             }
         }
-        if(inputTool.scrollY() > 0){
+        if (inputTool.scrollY() > 0) {
             grid.setGravity_y(grid.gravity_y() * 1.1f);
+            grid.setGravity_x(grid.gravity_x() * 1.1f);
         }
-        if(inputTool.scrollY() < 0){
+        if (inputTool.scrollY() < 0) {
             grid.setGravity_y(grid.gravity_y() * 0.9f);
+            grid.setGravity_x(grid.gravity_x() * 0.9f);
+        }
+        if (inputTool.isKeyPressed(GLFW_KEY_LEFT)) {
+            float newGravityX = (float) (Math.cos(Math.toRadians(1)) * grid.gravity_x() - Math.sin(Math.toRadians(1)) * grid.gravity_y());
+            float newGravityY = (float) (Math.sin(Math.toRadians(1)) * grid.gravity_x() + Math.cos(Math.toRadians(1)) * grid.gravity_y());
+            grid.setGravity_x(newGravityX);
+            grid.setGravity_y(newGravityY);
+        }
+        if (inputTool.isKeyPressed(GLFW_KEY_RIGHT)) {
+            float newGravityX = (float) (Math.cos(Math.toRadians(-1)) * grid.gravity_x() - Math.sin(Math.toRadians(-1)) * grid.gravity_y());
+            float newGravityY = (float) (Math.sin(Math.toRadians(-1)) * grid.gravity_x() + Math.cos(Math.toRadians(-1)) * grid.gravity_y());
+            grid.setGravity_x(newGravityX);
+            grid.setGravity_y(newGravityY);
         }
     }
 
