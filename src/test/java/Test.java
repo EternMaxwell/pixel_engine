@@ -30,7 +30,7 @@ public class Test extends Application<Render, InputTool> {
             render();
         });
         render = new Render(window);
-        stage = new SpaceGameStage();
+        stage = new FallingSandStage();
         stage.init();
     }
 

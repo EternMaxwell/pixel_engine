@@ -16,7 +16,7 @@ public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.fa
 
     public class Chunk{
         public static final int sleepChunkSizeBit = 3;
-        public static final int sleepChunkSize = 1 << 3;
+        public static final int sleepChunkSize = 1 << sleepChunkSizeBit;
         Element<ElementID>[][] elements;
         boolean[][] awake;
         boolean[][] awakeNext;
