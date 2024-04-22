@@ -145,7 +145,7 @@ public class FallingGridMinorRectChunk extends com.maxwell_dev.pixel_engine.worl
 
         public void stepYReverse(Grid grid, int y, int chunk_x, int tick) {
             int in_y = y % 64;
-            for (int cx = 0; cx < 64 / sleepChunkSize; cx++) {
+            for (int cx = 64 / sleepChunkSize - 1; cx >= 0; cx--) {
                 if (!awake[cx][in_y / sleepChunkSize]) {
                     continue;
                 }
