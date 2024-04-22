@@ -1,6 +1,8 @@
 package fallingsandsampletest;
 
+import com.maxwell_dev.pixel_engine.world.falling_sand.Grid;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
+import org.lwjgl.opengl.ARBDrawElementsBaseVertex;
 import render.Render;
 
 import java.util.Random;
@@ -122,6 +124,40 @@ public class FallingGridMinorRectChunk extends com.maxwell_dev.pixel_engine.worl
             }
             notFullSleep = notFullSleepNext;
             notFullSleepNext = false;
+        }
+
+        public void stepY(Grid grid, int y, int chunk_x, int tick){
+            int in_y = y % 64;
+            for(int cx = 0; cx < 4; cx++){
+                if(!awake[cx][in_y / sleepChunkSize]){
+                    continue;
+                }
+                for(int xx = rects[cx][in_y / sleepChunkSize].x; xx <= rects[cx][in_y / sleepChunkSize].xm; xx++){
+                    int in_x = cx * sleepChunkSize + xx;
+                    int targetX = chunk_x * 64 + in_x;
+                    Element target = elements[in_x][in_y];
+                    if(target != null){
+                        target.step(grid, targetX, y, tick);
+                    }
+                }
+            }
+        }
+
+        public void stepYReverse(Grid grid, int y, int chunk_x, int tick) {
+            int in_y = y % 64;
+            for (int cx = 0; cx < 4; cx++) {
+                if (!awake[cx][in_y / sleepChunkSize]) {
+                    continue;
+                }
+                for (int xx = rects[cx][in_y / sleepChunkSize].xm; xx >= rects[cx][in_y / sleepChunkSize].x; xx--) {
+                    int in_x = cx * sleepChunkSize + xx;
+                    int targetX = chunk_x * 64 + in_x;
+                    Element target = elements[in_x][in_y];
+                    if (target != null) {
+                        target.step(grid, targetX, y, tick);
+                    }
+                }
+            }
         }
     }
 
@@ -265,37 +301,54 @@ public class FallingGridMinorRectChunk extends com.maxwell_dev.pixel_engine.worl
             resetTag += gravity / 100;
         }
         for (int y = 0; y < chunks[0].length * 64; y++) {
+//            if(inverse){
+//                for (int x = 0; x < chunks.length * 64; x++) {
+//                    Chunk chunk = chunks[x >> 6][y >> 6];
+//                    if(!chunk.awake()){
+//                        x += 63;
+//                        continue;
+//                    }
+//                    if(!chunk.awakeAt(x & flag, y & flag)){
+//                        x += Chunk.sleepChunkSize - 1;
+//                        continue;
+//                    }
+//                    Element<ElementID> element = get(x, y);
+//                    if (element != null && chunk.inRectAt(x & flag, y & flag)) {
+//                        element.step(this, x, y, tick);
+//                    }
+//                }
+//            }else {
+//                for (int x = chunks.length * 64 - 1; x >= 0; x--) {
+//                    Chunk chunk = chunks[x >> 6][y >> 6];
+//                    if(!chunk.awake()){
+//                        x -= 63;
+//                        continue;
+//                    }
+//                    if(!chunk.awakeAt(x & flag, y & flag)){
+//                        x -= Chunk.sleepChunkSize - 1;
+//                        continue;
+//                    }
+//                    Element<ElementID> element = get(x, y);
+//                    if (element != null && chunk.inRectAt(x & flag, y & flag)) {
+//                        element.step(this, x, y, tick);
+//                    }
+//                }
+//            }
             if(inverse){
-                for (int x = 0; x < chunks.length * 64; x++) {
-                    Chunk chunk = chunks[x >> 6][y >> 6];
-                    if(!chunk.awake()){
-                        x += 63;
+                for (int x = 0; x < chunks.length; x++) {
+                    Chunk chunk = chunks[x][y >> 6];
+                    if(chunk == null || !chunk.awake()){
                         continue;
                     }
-                    if(!chunk.awakeAt(x & flag, y & flag)){
-                        x += Chunk.sleepChunkSize - 1;
-                        continue;
-                    }
-                    Element<ElementID> element = get(x, y);
-                    if (element != null && chunk.inRectAt(x & flag, y & flag)) {
-                        element.step(this, x, y, tick);
-                    }
+                    chunk.stepY(this, y, x, tick);
                 }
-            }else {
-                for (int x = chunks.length * 64 - 1; x >= 0; x--) {
-                    Chunk chunk = chunks[x >> 6][y >> 6];
-                    if(!chunk.awake()){
-                        x -= 63;
+            }else{
+                for (int x = chunks.length - 1; x >= 0; x--) {
+                    Chunk chunk = chunks[x][y >> 6];
+                    if(chunk == null || !chunk.awake()){
                         continue;
                     }
-                    if(!chunk.awakeAt(x & flag, y & flag)){
-                        x -= Chunk.sleepChunkSize - 1;
-                        continue;
-                    }
-                    Element<ElementID> element = get(x, y);
-                    if (element != null && chunk.inRectAt(x & flag, y & flag)) {
-                        element.step(this, x, y, tick);
-                    }
+                    chunk.stepYReverse(this, y, x, tick);
                 }
             }
         }
