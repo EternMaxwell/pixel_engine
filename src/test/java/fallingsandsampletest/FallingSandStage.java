@@ -9,14 +9,19 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import render.Render;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class FallingSandStage extends Stage<Render, InputTool> {
 
-    Grid grid;
+    public Grid grid;
     Element[] elements;
     int index = 0;
     Camera camera;
+    FileWriter fileWriter;
 
     @Override
     public void init() {
@@ -26,6 +31,11 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         camera.projectionOrtho(-1, 1, -1, 1, -1, 1);
         camera.setScale(256f);
         camera.move(256,256);
+        try {
+            fileWriter = new FileWriter(grid.getClass().getName() + ".txt");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -89,9 +99,21 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         }
     }
 
+    double lastTime = 0;
+    double rate = 0.2;
+
     @Override
     public void update() {
+        long start = System.nanoTime();
         grid.step();
+        long end = System.nanoTime();
+        double time = rate * ((end - start) / 1e6) + (1 - rate) * lastTime;
+        lastTime = time;
+        try {
+            fileWriter.write(grid.getClass().getDeclaredField("tick").getInt(grid) + " " + String.format("%2.4f",time) + "\n");
+        } catch (IOException|NoSuchFieldException|IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -108,6 +130,10 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void dispose() {
-
+        try {
+            fileWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
