@@ -305,7 +305,7 @@ public class FallingGridQuadTree extends com.maxwell_dev.pixel_engine.world.fall
                 }
             }
         }else{
-            resetTag += gravity / 50;
+            resetTag += gravity / 100;
         }
         for (int y = 0; y < chunks[0].length * 64; y++) {
 //            if(inverse){
