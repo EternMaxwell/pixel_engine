@@ -9,9 +9,11 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import render.Render;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -100,7 +102,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     }
 
     double lastTime = 0;
-    double rate = 0.2;
+    double rate = 0.1;
 
     @Override
     public void update() {
@@ -135,5 +137,43 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        //draw the collected data to a graph
+        int height = 2048;
+        BufferedImage image = new BufferedImage(10240, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = image.createGraphics();
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, 10240, height);
+        graphics.setColor(Color.BLACK);
+        try {
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(grid.getClass().getName() + ".txt"));
+            int c;
+            StringBuilder stringBuilder = new StringBuilder();
+            while (true) {
+                try {
+                    if ((c = bufferedInputStream.read()) == -1) break;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                stringBuilder.append((char) c);
+            }
+            String[] data = stringBuilder.toString().split("\n");
+            double max = 10;
+            for (String s : data) {
+                String[] split = s.split(" ");
+                double time = Double.parseDouble(split[1]);
+            }
+            for (int i = 0; i < data.length - 1; i++) {
+                String[] split = data[i].split(" ");
+                double time = Double.parseDouble(split[1]);
+                double nextTime = Double.parseDouble(data[i + 1].split(" ")[1]);
+                graphics.drawLine(i, height - (int) (time / max * height), i + 1, height - (int) (nextTime / max * height));
+            }
+            graphics.dispose();
+            ImageIO.write(image, "png", new File(grid.getClass().getName() + ".png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        grid.dispose();
     }
 }

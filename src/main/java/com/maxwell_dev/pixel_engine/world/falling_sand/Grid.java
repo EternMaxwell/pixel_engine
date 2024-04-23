@@ -37,4 +37,6 @@ public abstract class Grid <T extends Element<?,?,?>,V extends Renderer, ActionE
     public abstract float default_vx();
     public abstract float default_vy();
     public abstract float tickTime();
+
+    public void dispose(){}
 }
