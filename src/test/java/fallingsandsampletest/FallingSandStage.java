@@ -5,6 +5,7 @@ import com.maxwell_dev.pixel_engine.render.Camera;
 import com.maxwell_dev.pixel_engine.stage.Stage;
 import com.maxwell_dev.pixel_engine.world.falling_sand.Element;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import render.Render;
@@ -145,18 +146,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         graphics.fillRect(0, 0, 10240, height);
         graphics.setColor(Color.BLACK);
         try {
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(grid.getClass().getName() + ".txt"));
-            int c;
-            StringBuilder stringBuilder = new StringBuilder();
-            while (true) {
-                try {
-                    if ((c = bufferedInputStream.read()) == -1) break;
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                stringBuilder.append((char) c);
-            }
-            String[] data = stringBuilder.toString().split("\n");
+            String[] data = getStrings();
             double max = 10;
             for (String s : data) {
                 String[] split = s.split(" ");
@@ -175,5 +165,21 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         }
 
         grid.dispose();
+    }
+
+    private String @NotNull [] getStrings() throws FileNotFoundException {
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(grid.getClass().getName() + ".txt"));
+        int c;
+        StringBuilder stringBuilder = new StringBuilder();
+        while (true) {
+            try {
+                if ((c = bufferedInputStream.read()) == -1) break;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            stringBuilder.append((char) c);
+        }
+        String[] data = stringBuilder.toString().split("\n");
+        return data;
     }
 }
