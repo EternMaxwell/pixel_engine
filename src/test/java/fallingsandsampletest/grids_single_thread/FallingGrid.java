@@ -1,7 +1,8 @@
-package fallingsandsampletest;
+package fallingsandsampletest.grids_single_thread;
 
-import com.maxwell_dev.pixel_engine.world.falling_sand.Grid;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
+import fallingsandsampletest.Actions;
+import fallingsandsampletest.ElementID;
 import render.Render;
 
 import java.util.Random;
@@ -96,7 +97,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         }
 
         public boolean validRect(){
-            return rect_x < rect_xm && rect_y < rect_ym;
+            return rect_x <= rect_xm && rect_y <= rect_ym;
         }
     }
 

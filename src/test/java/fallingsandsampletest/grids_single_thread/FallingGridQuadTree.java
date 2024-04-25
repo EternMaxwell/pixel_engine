@@ -1,14 +1,13 @@
-package fallingsandsampletest;
+package fallingsandsampletest.grids_single_thread;
 
 import com.maxwell_dev.pixel_engine.render.Renderer;
 import com.maxwell_dev.pixel_engine.world.falling_sand.Grid;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
+import fallingsandsampletest.Actions;
+import fallingsandsampletest.ElementID;
 import render.Render;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
-import java.util.Stack;
 
 public class FallingGridQuadTree extends com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid<Render, Actions, ElementID>{
 

@@ -1,11 +1,14 @@
-package fallingsandsampletest;
+package fallingsandsampletest.grids_single_thread;
 
+import com.maxwell_dev.pixel_engine.world.falling_sand.Grid;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
+import fallingsandsampletest.Actions;
+import fallingsandsampletest.ElementID;
 import render.Render;
 
 import java.util.Random;
 
-public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid<Render, Actions, ElementID>{
+public class FallingGridMinorRectChunk extends com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid<Render, Actions, ElementID>{
 
     Chunk[][] chunks;
     int tick = 0;
@@ -22,10 +25,67 @@ public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.fa
         boolean[][] awakeNext;
         int x;
         int y;
+
+        boolean notFullSleep = false;
+        boolean notFullSleepNext = false;
+
+        Rect[][] rects;
+
+        public class Rect{
+            public int x,y,xm,ym;
+            public int x_next, y_next, xm_next, ym_next;
+
+            public Rect(){
+                x = sleepChunkSize;
+                y = sleepChunkSize;
+                xm = 0;
+                ym = 0;
+                x_next = sleepChunkSize;
+                y_next = sleepChunkSize;
+                xm_next = 0;
+                ym_next = 0;
+            }
+
+            public void reset(){
+                x = x_next;
+                y = y_next;
+                xm = xm_next;
+                ym = ym_next;
+                x_next = sleepChunkSize;
+                y_next = sleepChunkSize;
+                xm_next = 0;
+                ym_next = 0;
+            }
+
+            public void awake(int x, int y){
+                this.x = Math.min(x, this.x);
+                this.y = Math.min(y, this.y);
+                x_next = Math.min(x_next, x);
+                y_next = Math.min(y_next, y);
+                xm = Math.max(x, this.xm);
+                ym = Math.max(y, this.ym);
+                xm_next = Math.max(xm_next, x);
+                ym_next = Math.max(ym_next, y);
+            }
+            public boolean awakeAt(int x, int y){
+                return x >= this.x && x <= xm && y >= this.y && y <= ym;
+            }
+        }
+
+        public boolean awake(){
+            return notFullSleep;
+        }
+
         public Chunk(int x, int y){
             this.x = x;
             this.y = y;
             elements = new Element[64][64];
+            rects = new Rect[64/sleepChunkSize][64/sleepChunkSize];
+            for(int i = 0; i < rects.length; i++){
+                for(int j = 0; j < rects[0].length; j++){
+                    rects[i][j] = new Rect();
+                }
+            }
             awake = new boolean[64/sleepChunkSize][64/sleepChunkSize];
             awakeNext = new boolean[64/sleepChunkSize][64/sleepChunkSize];
         }
@@ -37,11 +97,18 @@ public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.fa
         public void awake(int x, int y){
             awake[x / sleepChunkSize][y / sleepChunkSize] = true;
             awakeNext[x / sleepChunkSize][y / sleepChunkSize] = true;
+            rects[x / sleepChunkSize][y / sleepChunkSize].awake(x % sleepChunkSize, y % sleepChunkSize);
+            notFullSleep = true;
+            notFullSleepNext = true;
         }
 
         public boolean awakeAt(int x, int y){
 //            return true;
             return awake[x / sleepChunkSize][y / sleepChunkSize];
+        }
+
+        public boolean inRectAt(int x, int y){
+            return rects[x / sleepChunkSize][y / sleepChunkSize].awakeAt(x % sleepChunkSize, y % sleepChunkSize);
         }
 
         public Element<ElementID> get(int x, int y){
@@ -51,10 +118,51 @@ public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.fa
         public void reset(){
             awake = awakeNext;
             awakeNext = new boolean[64/sleepChunkSize][64/sleepChunkSize];
+            for (Rect[] row : rects) {
+                for (Rect rect : row) {
+                    rect.reset();
+                }
+            }
+            notFullSleep = notFullSleepNext;
+            notFullSleepNext = false;
+        }
+
+        public void stepY(Grid grid, int y, int chunk_x, int tick){
+            int in_y = y % 64;
+            for(int cx = 0; cx < 64 / sleepChunkSize; cx++){
+                if(!awake[cx][in_y / sleepChunkSize]){
+                    continue;
+                }
+                for(int xx = rects[cx][in_y / sleepChunkSize].x; xx <= rects[cx][in_y / sleepChunkSize].xm; xx++){
+                    int in_x = cx * sleepChunkSize + xx;
+                    int targetX = chunk_x * 64 + in_x;
+                    Element target = elements[in_x][in_y];
+                    if(target != null){
+                        target.step(grid, targetX, y, tick);
+                    }
+                }
+            }
+        }
+
+        public void stepYReverse(Grid grid, int y, int chunk_x, int tick) {
+            int in_y = y % 64;
+            for (int cx = 64 / sleepChunkSize - 1; cx >= 0; cx--) {
+                if (!awake[cx][in_y / sleepChunkSize]) {
+                    continue;
+                }
+                for (int xx = rects[cx][in_y / sleepChunkSize].xm; xx >= rects[cx][in_y / sleepChunkSize].x; xx--) {
+                    int in_x = cx * sleepChunkSize + xx;
+                    int targetX = chunk_x * 64 + in_x;
+                    Element target = elements[in_x][in_y];
+                    if (target != null) {
+                        target.step(grid, targetX, y, tick);
+                    }
+                }
+            }
         }
     }
 
-    public FallingGridSleepChunk() {
+    public FallingGridMinorRectChunk() {
         gravity_x = 0;
         gravity_y = -100f;
         pixelSize = 1;
@@ -91,9 +199,9 @@ public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.fa
         if(x < 0 || y < 0 || x >= chunks.length * 64 || y >= chunks[0].length * 64){
             return;
         }
-        FallingGridSleepChunk.Chunk chunk = chunks[x >> 6][y >> 6];
+        Chunk chunk = chunks[x >> 6][y >> 6];
         if(chunk == null){
-            chunk = new FallingGridSleepChunk.Chunk(x >> 6, y >> 6);
+            chunk = new Chunk(x >> 6, y >> 6);
             chunks[x >> 6][y >> 6] = chunk;
         }
         chunk.awake(x & flag, y & flag);
@@ -194,29 +302,54 @@ public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.fa
             resetTag += gravity / 100;
         }
         for (int y = 0; y < chunks[0].length * 64; y++) {
+//            if(inverse){
+//                for (int x = 0; x < chunks.length * 64; x++) {
+//                    Chunk chunk = chunks[x >> 6][y >> 6];
+//                    if(!chunk.awake()){
+//                        x += 63;
+//                        continue;
+//                    }
+//                    if(!chunk.awakeAt(x & flag, y & flag)){
+//                        x += Chunk.sleepChunkSize - 1;
+//                        continue;
+//                    }
+//                    Element<ElementID> element = get(x, y);
+//                    if (element != null && chunk.inRectAt(x & flag, y & flag)) {
+//                        element.step(this, x, y, tick);
+//                    }
+//                }
+//            }else {
+//                for (int x = chunks.length * 64 - 1; x >= 0; x--) {
+//                    Chunk chunk = chunks[x >> 6][y >> 6];
+//                    if(!chunk.awake()){
+//                        x -= 63;
+//                        continue;
+//                    }
+//                    if(!chunk.awakeAt(x & flag, y & flag)){
+//                        x -= Chunk.sleepChunkSize - 1;
+//                        continue;
+//                    }
+//                    Element<ElementID> element = get(x, y);
+//                    if (element != null && chunk.inRectAt(x & flag, y & flag)) {
+//                        element.step(this, x, y, tick);
+//                    }
+//                }
+//            }
             if(inverse){
-                for (int x = 0; x < chunks.length * 64; x++) {
-                    Chunk chunk = chunks[x >> 6][y >> 6];
-                    Element<ElementID> element = get(x, y);
-                    if(!chunk.awakeAt(x & flag, y & flag)){
-                        x += Chunk.sleepChunkSize - 1;
+                for (int x = 0; x < chunks.length; x++) {
+                    Chunk chunk = chunks[x][y >> 6];
+                    if(chunk == null || !chunk.awake()){
                         continue;
                     }
-                    if (element != null && chunk.awakeAt(x & flag, y & flag)) {
-                        element.step(this, x, y, tick);
-                    }
+                    chunk.stepY(this, y, x, tick);
                 }
-            }else {
-                for (int x = chunks.length * 64 - 1; x >= 0; x--) {
-                    Chunk chunk = chunks[x >> 6][y >> 6];
-                    Element<ElementID> element = get(x, y);
-                    if(!chunk.awakeAt(x & flag, y & flag)){
-                        x -= Chunk.sleepChunkSize - 1;
+            }else{
+                for (int x = chunks.length - 1; x >= 0; x--) {
+                    Chunk chunk = chunks[x][y >> 6];
+                    if(chunk == null || !chunk.awake()){
                         continue;
                     }
-                    if (element != null && chunk.awakeAt(x & flag, y & flag)) {
-                        element.step(this, x, y, tick);
-                    }
+                    chunk.stepYReverse(this, y, x, tick);
                 }
             }
         }
@@ -318,7 +451,7 @@ public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.fa
                 Chunk chunk = chunks[x][y];
                 if(chunk != null){
                     float alpha = 0.2f;
-                    float alpha2 = 0.1f;
+                    float alpha2 = 0.2f;
 
                     float lb_x = x * 64 * pixelSize;
                     float lb_y = y * 64 * pixelSize;
@@ -341,6 +474,7 @@ public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.fa
 //                        renderer.lineDrawer.draw(rect_xm, rect_y, rect_xm, rect_ym, 0, 0, 1, alpha2);
 //                        renderer.lineDrawer.draw(rect_x, rect_ym, rect_xm, rect_ym, 0, 0, 1, alpha2);
 //                    }
+
                     for(int sx = 0; sx < 64 / Chunk.sleepChunkSize; sx++){
                         for(int sy = 0; sy < 64 / Chunk.sleepChunkSize; sy++){
                             if(chunk.awake[sx][sy]){
@@ -348,10 +482,25 @@ public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.fa
                                 float rect_y = sy * Chunk.sleepChunkSize * pixelSize + lb_y;
                                 float rect_xm = (sx + 1) * Chunk.sleepChunkSize * pixelSize + lb_x;
                                 float rect_ym = (sy + 1) * Chunk.sleepChunkSize * pixelSize + lb_y;
-                                renderer.lineDrawer.draw(rect_x, rect_y, rect_xm, rect_y, 0, 1, 0, alpha2);
-                                renderer.lineDrawer.draw(rect_x, rect_y, rect_x, rect_ym, 0, 1, 0, alpha2);
-                                renderer.lineDrawer.draw(rect_xm, rect_y, rect_xm, rect_ym, 0, 1, 0, alpha2);
-                                renderer.lineDrawer.draw(rect_x, rect_ym, rect_xm, rect_ym, 0, 1, 0, alpha2);
+                                renderer.lineDrawer.draw(rect_x, rect_y, rect_xm, rect_y, 1, 0, 1, alpha2);
+                                renderer.lineDrawer.draw(rect_x, rect_y, rect_x, rect_ym, 1, 0, 1, alpha2);
+                                renderer.lineDrawer.draw(rect_xm, rect_y, rect_xm, rect_ym, 1, 0, 1, alpha2);
+                                renderer.lineDrawer.draw(rect_x, rect_ym, rect_xm, rect_ym, 1, 0, 1, alpha2);
+                            }
+                        }
+                    }
+
+                    for(int sx = 0; sx < 64 / Chunk.sleepChunkSize; sx++){
+                        for(int sy = 0; sy < 64 / Chunk.sleepChunkSize; sy++){
+                            if(chunk.awake[sx][sy]){
+                                float rect_x = sx * Chunk.sleepChunkSize * pixelSize + lb_x + chunk.rects[sx][sy].x * pixelSize;
+                                float rect_y = sy * Chunk.sleepChunkSize * pixelSize + lb_y + chunk.rects[sx][sy].y * pixelSize;
+                                float rect_xm = sx * Chunk.sleepChunkSize * pixelSize + lb_x + chunk.rects[sx][sy].xm * pixelSize + pixelSize;
+                                float rect_ym = sy * Chunk.sleepChunkSize * pixelSize + lb_y + chunk.rects[sx][sy].ym * pixelSize + pixelSize;
+                                renderer.lineDrawer.draw(rect_x, rect_y, rect_xm, rect_y, 1, 1, 0, alpha2);
+                                renderer.lineDrawer.draw(rect_x, rect_y, rect_x, rect_ym, 1, 1, 0, alpha2);
+                                renderer.lineDrawer.draw(rect_xm, rect_y, rect_xm, rect_ym, 1, 1, 0, alpha2);
+                                renderer.lineDrawer.draw(rect_x, rect_ym, rect_xm, rect_ym, 1, 1, 0, alpha2);
                             }
                         }
                     }
