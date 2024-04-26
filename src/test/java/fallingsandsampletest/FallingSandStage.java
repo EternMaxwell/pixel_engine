@@ -5,7 +5,7 @@ import com.maxwell_dev.pixel_engine.render.Camera;
 import com.maxwell_dev.pixel_engine.stage.Stage;
 import com.maxwell_dev.pixel_engine.world.falling_sand.Element;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid;
-import fallingsandsampletest.grids_single_thread.FallingGridSleepChunk;
+import fallingsandsampletest.grids_chunk_multithread.FallingGridChunkMulti;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -28,7 +28,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void init() {
-        grid = new FallingGridSleepChunk();
+        grid = new FallingGridChunkMulti();
         elements = new Element[]{new Sand(grid), new Stone(grid), new Water(grid), new Oil(grid), new Smoke(grid, 2500), new Steam(grid, 2500)};
         camera = new Camera();
         camera.projectionOrtho(-1, 1, -1, 1, -1, 1);
@@ -113,8 +113,8 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         double time = rate * ((end - start) / 1e6) + (1 - rate) * lastTime;
         lastTime = time;
         try {
-            fileWriter.write(grid.getClass().getDeclaredField("tick").getInt(grid) + " " + String.format("%2.4f",time) + "\n");
-        } catch (IOException|NoSuchFieldException|IllegalAccessException e) {
+            fileWriter.write(grid.tick() + " " + String.format("%2.4f",time) + "\n");
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

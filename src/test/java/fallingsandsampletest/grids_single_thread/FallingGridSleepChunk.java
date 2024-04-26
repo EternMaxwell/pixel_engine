@@ -16,6 +16,10 @@ public class FallingGridSleepChunk extends com.maxwell_dev.pixel_engine.world.fa
     int resetThreshold = 16;
     int flag = 0x3f;
 
+    public int tick(){
+        return tick;
+    }
+
     public class Chunk{
         public static final int sleepChunkSizeBit = 3;
         public static final int sleepChunkSize = 1 << sleepChunkSizeBit;

@@ -1,13 +1,15 @@
-package fallingsandsampletest.grids_single_thread;
+package fallingsandsampletest.grids_chunk_multithread;
 
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
 import fallingsandsampletest.Actions;
 import fallingsandsampletest.ElementID;
+import org.jetbrains.annotations.NotNull;
 import render.Render;
 
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.*;
 
-public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid<Render, Actions, ElementID> {
+public class FallingGridChunkMulti extends com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid<Render, Actions, ElementID> {
 
     Chunk[][] chunks;
     int tick = 0;
@@ -16,7 +18,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
     int resetThreshold = 16;
     int flag = 0x3f;
 
-    public int tick() {
+    public int tick(){
         return tick;
     }
 
@@ -105,7 +107,7 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         }
     }
 
-    public FallingGrid() {
+    public FallingGridChunkMulti() {
         gravity_x = 0;
         gravity_y = -100f;
         pixelSize = 1;
@@ -231,6 +233,77 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         return element;
     }
 
+    ExecutorService executor = new AbstractExecutorService() {
+        final Set<Runnable> pool = new HashSet<>();
+        final Thread[] threads = new Thread[8];
+        boolean running = true;
+
+        {
+            for (int i = 0; i < threads.length; i++) {
+                Thread thread = new Thread(() -> {
+                    while (running) {
+                        Runnable runnable = null;
+                        synchronized (pool) {
+                            if (!pool.isEmpty()) {
+                                runnable = pool.iterator().next();
+                                pool.remove(runnable);
+                            }
+                        }
+                        if (runnable != null) {
+                            runnable.run();
+                        }
+//                        else {
+//                            try {
+//                                Thread.sleep(1);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+                    }
+                });
+                thread.start();
+                threads[i] = thread;
+            }
+        }
+
+        @Override
+        public void shutdown() {
+            running = false;
+            for (Thread thread : threads) {
+                thread.interrupt();
+            }
+        }
+
+        @NotNull
+        @Override
+        public List<Runnable> shutdownNow() {
+            return List.of();
+        }
+
+        @Override
+        public boolean isShutdown() {
+            return false;
+        }
+
+        @Override
+        public boolean isTerminated() {
+            return false;
+        }
+
+        @Override
+        public boolean awaitTermination(long timeout, @NotNull TimeUnit unit) throws InterruptedException {
+            return false;
+        }
+
+        @Override
+        public void execute(@NotNull Runnable command) {
+            synchronized (pool){
+                pool.add(command);
+            }
+        }
+    };
+    final Set<Future> futures = new HashSet<>();
+
     @Override
     public double step() {
         long start = System.nanoTime();
@@ -245,31 +318,82 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         } else {
             resetTag += gravity / 100;
         }
-        for (int y = 0; y < chunks[0].length * 64; y++) {
-            if (inverse) {
-                for (int x = 0; x < chunks.length * 64; x++) {
-                    Chunk chunk = chunks[x >> 6][y >> 6];
-                    if(chunk == null || !chunk.validRect()) {
-                        x += 63;
-                        continue;
-                    }
-                    Element<ElementID> element = get(x, y);
-                    if (element != null && chunk.in_rect(x & flag, y & flag)) {
-                        element.step(this, x, y, tick);
+//        for (int y = 0; y < chunks[0].length * 64; y++) {
+//            if (inverse) {
+//                for (int x = 0; x < chunks.length * 64; x++) {
+//                    Chunk chunk = chunks[x >> 6][y >> 6];
+//                    if(chunk == null || !chunk.validRect()) {
+//                        x += 63;
+//                        continue;
+//                    }
+//                    Element<ElementID> element = get(x, y);
+//                    if (element != null && chunk.in_rect(x & flag, y & flag)) {
+//                        element.step(this, x, y, tick);
+//                    }
+//                }
+//            } else {
+//                for (int x = chunks.length * 64 - 1; x >= 0; x--) {
+//                    Chunk chunk = chunks[x >> 6][y >> 6];
+//                    if(chunk == null || !chunk.validRect()) {
+//                        x -= 63;
+//                        continue;
+//                    }
+//                    Element<ElementID> element = get(x, y);
+//                    if (element != null && chunk.in_rect(x & flag, y & flag)) {
+//                        element.step(this, x, y, tick);
+//                    }
+//                }
+//            }
+//        }
+        int[] xs = new int[]{0, 1};
+        if(Math.random() > 0.5){
+            xs[0] = 1;
+            xs[1] = 0;
+        }
+        int[] ys = new int[]{0, 1};
+        if(Math.random() > 0.5){
+            ys[0] = 1;
+            ys[1] = 0;
+        }
+        for(int oy: ys){
+            for(int ox: xs){
+                for(int cy = oy; cy < chunks[0].length; cy += 2){
+                    for(int cx = ox; cx < chunks.length; cx += 2){
+                        Chunk chunk = chunks[cx][cy];
+                        if(chunk == null || !chunk.validRect()) {
+                            continue;
+                        }
+                        int finalCy = cy;
+                        int finalCx = cx;
+                        futures.add(executor.submit(() -> {
+                            for (int y = finalCy * 64; y < (finalCy + 1) * 64; y++) {
+                                if (inverse) {
+                                    for (int x = finalCx * 64; x < (finalCx + 1) * 64; x++) {
+                                        Element<ElementID> element = get(x, y);
+                                        if (element != null && chunk.in_rect(x & flag, y & flag)) {
+                                            element.step(this, x, y, tick);
+                                        }
+                                    }
+                                } else {
+                                    for (int x = (finalCx + 1) * 64 - 1; x >= finalCx * 64; x--) {
+                                        Element<ElementID> element = get(x, y);
+                                        if (element != null && chunk.in_rect(x & flag, y & flag)) {
+                                            element.step(this, x, y, tick);
+                                        }
+                                    }
+                                }
+                            }
+                        }));
                     }
                 }
-            } else {
-                for (int x = chunks.length * 64 - 1; x >= 0; x--) {
-                    Chunk chunk = chunks[x >> 6][y >> 6];
-                    if(chunk == null || !chunk.validRect()) {
-                        x -= 63;
-                        continue;
-                    }
-                    Element<ElementID> element = get(x, y);
-                    if (element != null && chunk.in_rect(x & flag, y & flag)) {
-                        element.step(this, x, y, tick);
+                for(Future future : futures){
+                    try {
+                        future.get();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
                 }
+                futures.clear();
             }
         }
         randomTick();
@@ -396,6 +520,10 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
                 }
             }
         }
+    }
+
+    public void dispose(){
+        executor.shutdown();
     }
 
     @Override

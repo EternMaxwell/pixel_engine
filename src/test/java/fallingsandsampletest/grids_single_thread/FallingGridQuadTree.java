@@ -18,6 +18,10 @@ public class FallingGridQuadTree extends com.maxwell_dev.pixel_engine.world.fall
     int resetThreshold = 16;
     int flag = 0x3f;
 
+    public int tick(){
+        return tick;
+    }
+
     public class Chunk{
         Element<ElementID>[][] elements;
         int x;

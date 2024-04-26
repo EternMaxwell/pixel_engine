@@ -11,6 +11,10 @@ public class FallingGridEasy extends com.maxwell_dev.pixel_engine.world.falling_
     int tick = 0;
     boolean inverse = false;
 
+    public int tick(){
+        return tick;
+    }
+
     public FallingGridEasy() {
         gravity_x = 0;
         gravity_y = -100f;

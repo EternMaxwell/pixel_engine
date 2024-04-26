@@ -7,6 +7,7 @@ public abstract class Grid <T extends Element<?,?,?>,V extends Renderer, ActionE
     protected float gravity_y;
     protected float gravity_x;
 
+    public abstract int tick();
     public abstract T get(int x, int y);
     public abstract boolean valid(int x, int y);
     public abstract boolean invalidAsWall();
