@@ -6,6 +6,7 @@ import com.maxwell_dev.pixel_engine.stage.Stage;
 import com.maxwell_dev.pixel_engine.world.falling_sand.Element;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid;
 import fallingsandsampletest.grids_chunk_multithread.FallingGridChunkMulti;
+import fallingsandsampletest.grids_chunk_multithread.FallingGridMinorRectChunkChunkMulti;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -28,7 +29,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void init() {
-        grid = new FallingGridChunkMulti();
+        grid = new FallingGridMinorRectChunkChunkMulti();
         elements = new Element[]{new Sand(grid), new Stone(grid), new Water(grid), new Oil(grid), new Smoke(grid, 2500), new Steam(grid, 2500)};
         camera = new Camera();
         camera.projectionOrtho(-1, 1, -1, 1, -1, 1);
@@ -147,7 +148,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         graphics.setColor(Color.BLACK);
         try {
             String[] data = getStrings();
-            double max = 10;
+            double max = 25;
             for (String s : data) {
                 String[] split = s.split(" ");
                 double time = Double.parseDouble(split[1]);

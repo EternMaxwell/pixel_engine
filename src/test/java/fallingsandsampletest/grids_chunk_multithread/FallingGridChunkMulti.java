@@ -8,6 +8,7 @@ import render.Render;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FallingGridChunkMulti extends com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid<Render, Actions, ElementID> {
 
@@ -37,6 +38,15 @@ public class FallingGridChunkMulti extends com.maxwell_dev.pixel_engine.world.fa
         int rect_xm_next;
         int rect_ym_next;
 
+        Object lock_x = new Object();
+        Object lock_y = new Object();
+        Object lock_xm = new Object();
+        Object lock_ym = new Object();
+        Object lock_x_next = new Object();
+        Object lock_y_next = new Object();
+        Object lock_xm_next = new Object();
+        Object lock_ym_next = new Object();
+
         public Chunk(int x, int y) {
             this.x = x;
             this.y = y;
@@ -56,29 +66,45 @@ public class FallingGridChunkMulti extends com.maxwell_dev.pixel_engine.world.fa
         }
 
         public void awake(int x, int y) {
-            if (x < rect_x_next) {
-                rect_x_next = x;
+            synchronized (lock_x_next){
+                if (x < rect_x_next) {
+                    rect_x_next = x;
+                }
             }
-            if (y < rect_y_next) {
-                rect_y_next = y;
+            synchronized (lock_y_next){
+                if (y < rect_y_next) {
+                    rect_y_next = y;
+                }
             }
-            if (x > rect_xm_next) {
-                rect_xm_next = x;
+            synchronized (lock_xm_next){
+                if (x > rect_xm_next) {
+                    rect_xm_next = x;
+                }
             }
-            if (y > rect_ym_next) {
-                rect_ym_next = y;
+            synchronized (lock_ym_next){
+                if (y > rect_ym_next) {
+                    rect_ym_next = y;
+                }
             }
-            if (x < rect_x) {
-                rect_x = x;
+            synchronized (lock_x){
+                if (x < rect_x) {
+                    rect_x = x;
+                }
             }
-            if (y < rect_y) {
-                rect_y = y;
+            synchronized (lock_y){
+                if (y < rect_y) {
+                    rect_y = y;
+                }
             }
-            if (x > rect_xm) {
-                rect_xm = x;
+            synchronized (lock_xm){
+                if (x > rect_xm) {
+                    rect_xm = x;
+                }
             }
-            if (y > rect_ym) {
-                rect_ym = y;
+            synchronized (lock_ym){
+                if (y > rect_ym) {
+                    rect_ym = y;
+                }
             }
         }
 
