@@ -7,6 +7,7 @@ import com.maxwell_dev.pixel_engine.world.falling_sand.Element;
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid;
 import fallingsandsampletest.grids_chunk_multithread.FallingGridChunkMulti;
 import fallingsandsampletest.grids_chunk_multithread.FallingGridMinorRectChunkChunkMulti;
+import fallingsandsampletest.grids_chunk_multithread.FallingGridSleepChunkChunkMulti;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -29,7 +30,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void init() {
-        grid = new FallingGridMinorRectChunkChunkMulti();
+        grid = new FallingGridSleepChunkChunkMulti();
         elements = new Element[]{new Sand(grid), new Stone(grid), new Water(grid), new Oil(grid), new Smoke(grid, 2500), new Steam(grid, 2500)};
         camera = new Camera();
         camera.projectionOrtho(-1, 1, -1, 1, -1, 1);
