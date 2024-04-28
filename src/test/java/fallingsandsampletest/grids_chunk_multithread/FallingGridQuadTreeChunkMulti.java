@@ -1,4 +1,4 @@
-package fallingsandsampletest.grids_single_thread;
+package fallingsandsampletest.grids_chunk_multithread;
 
 import com.maxwell_dev.pixel_engine.render.Renderer;
 import com.maxwell_dev.pixel_engine.world.falling_sand.Grid;
@@ -7,9 +7,14 @@ import fallingsandsampletest.Actions;
 import fallingsandsampletest.ElementID;
 import render.Render;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-public class FallingGridQuadTree extends com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid<Render, Actions, ElementID>{
+public class FallingGridQuadTreeChunkMulti extends com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid<Render, Actions, ElementID>{
 
     Chunk[][] chunks;
     int tick = 0;
@@ -171,7 +176,7 @@ public class FallingGridQuadTree extends com.maxwell_dev.pixel_engine.world.fall
         }
     }
 
-    public FallingGridQuadTree() {
+    public FallingGridQuadTreeChunkMulti() {
         gravity_x = 0;
         gravity_y = -100f;
         pixelSize = 1;
@@ -296,6 +301,9 @@ public class FallingGridQuadTree extends com.maxwell_dev.pixel_engine.world.fall
         return element;
     }
 
+    ExecutorService executor = Executors.newCachedThreadPool();
+    Set<Future> futures = new HashSet<>();
+
     @Override
     public double step() {
         long start = System.nanoTime();
@@ -310,56 +318,65 @@ public class FallingGridQuadTree extends com.maxwell_dev.pixel_engine.world.fall
         }else{
             resetTag += gravity / 100;
         }
-        for (int y = 0; y < chunks[0].length * 64; y++) {
+//        for (int y = 0; y < chunks[0].length * 64; y++) {
 //            if(inverse){
-//                for (int x = 0; x < chunks.length * 64; x++) {
-//                    Chunk chunk = chunks[x >> 6][y >> 6];
-//                    if(!chunk.awake()){
-//                        x += 63;
+//                for (int x = 0; x < chunks.length; x++) {
+//                    Chunk chunk = chunks[x][y >> 6];
+//                    if(chunk == null || !chunk.awake()){
 //                        continue;
 //                    }
-//                    if(!chunk.awakeAt(x & flag, y & flag)){
-//                        x += Chunk.sleepChunkSize - 1;
-//                        continue;
-//                    }
-//                    Element<ElementID> element = get(x, y);
-//                    if (element != null && chunk.inRectAt(x & flag, y & flag)) {
-//                        element.step(this, x, y, tick);
-//                    }
+//                    chunk.stepY(this, y, x, tick);
 //                }
-//            }else {
-//                for (int x = chunks.length * 64 - 1; x >= 0; x--) {
-//                    Chunk chunk = chunks[x >> 6][y >> 6];
-//                    if(!chunk.awake()){
-//                        x -= 63;
+//            }else{
+//                for (int x = chunks.length - 1; x >= 0; x--) {
+//                    Chunk chunk = chunks[x][y >> 6];
+//                    if(chunk == null || !chunk.awake()){
 //                        continue;
 //                    }
-//                    if(!chunk.awakeAt(x & flag, y & flag)){
-//                        x -= Chunk.sleepChunkSize - 1;
-//                        continue;
-//                    }
-//                    Element<ElementID> element = get(x, y);
-//                    if (element != null && chunk.inRectAt(x & flag, y & flag)) {
-//                        element.step(this, x, y, tick);
-//                    }
+//                    chunk.stepYReverse(this, y, x, tick);
 //                }
 //            }
-            if(inverse){
-                for (int x = 0; x < chunks.length; x++) {
-                    Chunk chunk = chunks[x][y >> 6];
-                    if(chunk == null || !chunk.awake()){
-                        continue;
+//        }
+        int[] oy = new int[]{0,1};
+        if(Math.random() > 0.5){
+            oy[0] = 1;
+            oy[1] = 0;
+        }
+        int[] ox = new int[]{0,1};
+        if(Math.random() > 0.5){
+            ox[0] = 1;
+            ox[1] = 0;
+        }
+        for(int sy: oy){
+            for(int sx: ox){
+                for (int cy = sy; cy < chunks[0].length; cy += 2){
+                    for(int cx = sx; cx < chunks.length; cx += 2){
+                        Chunk chunk = chunks[cx][cy];
+                        if(chunk == null || !chunk.awake()){
+                            continue;
+                        }
+                        int y = cy << 6;
+                        int finalCx = cx;
+                        futures.add(executor.submit(() -> {
+                            for (int yy = 0; yy < 64; yy++) {
+                                int yyy = y + yy;
+                                if(inverse){
+                                    chunk.stepY(this, yyy, finalCx, tick);
+                                } else {
+                                    chunk.stepYReverse(this, yyy, finalCx, tick);
+                                }
+                            }
+                        }));
                     }
-                    chunk.stepY(this, y, x, tick);
                 }
-            }else{
-                for (int x = chunks.length - 1; x >= 0; x--) {
-                    Chunk chunk = chunks[x][y >> 6];
-                    if(chunk == null || !chunk.awake()){
-                        continue;
+                for(Future future: futures){
+                    try {
+                        future.get();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    chunk.stepYReverse(this, y, x, tick);
                 }
+                futures.clear();
             }
         }
         randomTick();
@@ -482,6 +499,10 @@ public class FallingGridQuadTree extends com.maxwell_dev.pixel_engine.world.fall
             }
         }
         renderer.lineDrawer.flush();
+    }
+
+    public void dispose(){
+        executor.shutdown();
     }
 
     @Override

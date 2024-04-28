@@ -35,8 +35,8 @@ public class LineDrawer extends Pipeline {
         uniformBuffer = glGenBuffers();
         glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer);
         glBufferData(GL_UNIFORM_BUFFER, 16 * 4 * 3, GL_DYNAMIC_DRAW);
-        vertices = MemoryUtil.memAlloc(1024);
-        glNamedBufferData(vbo, 1024, GL_DYNAMIC_DRAW);
+        vertices = MemoryUtil.memAlloc(1024 * 1024 * 128);
+        glNamedBufferData(vbo, vertices, GL_DYNAMIC_DRAW);
         uniformBuffer(0, uniformBuffer);
     }
 
