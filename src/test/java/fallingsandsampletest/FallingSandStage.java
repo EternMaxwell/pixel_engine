@@ -32,16 +32,45 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void init() {
-        grid = new FallingGridQuadTree();
+        grid = new FallingGridMinorRectChunkChunkMulti();
         elements = new Element[]{new Sand(grid), new Stone(grid), new Water(grid), new Oil(grid), new Smoke(grid, 2500), new Steam(grid, 2500)};
         camera = new Camera();
         camera.projectionOrtho(-1, 1, -1, 1, -1, 1);
         camera.setScale(256f);
         camera.move(256,256);
         try {
-            fileWriter = new FileWriter(grid.getClass().getName() + ".txt");
+            fileWriter = new FileWriter("results\\" + grid.getClass().getName() + ".txt");
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        //put wall
+        for(int y = 130; y < 140; y++){
+            for(int x = 100; x < 512 - 100; x++){
+                grid.set(x,y,elements[1].newInstance(grid));
+            }
+            //put holes
+            for(int x = 180; x < 190; x++){
+                grid.set(x,y,null);
+            }
+            for(int x = 512 - 190; x < 512 - 180; x++){
+                grid.set(x,y,null);
+            }
+        }
+        for(int y = 130; y < 400; y++){
+            for(int x = 100; x < 110; x++){
+                grid.set(x,y,elements[1].newInstance(grid));
+            }
+            for(int x = 512 - 110; x < 512 - 100; x++){
+                grid.set(x,y,elements[1].newInstance(grid));
+            }
+        }
+
+        //put water
+        for(int y = 140; y < 400; y++){
+            for(int x = 110; x < 512 - 110; x++){
+                grid.set(x,y,elements[2].newInstance(grid));
+            }
         }
     }
 
@@ -117,7 +146,8 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         double time = rate * ((end - start) / 1e6) + (1 - rate) * lastTime;
         lastTime = time;
         try {
-            fileWriter.write(grid.tick() + " " + String.format("%2.4f",time) + "\n");
+            if(grid.tick() >= 60)
+                fileWriter.write(grid.tick() + " " + String.format("%2.4f",time) + "\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -163,7 +193,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
                 graphics.drawLine(i, height - (int) (time / max * height), i + 1, height - (int) (nextTime / max * height));
             }
             graphics.dispose();
-            ImageIO.write(image, "png", new File(grid.getClass().getName() + ".png"));
+            ImageIO.write(image, "png", new File("resultImages/" + grid.getClass().getName() + ".png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -172,7 +202,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     }
 
     private String @NotNull [] getStrings() throws FileNotFoundException {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(grid.getClass().getName() + ".txt"));
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream("results/" + grid.getClass().getName() + ".txt"));
         int c;
         StringBuilder stringBuilder = new StringBuilder();
         while (true) {
