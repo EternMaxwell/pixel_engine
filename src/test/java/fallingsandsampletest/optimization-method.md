@@ -1,6 +1,6 @@
 # Method
 
-## Subjects
+### Subjects
 
 2 parts - water simulation and optimization.
 
@@ -32,7 +32,7 @@ And for some of the subjects, the chunk size and sub chunk size or amount can be
 - Subject 2: Use multiple threads to update the grid, each thread will update a chunk.
 - Subject 3: Use multiple threads to update the grid, each thread is assigned a min x and max x value to update.
 
-## Data Collection & Procedure
+### Data Collection & Procedure
 
 For the water simulation experiment, we are going to use the first grid implementation. 
 Then, create a wall below to block water, create a square of water on top of it. We will collect the height of highest water block over time, until the water spreads out.
@@ -41,7 +41,7 @@ For the optimization experiment, we are going to use all 5 grid implementations,
 Then, we will create a grid with a size of 1024x1024, and fill it with the similar setup with the water simulation experiment,
 but this time we only track the time it takes to update the grid over time. The ticks to cover is TBD. And we will also test on other setups.
 
-## Principle
+### Principle
 
 For each experiment, we will use the same setup, and only change the subject of the experiment.
 Each experiment will be run for a number of ticks.
