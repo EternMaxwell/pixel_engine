@@ -137,7 +137,7 @@ public class FallingGridChunkMulti extends com.maxwell_dev.pixel_engine.world.fa
         gravity_x = 0;
         gravity_y = -100f;
         pixelSize = 1;
-        chunks = new Chunk[8][8];
+        chunks = new Chunk[16][16];
         for (int x = 0; x < chunks.length; x++) {
             for (int y = 0; y < chunks[0].length; y++) {
                 chunks[x][y] = new Chunk(x, y);
@@ -259,75 +259,7 @@ public class FallingGridChunkMulti extends com.maxwell_dev.pixel_engine.world.fa
         return element;
     }
 
-    ExecutorService executor = new AbstractExecutorService() {
-        final Set<Runnable> pool = new HashSet<>();
-        final Thread[] threads = new Thread[8];
-        boolean running = true;
-
-        {
-            for (int i = 0; i < threads.length; i++) {
-                Thread thread = new Thread(() -> {
-                    while (running) {
-                        Runnable runnable = null;
-                        synchronized (pool) {
-                            if (!pool.isEmpty()) {
-                                runnable = pool.iterator().next();
-                                pool.remove(runnable);
-                            }
-                        }
-                        if (runnable != null) {
-                            runnable.run();
-                        }
-//                        else {
-//                            try {
-//                                Thread.sleep(1);
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-                    }
-                });
-                thread.start();
-                threads[i] = thread;
-            }
-        }
-
-        @Override
-        public void shutdown() {
-            running = false;
-            for (Thread thread : threads) {
-                thread.interrupt();
-            }
-        }
-
-        @NotNull
-        @Override
-        public List<Runnable> shutdownNow() {
-            return List.of();
-        }
-
-        @Override
-        public boolean isShutdown() {
-            return false;
-        }
-
-        @Override
-        public boolean isTerminated() {
-            return false;
-        }
-
-        @Override
-        public boolean awaitTermination(long timeout, @NotNull TimeUnit unit) throws InterruptedException {
-            return false;
-        }
-
-        @Override
-        public void execute(@NotNull Runnable command) {
-            synchronized (pool){
-                pool.add(command);
-            }
-        }
-    };
+    ExecutorService executor = Executors.newCachedThreadPool();
     final Set<Future> futures = new HashSet<>();
 
     @Override

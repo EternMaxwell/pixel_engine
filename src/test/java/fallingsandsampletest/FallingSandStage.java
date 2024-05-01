@@ -9,7 +9,7 @@ import fallingsandsampletest.grids_chunk_multithread.FallingGridChunkMulti;
 import fallingsandsampletest.grids_chunk_multithread.FallingGridMinorRectChunkChunkMulti;
 import fallingsandsampletest.grids_chunk_multithread.FallingGridQuadTreeChunkMulti;
 import fallingsandsampletest.grids_chunk_multithread.FallingGridSleepChunkChunkMulti;
-import fallingsandsampletest.grids_single_thread.FallingGridQuadTree;
+import fallingsandsampletest.grids_single_thread.*;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -36,8 +36,8 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         elements = new Element[]{new Sand(grid), new Stone(grid), new Water(grid), new Oil(grid), new Smoke(grid, 2500), new Steam(grid, 2500)};
         camera = new Camera();
         camera.projectionOrtho(-1, 1, -1, 1, -1, 1);
-        camera.setScale(256f);
-        camera.move(256,256);
+        camera.setScale(512f);
+        camera.move(512,512);
         try {
             fileWriter = new FileWriter("results\\" + grid.getClass().getName() + ".txt");
         } catch (IOException e) {
@@ -46,29 +46,29 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
         //put wall
         for(int y = 130; y < 140; y++){
-            for(int x = 100; x < 512 - 100; x++){
+            for(int x = 100; x < 1024 - 100; x++){
                 grid.set(x,y,elements[1].newInstance(grid));
             }
             //put holes
             for(int x = 180; x < 190; x++){
                 grid.set(x,y,null);
             }
-            for(int x = 512 - 190; x < 512 - 180; x++){
+            for(int x = 1024 - 190; x < 1024 - 180; x++){
                 grid.set(x,y,null);
             }
         }
-        for(int y = 130; y < 400; y++){
+        for(int y = 130; y < 900; y++){
             for(int x = 100; x < 110; x++){
                 grid.set(x,y,elements[1].newInstance(grid));
             }
-            for(int x = 512 - 110; x < 512 - 100; x++){
+            for(int x = 1024 - 110; x < 1024 - 100; x++){
                 grid.set(x,y,elements[1].newInstance(grid));
             }
         }
 
         //put water
-        for(int y = 140; y < 400; y++){
-            for(int x = 110; x < 512 - 110; x++){
+        for(int y = 140; y < 900; y++){
+            for(int x = 110; x < 1024 - 110; x++){
                 grid.set(x,y,elements[2].newInstance(grid));
             }
         }
@@ -151,6 +151,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        System.out.println(grid.tick());
     }
 
     @Override

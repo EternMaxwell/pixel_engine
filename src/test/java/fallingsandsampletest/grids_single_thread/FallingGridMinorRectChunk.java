@@ -170,7 +170,7 @@ public class FallingGridMinorRectChunk extends com.maxwell_dev.pixel_engine.worl
         gravity_x = 0;
         gravity_y = -100f;
         pixelSize = 1;
-        chunks = new Chunk[8][8];
+        chunks = new Chunk[16][16];
         for(int x = 0; x < chunks.length; x++){
             for(int y = 0; y < chunks[0].length; y++){
                 chunks[x][y] = new Chunk(x, y);
