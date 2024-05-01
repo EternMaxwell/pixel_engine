@@ -64,9 +64,9 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
                         grid.set(shouldBe[0], shouldBe[1], this);
                         moved = true;
                     }
-                    float gravity = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
-                    float downX = grid.gravity_x() / gravity / grid.pixelSize();
-                    float downY = grid.gravity_y() / gravity / grid.pixelSize();
+                    float gravity = grid.gravity();
+                    float downX = grid.downX();
+                    float downY = grid.downY();
                     int topX = Math.round(x - downX);
                     int topY = Math.round(y - downY);
                     if(!moved){
@@ -243,9 +243,9 @@ public abstract class Gas<ElementID> extends Element<ElementID>{
     public boolean tryLTandRT(Grid<?, ?, ElementID> grid, int x, int y, int[] shouldBe){
         shouldBe[0] = x;
         shouldBe[1] = y;
-        float gravity = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
-        float downX = grid.gravity_x() / gravity / grid.pixelSize();
-        float downY = grid.gravity_y() / gravity / grid.pixelSize();
+        float gravity = grid.gravity();
+        float downX = grid.downX();
+        float downY = grid.downY();
         int topX = Math.round(x - downX);
         int topY = Math.round(y - downY);
         if((grid.get(topX, topY) == null) && (grid.valid(topX, topY) || !grid.invalidAsWall())){

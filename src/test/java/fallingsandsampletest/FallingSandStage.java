@@ -32,7 +32,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void init() {
-        grid = new FallingGridMinorRectChunkChunkMulti();
+        grid = new FallingGridSleepChunkChunkMulti();
         elements = new Element[]{new Sand(grid), new Stone(grid), new Water(grid), new Oil(grid), new Smoke(grid, 2500), new Steam(grid, 2500)};
         camera = new Camera();
         camera.projectionOrtho(-1, 1, -1, 1, -1, 1);
@@ -63,6 +63,15 @@ public class FallingSandStage extends Stage<Render, InputTool> {
             }
             for(int x = 1024 - 110; x < 1024 - 100; x++){
                 grid.set(x,y,elements[1].newInstance(grid));
+            }
+            for(int x = 507; x < 517; x++){
+                grid.set(x,y,null);
+            }
+            for(int x = 330; x < 340; x++){
+                grid.set(x,y,null);
+            }
+            for(int x = 1024 - 340; x < 1024 - 330; x++){
+                grid.set(x,y,null);
             }
         }
 
@@ -195,7 +204,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
             }
             graphics.dispose();
             ImageIO.write(image, "png", new File("resultImages/" + grid.getClass().getName() + ".png"));
-        } catch (IOException e) {
+        } catch (IOException|ArrayIndexOutOfBoundsException e) {
             throw new RuntimeException(e);
         }
 

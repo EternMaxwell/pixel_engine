@@ -16,9 +16,9 @@ public class FallingGridEasy extends com.maxwell_dev.pixel_engine.world.falling_
     }
 
     public FallingGridEasy() {
-        gravity_x = 0;
-        gravity_y = -100f;
         pixelSize = 1;
+        setGravity_x(0);
+        setGravity_y(-100f);
         grid = new Element[1024][1024];
     }
     @Override

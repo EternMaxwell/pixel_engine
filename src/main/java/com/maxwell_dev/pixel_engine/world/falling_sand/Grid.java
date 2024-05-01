@@ -6,6 +6,9 @@ public abstract class Grid <T extends Element<?,?,?>,V extends Renderer, ActionE
     protected float pixelSize;
     protected float gravity_y;
     protected float gravity_x;
+    protected float gravity;
+    protected float downX;
+    protected float downY;
 
     public abstract int tick();
     public abstract T get(int x, int y);
@@ -29,11 +32,36 @@ public abstract class Grid <T extends Element<?,?,?>,V extends Renderer, ActionE
     public float gravity_x() {
         return gravity_x;
     }
+    public float gravity(){
+        return gravity;
+    }
     public void setGravity_x(float gravity_x) {
         this.gravity_x = gravity_x;
+        gravity = (float) Math.sqrt(gravity_x * gravity_x + gravity_y * gravity_y);
+        if(gravity == 0){
+            downX = 0;
+            downY = 0;
+            return;
+        }
+        downX = gravity_x / gravity;
+        downY = gravity_y / gravity;
     }
     public void setGravity_y(float gravity_y) {
         this.gravity_y = gravity_y;
+        gravity = (float) Math.sqrt(gravity_x * gravity_x + gravity_y * gravity_y);
+        if(gravity == 0){
+            downX = 0;
+            downY = 0;
+            return;
+        }
+        downX = gravity_x / gravity;
+        downY = gravity_y / gravity;
+    }
+    public float downX() {
+        return downX;
+    }
+    public float downY() {
+        return downY;
     }
     public abstract float default_vx();
     public abstract float default_vy();

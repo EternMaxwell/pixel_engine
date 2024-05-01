@@ -65,9 +65,9 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                 moved = true;
             } else if(grid.valid(blocked[0], blocked[1])){
                 collideBlock(grid, blocked, lastAvailable);
-                float gravity = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
-                float downX = grid.gravity_x() / gravity / grid.pixelSize();
-                float downY = grid.gravity_y() / gravity / grid.pixelSize();
+                float gravity = grid.gravity();
+                float downX = grid.downX();
+                float downY = grid.downY();
                 if (blockDirSameToGravity(grid, blocked[0] - lastAvailable[0], blocked[1] - lastAvailable[1])) {
                     int shouldBe[] = new int[2];
                     tryLBandRB(grid, lastAvailable[0], lastAvailable[1], shouldBe);
@@ -253,10 +253,10 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
                 }
         }
         if(!falling){
-            float gravity = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
+            float gravity = grid.gravity();
             if (gravity != 0) {
-                float downX = grid.gravity_x() / gravity / grid.pixelSize();
-                float downY = grid.gravity_y() / gravity / grid.pixelSize();
+                float downX = grid.downX();
+                float downY = grid.downY();
                 int belowX = Math.round(lastAvailable[0] + downX);
                 int belowY = Math.round(lastAvailable[1] + downY);
                 Element below = grid.get(belowX, belowY);
@@ -271,9 +271,9 @@ public abstract class Liquid<ElementID> extends Element<ElementID>{
     public boolean tryLBandRB(Grid<?, ?, ElementID> grid, int x, int y, int[] shouldBe){
         shouldBe[0] = x;
         shouldBe[1] = y;
-        float gravity = (float) Math.sqrt(grid.gravity_x() * grid.gravity_x() + grid.gravity_y() * grid.gravity_y());
-        float downX = grid.gravity_x() / gravity / grid.pixelSize();
-        float downY = grid.gravity_y() / gravity / grid.pixelSize();
+        float gravity = grid.gravity();
+        float downX = grid.downX();
+        float downY = grid.downY();
         int belowX = Math.round(x + downX);
         int belowY = Math.round(y + downY);
         if((grid.get(belowX, belowY) == null || grid.get(belowX, belowY).type() == ElementType.GAS) && (grid.valid(belowX, belowY) || !grid.invalidAsWall())){
