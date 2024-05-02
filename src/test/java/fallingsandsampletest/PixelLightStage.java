@@ -39,7 +39,7 @@ public class PixelLightStage extends Stage<Render, InputTool> {
     float mouseY;
     @Override
     public void init() {
-        grid = new FallingGrid();
+        grid = new FallingGrid(8,8);
         frameBuffer = new FrameBuffer(64, 64);
         texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);

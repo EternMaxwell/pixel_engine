@@ -15,11 +15,11 @@ public class FallingGridEasy extends com.maxwell_dev.pixel_engine.world.falling_
         return tick;
     }
 
-    public FallingGridEasy() {
+    public FallingGridEasy(int xc, int yc) {
         pixelSize = 1;
         setGravity_x(0);
         setGravity_y(-100f);
-        grid = new Element[1024][1024];
+        grid = new Element[xc * 64][yc * 64];
     }
     @Override
     public Element<ElementID> get(int x, int y) {

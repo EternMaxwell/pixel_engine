@@ -105,11 +105,11 @@ public class FallingGrid extends com.maxwell_dev.pixel_engine.world.falling_sand
         }
     }
 
-    public FallingGrid() {
+    public FallingGrid(int xc, int yc) {
         pixelSize = 1;
         setGravity_x(0);
         setGravity_y(-100f);
-        chunks = new Chunk[16][16];
+        chunks = new Chunk[xc][yc];
         for (int x = 0; x < chunks.length; x++) {
             for (int y = 0; y < chunks[0].length; y++) {
                 chunks[x][y] = new Chunk(x, y);

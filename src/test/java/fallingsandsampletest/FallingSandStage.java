@@ -32,12 +32,14 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void init() {
-        grid = new FallingGridSleepChunkChunkMulti();
+        int width = 10;
+        int length = width * 64;
+        grid = new FallingGridSleepChunkChunkMulti(width,width);
         elements = new Element[]{new Sand(grid), new Stone(grid), new Water(grid), new Oil(grid), new Smoke(grid, 2500), new Steam(grid, 2500)};
         camera = new Camera();
         camera.projectionOrtho(-1, 1, -1, 1, -1, 1);
         camera.setScale(512f);
-        camera.move(512,512);
+        camera.move((float) (64 * width) / 2, (float) (64 * width) / 2);
         try {
             fileWriter = new FileWriter("results\\" + grid.getClass().getName() + ".txt");
         } catch (IOException e) {
@@ -46,38 +48,38 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
         //put wall
         for(int y = 130; y < 140; y++){
-            for(int x = 100; x < 1024 - 100; x++){
+            for(int x = 100; x < length - 100; x++){
                 grid.set(x,y,elements[1].newInstance(grid));
             }
             //put holes
             for(int x = 180; x < 190; x++){
                 grid.set(x,y,null);
             }
-            for(int x = 1024 - 190; x < 1024 - 180; x++){
+            for(int x = length - 190; x < length - 180; x++){
                 grid.set(x,y,null);
             }
         }
-        for(int y = 130; y < 900; y++){
+        for(int y = 130; y < length - 100; y++){
             for(int x = 100; x < 110; x++){
                 grid.set(x,y,elements[1].newInstance(grid));
             }
-            for(int x = 1024 - 110; x < 1024 - 100; x++){
+            for(int x = length - 110; x < length - 100; x++){
                 grid.set(x,y,elements[1].newInstance(grid));
             }
-            for(int x = 507; x < 517; x++){
+            for(int x = length / 2 - 5; x < length / 2 + 5; x++){
                 grid.set(x,y,null);
             }
             for(int x = 330; x < 340; x++){
                 grid.set(x,y,null);
             }
-            for(int x = 1024 - 340; x < 1024 - 330; x++){
+            for(int x = length - 340; x < length - 330; x++){
                 grid.set(x,y,null);
             }
         }
 
         //put water
-        for(int y = 140; y < 900; y++){
-            for(int x = 110; x < 1024 - 110; x++){
+        for(int y = 140; y < length - 100; y++){
+            for(int x = 110; x < length - 110; x++){
                 grid.set(x,y,elements[2].newInstance(grid));
             }
         }
