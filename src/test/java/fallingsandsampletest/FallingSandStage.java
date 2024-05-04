@@ -32,13 +32,21 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void init() {
-        int width = 10;
+        int width = 8;
         int length = width * 64;
         grid = new FallingGridSleepChunkChunkMulti(width,width);
-        elements = new Element[]{new Sand(grid), new Stone(grid), new Water(grid), new Oil(grid), new Smoke(grid, 2500), new Steam(grid, 2500)};
+        elements = new Element[]{
+                new Sand(grid),
+                new Stone(grid),
+                new Water(grid),
+                new Oil(grid),
+                new Smoke(grid, 2500),
+                new Steam(grid, 2500),
+                new Wood(grid),
+        };
         camera = new Camera();
         camera.projectionOrtho(-1, 1, -1, 1, -1, 1);
-        camera.setScale(512f);
+        camera.setScale((float) length / 2);
         camera.move((float) (64 * width) / 2, (float) (64 * width) / 2);
         try {
             fileWriter = new FileWriter("results\\" + grid.getClass().getName() + ".txt");
@@ -47,42 +55,42 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         }
 
         //put wall
-        for(int y = 130; y < 140; y++){
-            for(int x = 100; x < length - 100; x++){
-                grid.set(x,y,elements[1].newInstance(grid));
-            }
-            //put holes
-            for(int x = 180; x < 190; x++){
-                grid.set(x,y,null);
-            }
-            for(int x = length - 190; x < length - 180; x++){
-                grid.set(x,y,null);
-            }
-        }
-        for(int y = 130; y < length - 100; y++){
-            for(int x = 100; x < 110; x++){
-                grid.set(x,y,elements[1].newInstance(grid));
-            }
-            for(int x = length - 110; x < length - 100; x++){
-                grid.set(x,y,elements[1].newInstance(grid));
-            }
-            for(int x = length / 2 - 5; x < length / 2 + 5; x++){
-                grid.set(x,y,null);
-            }
-            for(int x = 330; x < 340; x++){
-                grid.set(x,y,null);
-            }
-            for(int x = length - 340; x < length - 330; x++){
-                grid.set(x,y,null);
-            }
-        }
-
-        //put water
-        for(int y = 140; y < length - 100; y++){
-            for(int x = 110; x < length - 110; x++){
-                grid.set(x,y,elements[2].newInstance(grid));
-            }
-        }
+//        for(int y = 130; y < 140; y++){
+//            for(int x = 100; x < length - 100; x++){
+//                grid.set(x,y,elements[1].newInstance(grid));
+//            }
+//            //put holes
+//            for(int x = 180; x < 190; x++){
+//                grid.set(x,y,null);
+//            }
+//            for(int x = length - 190; x < length - 180; x++){
+//                grid.set(x,y,null);
+//            }
+//        }
+//        for(int y = 130; y < length - 100; y++){
+//            for(int x = 100; x < 110; x++){
+//                grid.set(x,y,elements[1].newInstance(grid));
+//            }
+//            for(int x = length - 110; x < length - 100; x++){
+//                grid.set(x,y,elements[1].newInstance(grid));
+//            }
+//            for(int x = length / 2 - 5; x < length / 2 + 5; x++){
+//                grid.set(x,y,null);
+//            }
+//            for(int x = 330; x < 340; x++){
+//                grid.set(x,y,null);
+//            }
+//            for(int x = length - 340; x < length - 330; x++){
+//                grid.set(x,y,null);
+//            }
+//        }
+//
+//        //put water
+//        for(int y = 140; y < length - 100; y++){
+//            for(int x = 110; x < length - 110; x++){
+//                grid.set(x,y,elements[2].newInstance(grid));
+//            }
+//        }
     }
 
     @Override
@@ -107,7 +115,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
                 for (int j = -5; j < 5; j++) {
                     Element element = grid.get(putX + i, putY + j);
                     if(element != null){
-                        element.heat(grid, putX + i, putY + j, 100);
+                        element.heat(grid, putX + i, putY + j, 120);
                     }
                 }
             }
@@ -206,8 +214,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
             }
             graphics.dispose();
             ImageIO.write(image, "png", new File("resultImages/" + grid.getClass().getName() + ".png"));
-        } catch (IOException|ArrayIndexOutOfBoundsException e) {
-            throw new RuntimeException(e);
+        } catch (IOException|ArrayIndexOutOfBoundsException ignored) {
         }
 
         grid.dispose();
