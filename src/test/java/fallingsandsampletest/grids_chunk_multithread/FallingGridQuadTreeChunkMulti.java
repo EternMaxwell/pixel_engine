@@ -38,7 +38,7 @@ public class FallingGridQuadTreeChunkMulti extends com.maxwell_dev.pixel_engine.
             boolean awakeNext = false;
             Node[][] nodes = new Node[2][2];
             int size;
-            public final static int minimumSize = 2;
+            public final static int minimumSize = 16;
 
             public Node(int size){
                 this.size = size;
@@ -137,6 +137,61 @@ public class FallingGridQuadTreeChunkMulti extends com.maxwell_dev.pixel_engine.
 
         public void reset(){
             root.reset();
+        }
+
+        public void stepNode(Grid grid, Node node, int left, int bottom, int tick, int relevantX, int relevantY){
+            if (!node.awake()){
+                return;
+            }
+            if(node.size <= Node.minimumSize){
+                for(int x = 0; x < node.size; x++){
+                    for(int y = 0; y < node.size; y++){
+                        Element element = elements[x + relevantX][y + relevantY];
+                        if(element != null){
+                            element.step(grid, x + left, y + bottom, tick);
+                        }
+                    }
+                }
+            }else{
+                for (int nx = 0; nx < 2; nx++) {
+                    for (int ny = 0; ny < 2; ny++) {
+                        stepNode(grid, node.nodes[nx][ny], left + nx * node.size / 2,
+                                bottom + ny * node.size / 2, tick, relevantX + nx * node.size / 2,
+                                relevantY + ny * node.size / 2);
+                    }
+                }
+            }
+        }
+
+        public void stepNodeReverse(Grid grid, Node node, int left, int bottom, int tick, int relevantX, int relevantY){
+            if (!node.awake()){
+                return;
+            }
+            if(node.size <= Node.minimumSize){
+                for(int x = node.size - 1; x >= 0; x--){
+                    for(int y = 0; y < node.size; y++){
+                        Element element = elements[x + relevantX][y + relevantY];
+                        if(element != null){
+                            element.step(grid, x + left, y + bottom, tick);
+                        }
+                    }
+                }
+            }else{
+                for (int nx = 1; nx >= 0; nx--) {
+                    for (int ny = 0; ny < 2; ny++) {
+                        stepNodeReverse(grid, node.nodes[nx][ny], left + nx * node.size / 2, bottom + ny * node.size / 2, tick, relevantX + nx * node.size / 2,
+                                relevantY + ny * node.size / 2);
+                    }
+                }
+            }
+        }
+
+        public void stepAllReverse(Grid grid, int chunk_x, int chunk_y, int tick) {
+            stepNodeReverse(grid, root, chunk_x * 64, chunk_y * 64, tick, 0,0);
+        }
+
+        public void stepAll(Grid grid, int chunk_x, int chunk_y, int tick){
+            stepNode(grid, root, chunk_x * 64, chunk_y * 64, tick,0,0);
         }
 
         public void stepY(Grid grid, int y, int chunk_x, int tick){
@@ -355,16 +410,21 @@ public class FallingGridQuadTreeChunkMulti extends com.maxwell_dev.pixel_engine.
                         if(chunk == null || !chunk.awake()){
                             continue;
                         }
-                        int y = cy << 6;
+                        int finalCy = cy;
                         int finalCx = cx;
                         futures.add(executor.submit(() -> {
-                            for (int yy = 0; yy < 64; yy++) {
-                                int yyy = y + yy;
-                                if(inverse){
-                                    chunk.stepY(this, yyy, finalCx, tick);
-                                } else {
-                                    chunk.stepYReverse(this, yyy, finalCx, tick);
-                                }
+//                            for (int yy = 0; yy < 64; yy++) {
+//                                int yyy = finalCy * 64 + yy;
+//                                if(inverse){
+//                                    chunk.stepY(this, yyy, finalCx, tick);
+//                                } else {
+//                                    chunk.stepYReverse(this, yyy, finalCx, tick);
+//                                }
+//                            }
+                            if(inverse){
+                                chunk.stepAll(this, finalCx, finalCy, tick);
+                            }else{
+                                chunk.stepAllReverse(this, finalCx, finalCy, tick);
                             }
                         }));
                     }
