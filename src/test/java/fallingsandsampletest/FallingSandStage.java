@@ -34,7 +34,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     public void init() {
         int width = 8;
         int length = width * 64;
-        grid = new FallingGridSleepChunkChunkMulti(width,width);
+        grid = new FallingGridQuadTreeChunkMulti(width,width);
         elements = new Element[]{
                 new Sand(grid),
                 new Stone(grid),
@@ -93,6 +93,9 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 //        }
     }
 
+    int lastX = 0;
+    int lastY = 0;
+
     @Override
     public void input(InputTool inputTool) {
         camera.projectionOrtho(-inputTool.window().ratio(), inputTool.window().ratio(), -1, 1, -1, 1);
@@ -103,10 +106,21 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         pos.mul(camera.viewMatrix(new Matrix4f()).invert());
         int putX = (int) pos.x;
         int putY = (int) pos.y;
+        if (inputTool.isMouseJustPressed(GLFW_MOUSE_BUTTON_LEFT)){
+            lastX = putX;
+            lastY = putY;
+        }
+        float distance = (float) Math.sqrt((putX - lastX) * (putX - lastX) + (putY - lastY) * (putY - lastY));
+        int times = (int) (distance / 5) + 1;
         if (inputTool.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
-            for (int i = -5; i < 5; i++) {
-                for (int j = -5; j < 5; j++) {
-                    grid.set(putX + i, putY + j, elements[index].newInstance(grid));
+            for(int c = 0; c < times;c++){
+                float ratio = (float) c / times;
+                int x1 = (int) (lastX * (1 - ratio) + putX * ratio);
+                int y1 = (int) (lastY * (1 - ratio) + putY * ratio);
+                for (int i = -5; i < 5; i++) {
+                    for (int j = -5; j < 5; j++) {
+                        grid.set(x1 + i, y1 + j, elements[index].newInstance(grid));
+                    }
                 }
             }
         }
@@ -152,6 +166,8 @@ public class FallingSandStage extends Stage<Render, InputTool> {
             grid.setGravity_x(newGravityX);
             grid.setGravity_y(newGravityY);
         }
+        lastX = putX;
+        lastY = putY;
     }
 
     double lastTime = 0;
