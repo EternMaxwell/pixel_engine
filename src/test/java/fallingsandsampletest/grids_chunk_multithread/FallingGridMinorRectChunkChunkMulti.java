@@ -139,6 +139,42 @@ public class FallingGridMinorRectChunkChunkMulti extends com.maxwell_dev.pixel_e
             notFullSleepNext = false;
         }
 
+        public void stepAll(Grid grid, int chunk_x, int chunk_y, int tick){
+            for (int ry = 0; ry < 64 / sleepChunkSize; ry++){
+                for (int rx = 0; rx < 64 / sleepChunkSize; rx++){
+                    if(!awake[rx][ry]){
+                        continue;
+                    }
+                    for(int y = ry * sleepChunkSize + rects[rx][ry].y.get(); y <= ry * sleepChunkSize + rects[rx][ry].ym.get(); y++) {
+                        for (int x = rx * sleepChunkSize + rects[rx][ry].x.get(); x <= rx * sleepChunkSize + rects[rx][ry].xm.get(); x++) {
+                            Element target = elements[x][y];
+                            if (target != null) {
+                                target.step(grid, chunk_x * 64 + x, chunk_y * 64 + y, tick);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void stepAllReverse(Grid grid, int chunk_x, int chunk_y, int tick){
+            for (int ry = 0; ry < 64 / sleepChunkSize; ry++){
+                for (int rx = 64 / sleepChunkSize - 1; rx >= 0; rx--){
+                    if(!awake[rx][ry]){
+                        continue;
+                    }
+                    for(int y = ry * sleepChunkSize + rects[rx][ry].y.get(); y <= ry * sleepChunkSize + rects[rx][ry].ym.get(); y++) {
+                        for (int x = rx * sleepChunkSize + rects[rx][ry].xm.get(); x >= rx * sleepChunkSize + rects[rx][ry].x.get(); x--) {
+                            Element target = elements[x][y];
+                            if (target != null) {
+                                target.step(grid, chunk_x * 64 + x, chunk_y * 64 + y, tick);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void stepY(Grid grid, int y, int chunk_x, int tick){
             int in_y = y % 64;
             for(int cx = 0; cx < 64 / sleepChunkSize; cx++){
@@ -354,14 +390,13 @@ public class FallingGridMinorRectChunkChunkMulti extends com.maxwell_dev.pixel_e
                             continue;
                         }
                         int y = cy << 6;
+                        int finalCy = cy;
                         int finalCx = cx;
                         futures.add(executor.submit(() -> {
-                            for (int yy = 0; yy < 64; yy++) {
-                                if(inverse){
-                                    chunk.stepY(this, y + yy, finalCx, tick);
-                                }else {
-                                    chunk.stepYReverse(this, y + yy, finalCx, tick);
-                                }
+                            if (inverse) {
+                                chunk.stepAll(this, finalCx, finalCy, tick);
+                            } else {
+                                chunk.stepAllReverse(this, finalCx, finalCy, tick);
                             }
                         }));
                     }
