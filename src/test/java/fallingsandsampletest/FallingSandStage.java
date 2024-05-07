@@ -9,7 +9,10 @@ import fallingsandsampletest.grids_chunk_multithread.FallingGridChunkMulti;
 import fallingsandsampletest.grids_chunk_multithread.FallingGridMinorRectChunkChunkMulti;
 import fallingsandsampletest.grids_chunk_multithread.FallingGridQuadTreeChunkMulti;
 import fallingsandsampletest.grids_chunk_multithread.FallingGridSleepChunkChunkMulti;
-import fallingsandsampletest.grids_single_thread.*;
+import fallingsandsampletest.grids_single_thread.FallingGrid;
+import fallingsandsampletest.grids_single_thread.FallingGridEasy;
+import fallingsandsampletest.grids_single_thread.FallingGridMinorRectChunk;
+import fallingsandsampletest.grids_single_thread.FallingGridQuadTree;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -19,6 +22,9 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -29,12 +35,26 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     int index = 0;
     Camera camera;
     FileWriter fileWriter;
+    int width = 16;
+    int length = width * 64;
+    Grid[] grids = new Grid[]{
+            new FallingGridEasy(width, width),
+            new FallingGrid(width, width),
+            new FallingGridMinorRectChunk(width, width),
+            new FallingGridQuadTree(width, width),
+            new FallingGridChunkMulti(width, width),
+            new FallingGridMinorRectChunkChunkMulti(width, width),
+            new FallingGridQuadTreeChunkMulti(width, width),
+            new FallingGridSleepChunkChunkMulti(width, width)};
+    LinkedList<Grid> gridList = new LinkedList<>(Arrays.stream(grids).toList());
+    Iterator<Grid> gridIterator = gridList.iterator();
+    int lastX = 0;
+    int lastY = 0;
+    double lastTime = 0;
+    double rate = 0.1;
 
-    @Override
-    public void init() {
-        int width = 8;
-        int length = width * 64;
-        grid = new FallingGridQuadTreeChunkMulti(width,width);
+    public void init(Grid grid) {
+        this.grid = grid;
         elements = new Element[]{
                 new Sand(grid),
                 new Stone(grid),
@@ -47,7 +67,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         camera = new Camera();
         camera.projectionOrtho(-1, 1, -1, 1, -1, 1);
         camera.setScale((float) length / 2);
-        camera.move((float) (64 * width) / 2, (float) (64 * width) / 2);
+        camera.move((float) length / 2, (float) length / 2);
         try {
             fileWriter = new FileWriter("results\\" + grid.getClass().getName() + ".txt");
         } catch (IOException e) {
@@ -55,46 +75,48 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         }
 
         //put wall
-//        for(int y = 130; y < 140; y++){
-//            for(int x = 100; x < length - 100; x++){
-//                grid.set(x,y,elements[1].newInstance(grid));
-//            }
-//            //put holes
-//            for(int x = 180; x < 190; x++){
-//                grid.set(x,y,null);
-//            }
-//            for(int x = length - 190; x < length - 180; x++){
-//                grid.set(x,y,null);
-//            }
-//        }
-//        for(int y = 130; y < length - 100; y++){
-//            for(int x = 100; x < 110; x++){
-//                grid.set(x,y,elements[1].newInstance(grid));
-//            }
-//            for(int x = length - 110; x < length - 100; x++){
-//                grid.set(x,y,elements[1].newInstance(grid));
-//            }
-//            for(int x = length / 2 - 5; x < length / 2 + 5; x++){
-//                grid.set(x,y,null);
-//            }
-//            for(int x = 330; x < 340; x++){
-//                grid.set(x,y,null);
-//            }
-//            for(int x = length - 340; x < length - 330; x++){
-//                grid.set(x,y,null);
-//            }
-//        }
-//
-//        //put water
-//        for(int y = 140; y < length - 100; y++){
-//            for(int x = 110; x < length - 110; x++){
-//                grid.set(x,y,elements[2].newInstance(grid));
-//            }
-//        }
+        for (int y = 130; y < 140; y++) {
+            for (int x = 100; x < length - 100; x++) {
+                grid.set(x, y, elements[1].newInstance(grid));
+            }
+            //put holes
+            for (int x = 180; x < 190; x++) {
+                grid.set(x, y, null);
+            }
+            for (int x = length - 190; x < length - 180; x++) {
+                grid.set(x, y, null);
+            }
+        }
+        for (int y = 130; y < length - 100; y++) {
+            for (int x = 100; x < 110; x++) {
+                grid.set(x, y, elements[1].newInstance(grid));
+            }
+            for (int x = length - 110; x < length - 100; x++) {
+                grid.set(x, y, elements[1].newInstance(grid));
+            }
+            for (int x = length / 2 - 5; x < length / 2 + 5; x++) {
+                grid.set(x, y, null);
+            }
+            for (int x = 330; x < 340; x++) {
+                grid.set(x, y, null);
+            }
+            for (int x = length - 340; x < length - 330; x++) {
+                grid.set(x, y, null);
+            }
+        }
+
+        //put water
+        for (int y = 140; y < length - 100; y++) {
+            for (int x = 110; x < length - 110; x++) {
+                grid.set(x, y, elements[2].newInstance(grid));
+            }
+        }
     }
 
-    int lastX = 0;
-    int lastY = 0;
+    @Override
+    public void init() {
+        init(gridIterator.next());
+    }
 
     @Override
     public void input(InputTool inputTool) {
@@ -106,14 +128,14 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         pos.mul(camera.viewMatrix(new Matrix4f()).invert());
         int putX = (int) pos.x;
         int putY = (int) pos.y;
-        if (inputTool.isMouseJustPressed(GLFW_MOUSE_BUTTON_LEFT)){
+        if (inputTool.isMouseJustPressed(GLFW_MOUSE_BUTTON_LEFT)) {
             lastX = putX;
             lastY = putY;
         }
         float distance = (float) Math.sqrt((putX - lastX) * (putX - lastX) + (putY - lastY) * (putY - lastY));
         int times = (int) (distance / 5) + 1;
         if (inputTool.isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
-            for(int c = 0; c < times;c++){
+            for (int c = 0; c < times; c++) {
                 float ratio = (float) c / times;
                 int x1 = (int) (lastX * (1 - ratio) + putX * ratio);
                 int y1 = (int) (lastY * (1 - ratio) + putY * ratio);
@@ -124,11 +146,11 @@ public class FallingSandStage extends Stage<Render, InputTool> {
                 }
             }
         }
-        if(inputTool.isMousePressed(GLFW_MOUSE_BUTTON_RIGHT)){
+        if (inputTool.isMousePressed(GLFW_MOUSE_BUTTON_RIGHT)) {
             for (int i = -5; i < 5; i++) {
                 for (int j = -5; j < 5; j++) {
                     Element element = grid.get(putX + i, putY + j);
-                    if(element != null){
+                    if (element != null) {
                         element.heat(grid, putX + i, putY + j, 120);
                     }
                 }
@@ -170,9 +192,6 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         lastY = putY;
     }
 
-    double lastTime = 0;
-    double rate = 0.1;
-
     @Override
     public void update() {
         long start = System.nanoTime();
@@ -180,9 +199,16 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         long end = System.nanoTime();
         double time = rate * ((end - start) / 1e6) + (1 - rate) * lastTime;
         lastTime = time;
+        if (grid.tick() >= 10300) {
+            if (gridIterator.hasNext())
+                init(gridIterator.next());
+            else
+                System.exit(0);
+            return;
+        }
         try {
-            if(grid.tick() >= 60)
-                fileWriter.write(grid.tick() + " " + String.format("%2.4f",time) + "\n");
+            if (grid.tick() >= 60)
+                fileWriter.write(grid.tick() + " " + String.format("%2.4f", time) + "\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -230,7 +256,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
             }
             graphics.dispose();
             ImageIO.write(image, "png", new File("resultImages/" + grid.getClass().getName() + ".png"));
-        } catch (IOException|ArrayIndexOutOfBoundsException ignored) {
+        } catch (IOException | ArrayIndexOutOfBoundsException ignored) {
         }
 
         grid.dispose();

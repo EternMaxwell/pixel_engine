@@ -259,7 +259,10 @@ public class FallingGridChunkMulti extends com.maxwell_dev.pixel_engine.world.fa
         return element;
     }
 
-    ExecutorService executor = Executors.newCachedThreadPool();
+    ExecutorService executor = new ThreadPoolExecutor(2, 8,
+            60L, TimeUnit.SECONDS,
+            new ArrayBlockingQueue<>(256)
+            );
     final Set<Future> futures = new HashSet<>();
 
     @Override
