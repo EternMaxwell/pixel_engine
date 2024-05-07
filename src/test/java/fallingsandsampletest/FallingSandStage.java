@@ -34,7 +34,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     public void init() {
         int width = 8;
         int length = width * 64;
-        grid = new FallingGridMinorRectChunkChunkMulti(width,width);
+        grid = new FallingGridSleepChunkChunkMulti(width,width);
         elements = new Element[]{
                 new Sand(grid),
                 new Stone(grid),

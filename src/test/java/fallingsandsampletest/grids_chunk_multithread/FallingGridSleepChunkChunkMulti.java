@@ -1,6 +1,7 @@
 package fallingsandsampletest.grids_chunk_multithread;
 
 import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Element;
+import com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid;
 import fallingsandsampletest.Actions;
 import fallingsandsampletest.ElementID;
 import render.Render;
@@ -62,6 +63,40 @@ public class FallingGridSleepChunkChunkMulti extends com.maxwell_dev.pixel_engin
         public void reset(){
             awake = awakeNext;
             awakeNext = new boolean[64/sleepChunkSize][64/sleepChunkSize];
+        }
+
+        public void stepAll(Grid grid, int chunk_x, int chunk_y, int tick){
+            for(int sy = 0; sy < 64 / sleepChunkSize; sy++){
+                for (int sx = 0; sx < 64 / sleepChunkSize; sx++){
+                    if(awake[sx][sy]){
+                        for(int y = sy * sleepChunkSize; y < (sy + 1) * sleepChunkSize; y++){
+                            for(int x = sx * sleepChunkSize; x < (sx + 1) * sleepChunkSize; x++){
+                                Element<ElementID> element = get(x, y);
+                                if(element != null){
+                                    element.step(grid, x + chunk_x * 64, y + chunk_y * 64, tick);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void stepAllReverse(Grid grid, int chunk_x, int chunk_y, int tick){
+            for(int sy = 0; sy < 64 / sleepChunkSize; sy++){
+                for (int sx = 64 / sleepChunkSize - 1; sx >= 0; sx--){
+                    if(awake[sx][sy]){
+                        for(int y = sy * sleepChunkSize; y < (sy + 1) * sleepChunkSize; y++){
+                            for(int x = (sx + 1) * sleepChunkSize - 1; x >= sx * sleepChunkSize; x--){
+                                Element<ElementID> element = get(x, y);
+                                if(element != null){
+                                    element.step(grid, x + chunk_x * 64, y + chunk_y * 64, tick);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -253,25 +288,13 @@ public class FallingGridSleepChunkChunkMulti extends com.maxwell_dev.pixel_engin
                             continue;
                         }
                         int y = cy << 6;
-                        int finalCx = cx << 6;
+                        int finalCy = cy;
+                        int finalCx = cx;
                         futures.add(executor.submit(() -> {
-                            for (int yy = 0; yy < 64; yy++) {
-                                int yyy = y + yy;
-                                if(inverse){
-                                    for (int xx = 0; xx < 64; xx++) {
-                                        Element<ElementID> element = chunk.get(xx, yy);
-                                        if (element != null && chunk.awakeAt(xx, yy)) {
-                                            element.step(FallingGridSleepChunkChunkMulti.this, xx + finalCx, yyy, tick);
-                                        }
-                                    }
-                                } else {
-                                    for (int xx = 63; xx >= 0; xx--) {
-                                        Element<ElementID> element = chunk.get(xx, yy);
-                                        if (element != null && chunk.awakeAt(xx, yy)) {
-                                            element.step(FallingGridSleepChunkChunkMulti.this, xx + finalCx, yyy, tick);
-                                        }
-                                    }
-                                }
+                            if (inverse) {
+                                chunk.stepAll(this, finalCx, finalCy, tick);
+                            } else {
+                                chunk.stepAllReverse(this, finalCx, finalCy, tick);
                             }
                         }));
                     }
