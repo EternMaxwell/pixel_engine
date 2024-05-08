@@ -68,24 +68,24 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         camera.setScale((float) length / 2);
         camera.move((float) length / 2, (float) length / 2);
         try {
-            fileWriter = new FileWriter("results-spread\\" + grid.getClass().getName() + ".txt");
+            fileWriter = new FileWriter("results-empty\\" + grid.getClass().getName() + ".txt");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         //put wall
-        for (int y = 130; y < 140; y++) {
-            for (int x = 100; x < length - 100; x++) {
-                grid.set(x, y, elements[1].newInstance(grid));
-            }
-            //put holes
-//            for (int x = 180; x < 190; x++) {
-//                grid.set(x, y, null);
+//        for (int y = 130; y < 140; y++) {
+//            for (int x = 100; x < length - 100; x++) {
+//                grid.set(x, y, elements[1].newInstance(grid));
 //            }
-//            for (int x = length - 190; x < length - 180; x++) {
-//                grid.set(x, y, null);
-//            }
-        }
+//            //put holes
+////            for (int x = 180; x < 190; x++) {
+////                grid.set(x, y, null);
+////            }
+////            for (int x = length - 190; x < length - 180; x++) {
+////                grid.set(x, y, null);
+////            }
+//        }
 //        for (int y = 130; y < length - 100; y++) {
 //            for (int x = 100; x < 110; x++) {
 //                grid.set(x, y, elements[1].newInstance(grid));
@@ -105,11 +105,11 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 //        }
 
         //put water
-        for (int y = 140; y < length - 100; y++) {
-            for (int x = 110; x < length - 110; x++) {
-                grid.set(x, y, elements[2].newInstance(grid));
-            }
-        }
+//        for (int y = 140; y < length - 100; y++) {
+//            for (int x = 110; x < length - 110; x++) {
+//                grid.set(x, y, elements[2].newInstance(grid));
+//            }
+//        }
     }
 
     @Override
@@ -198,7 +198,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         long end = System.nanoTime();
         double time = rate * ((end - start) / 1e6) + (1 - rate) * lastTime;
         lastTime = time;
-        if (grid.tick() >= 10300) {
+        if (grid.tick() >= 2048) {
             try {
                 fileWriter.close();
             } catch (IOException e) {

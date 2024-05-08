@@ -7,13 +7,13 @@ import java.io.*;
 
 public class DataDrawer {
     public static int tickWidth = 1;
-    public static int tickAll = 1024 * 16;
+    public static int tickAll = 1024 * 2;
     public static int width = tickAll * tickWidth;
     public static int height = 1024;
     public static int xoffset = 60;
     public static int yoffset = 30;
-    public static String folder = "results-spread\\";
-    public static double max = 75;
+    public static String folder = "results-empty\\";
+    public static double max = 2;
     public static void main(String args[]){
         BufferedImage image = new BufferedImage(width + xoffset, height + yoffset, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = image.createGraphics();
@@ -35,7 +35,7 @@ public class DataDrawer {
             g2d.drawString(String.valueOf(i * 100) + "tick", i * 100 * tickWidth + xoffset, height + 20);
             g2d.drawLine(i * 100 * tickWidth + xoffset, height - 5, i * 100 * tickWidth + xoffset, height);
         }
-        for(int i = 0; i < max; i+= (int) (max / 25)){
+        for(int i = 0; i < max; i+= 1){
             g2d.drawString(String.valueOf(i) + "ms", xoffset - 55, height - (int) (i * height / max));
             g2d.drawLine(xoffset - 5, height - (int) (i * height / max), xoffset, height - (int) (i * height / max));
         }
@@ -76,7 +76,7 @@ public class DataDrawer {
 
         g2d.dispose();
         try {
-            ImageIO.write(image, "png", new File("resultImages\\resultAll-spread.png"));
+            ImageIO.write(image, "png", new File("resultImages\\resultAll-empty.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
