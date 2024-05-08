@@ -33,7 +33,7 @@ public class FallingGridQuadTree extends com.maxwell_dev.pixel_engine.world.fall
             boolean awakeNext = false;
             Node[][] nodes = new Node[2][2];
             int size;
-            public final static int minimumSize = 2;
+            public final static int minimumSize = 8;
 
             public Node(int size){
                 this.size = size;

@@ -9,10 +9,7 @@ import fallingsandsampletest.grids_chunk_multithread.FallingGridChunkMulti;
 import fallingsandsampletest.grids_chunk_multithread.FallingGridMinorRectChunkChunkMulti;
 import fallingsandsampletest.grids_chunk_multithread.FallingGridQuadTreeChunkMulti;
 import fallingsandsampletest.grids_chunk_multithread.FallingGridSleepChunkChunkMulti;
-import fallingsandsampletest.grids_single_thread.FallingGrid;
-import fallingsandsampletest.grids_single_thread.FallingGridEasy;
-import fallingsandsampletest.grids_single_thread.FallingGridMinorRectChunk;
-import fallingsandsampletest.grids_single_thread.FallingGridQuadTree;
+import fallingsandsampletest.grids_single_thread.*;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -38,14 +35,16 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     int width = 16;
     int length = width * 64;
     Grid[] grids = new Grid[]{
-            new FallingGridEasy(width, width),
-            new FallingGrid(width, width),
-            new FallingGridMinorRectChunk(width, width),
+//            new FallingGridEasy(width, width),
+//            new FallingGrid(width, width),
+//            new FallingGridMinorRectChunk(width, width),
             new FallingGridQuadTree(width, width),
-            new FallingGridChunkMulti(width, width),
-            new FallingGridMinorRectChunkChunkMulti(width, width),
-            new FallingGridQuadTreeChunkMulti(width, width),
-            new FallingGridSleepChunkChunkMulti(width, width)};
+//            new FallingGridSleepChunk(width,width),
+//            new FallingGridChunkMulti(width, width),
+//            new FallingGridMinorRectChunkChunkMulti(width, width),
+//            new FallingGridQuadTreeChunkMulti(width, width),
+//            new FallingGridSleepChunkChunkMulti(width, width)
+    };
     LinkedList<Grid> gridList = new LinkedList<>(Arrays.stream(grids).toList());
     Iterator<Grid> gridIterator = gridList.iterator();
     int lastX = 0;

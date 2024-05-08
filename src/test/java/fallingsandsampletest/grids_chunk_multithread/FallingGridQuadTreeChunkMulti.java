@@ -10,9 +10,7 @@ import render.Render;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class FallingGridQuadTreeChunkMulti extends com.maxwell_dev.pixel_engine.world.falling_sand.sample.Grid<Render, Actions, ElementID>{
 
@@ -356,7 +354,10 @@ public class FallingGridQuadTreeChunkMulti extends com.maxwell_dev.pixel_engine.
         return element;
     }
 
-    ExecutorService executor = Executors.newCachedThreadPool();
+    ExecutorService executor = new ThreadPoolExecutor(2, 8,
+            60L, TimeUnit.SECONDS,
+            new ArrayBlockingQueue<>(256)
+    );
     Set<Future> futures = new HashSet<>();
 
     @Override
