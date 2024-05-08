@@ -199,6 +199,11 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         double time = rate * ((end - start) / 1e6) + (1 - rate) * lastTime;
         lastTime = time;
         if (grid.tick() >= 10300) {
+            try {
+                fileWriter.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             if (gridIterator.hasNext())
                 init(gridIterator.next());
             else
