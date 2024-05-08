@@ -12,8 +12,8 @@ public class DataDrawer {
     public static int height = 1024;
     public static int xoffset = 60;
     public static int yoffset = 30;
-    public static String folder = "results\\";
-    public static double max = 200;
+    public static String folder = "results-spread\\";
+    public static double max = 75;
     public static void main(String args[]){
         BufferedImage image = new BufferedImage(width + xoffset, height + yoffset, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = image.createGraphics();
@@ -76,7 +76,7 @@ public class DataDrawer {
 
         g2d.dispose();
         try {
-            ImageIO.write(image, "png", new File("resultImages\\resultAll3.png"));
+            ImageIO.write(image, "png", new File("resultImages\\resultAll-spread.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

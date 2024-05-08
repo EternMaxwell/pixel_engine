@@ -32,18 +32,18 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     int index = 0;
     Camera camera;
     FileWriter fileWriter;
-    int width = 16;
+    int width = 12;
     int length = width * 64;
     Grid[] grids = new Grid[]{
-//            new FallingGridEasy(width, width),
-//            new FallingGrid(width, width),
-//            new FallingGridMinorRectChunk(width, width),
+            new FallingGridEasy(width, width),
+            new FallingGrid(width, width),
+            new FallingGridMinorRectChunk(width, width),
             new FallingGridQuadTree(width, width),
-//            new FallingGridSleepChunk(width,width),
-//            new FallingGridChunkMulti(width, width),
-//            new FallingGridMinorRectChunkChunkMulti(width, width),
-//            new FallingGridQuadTreeChunkMulti(width, width),
-//            new FallingGridSleepChunkChunkMulti(width, width)
+            new FallingGridSleepChunk(width,width),
+            new FallingGridChunkMulti(width, width),
+            new FallingGridMinorRectChunkChunkMulti(width, width),
+            new FallingGridQuadTreeChunkMulti(width, width),
+            new FallingGridSleepChunkChunkMulti(width, width)
     };
     LinkedList<Grid> gridList = new LinkedList<>(Arrays.stream(grids).toList());
     Iterator<Grid> gridIterator = gridList.iterator();
@@ -68,7 +68,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         camera.setScale((float) length / 2);
         camera.move((float) length / 2, (float) length / 2);
         try {
-            fileWriter = new FileWriter("results\\" + grid.getClass().getName() + ".txt");
+            fileWriter = new FileWriter("results-spread\\" + grid.getClass().getName() + ".txt");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -79,30 +79,30 @@ public class FallingSandStage extends Stage<Render, InputTool> {
                 grid.set(x, y, elements[1].newInstance(grid));
             }
             //put holes
-            for (int x = 180; x < 190; x++) {
-                grid.set(x, y, null);
-            }
-            for (int x = length - 190; x < length - 180; x++) {
-                grid.set(x, y, null);
-            }
+//            for (int x = 180; x < 190; x++) {
+//                grid.set(x, y, null);
+//            }
+//            for (int x = length - 190; x < length - 180; x++) {
+//                grid.set(x, y, null);
+//            }
         }
-        for (int y = 130; y < length - 100; y++) {
-            for (int x = 100; x < 110; x++) {
-                grid.set(x, y, elements[1].newInstance(grid));
-            }
-            for (int x = length - 110; x < length - 100; x++) {
-                grid.set(x, y, elements[1].newInstance(grid));
-            }
-            for (int x = length / 2 - 5; x < length / 2 + 5; x++) {
-                grid.set(x, y, null);
-            }
-            for (int x = 330; x < 340; x++) {
-                grid.set(x, y, null);
-            }
-            for (int x = length - 340; x < length - 330; x++) {
-                grid.set(x, y, null);
-            }
-        }
+//        for (int y = 130; y < length - 100; y++) {
+//            for (int x = 100; x < 110; x++) {
+//                grid.set(x, y, elements[1].newInstance(grid));
+//            }
+//            for (int x = length - 110; x < length - 100; x++) {
+//                grid.set(x, y, elements[1].newInstance(grid));
+//            }
+////            for (int x = length / 2 - 5; x < length / 2 + 5; x++) {
+////                grid.set(x, y, null);
+////            }
+////            for (int x = 330; x < 340; x++) {
+////                grid.set(x, y, null);
+////            }
+////            for (int x = length - 340; x < length - 330; x++) {
+////                grid.set(x, y, null);
+////            }
+//        }
 
         //put water
         for (int y = 140; y < length - 100; y++) {
