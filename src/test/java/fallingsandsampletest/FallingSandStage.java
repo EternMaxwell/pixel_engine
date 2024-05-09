@@ -49,8 +49,6 @@ public class FallingSandStage extends Stage<Render, InputTool> {
     Iterator<Grid> gridIterator = gridList.iterator();
     int lastX = 0;
     int lastY = 0;
-    double lastTime = 0;
-    double rate = 0.1;
 
     public void init(Grid grid) {
         this.grid = grid;
@@ -72,44 +70,6 @@ public class FallingSandStage extends Stage<Render, InputTool> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        //put wall
-//        for (int y = 130; y < 140; y++) {
-//            for (int x = 100; x < length - 100; x++) {
-//                grid.set(x, y, elements[1].newInstance(grid));
-//            }
-//            //put holes
-////            for (int x = 180; x < 190; x++) {
-////                grid.set(x, y, null);
-////            }
-////            for (int x = length - 190; x < length - 180; x++) {
-////                grid.set(x, y, null);
-////            }
-//        }
-//        for (int y = 130; y < length - 100; y++) {
-//            for (int x = 100; x < 110; x++) {
-//                grid.set(x, y, elements[1].newInstance(grid));
-//            }
-//            for (int x = length - 110; x < length - 100; x++) {
-//                grid.set(x, y, elements[1].newInstance(grid));
-//            }
-////            for (int x = length / 2 - 5; x < length / 2 + 5; x++) {
-////                grid.set(x, y, null);
-////            }
-////            for (int x = 330; x < 340; x++) {
-////                grid.set(x, y, null);
-////            }
-////            for (int x = length - 340; x < length - 330; x++) {
-////                grid.set(x, y, null);
-////            }
-//        }
-
-        //put water
-//        for (int y = 140; y < length - 100; y++) {
-//            for (int x = 110; x < length - 110; x++) {
-//                grid.set(x, y, elements[2].newInstance(grid));
-//            }
-//        }
     }
 
     @Override
@@ -193,29 +153,7 @@ public class FallingSandStage extends Stage<Render, InputTool> {
 
     @Override
     public void update() {
-        long start = System.nanoTime();
         grid.step();
-        long end = System.nanoTime();
-        double time = rate * ((end - start) / 1e6) + (1 - rate) * lastTime;
-        lastTime = time;
-        if (grid.tick() >= 2048) {
-            try {
-                fileWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            if (gridIterator.hasNext())
-                init(gridIterator.next());
-            else
-                System.exit(0);
-            return;
-        }
-        try {
-            if (grid.tick() >= 60)
-                fileWriter.write(grid.tick() + " " + String.format("%2.4f", time) + "\n");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         System.out.println(grid.tick());
     }
 
