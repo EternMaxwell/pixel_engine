@@ -37,14 +37,17 @@ public abstract class UIManager <T extends Renderer, V extends InputTool>{
     public abstract void init();
 
     public void input(V inputTool){
+        if (currentPage == null) return;
         currentPage.handleInput(inputTool);
     }
 
     public void update(){
+        if (currentPage == null) return;
         currentPage.update();
     }
 
     public void render(T renderer){
+        if (currentPage == null) return;
         currentPage.render(renderer);
     }
 

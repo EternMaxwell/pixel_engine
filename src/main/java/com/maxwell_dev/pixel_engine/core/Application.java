@@ -4,6 +4,8 @@ import com.maxwell_dev.pixel_engine.render.Renderer;
 import com.maxwell_dev.pixel_engine.stage.Stage;
 import com.maxwell_dev.pixel_engine.ui_system.UIManager;
 
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+
 public abstract class Application<T extends Renderer, V extends InputTool> {
 
     /**
@@ -65,6 +67,8 @@ public abstract class Application<T extends Renderer, V extends InputTool> {
      * <p>Only uses in the loop method</p>
      */
     public void input() {
+        glfwPollEvents();
+        inputTool.input();
         uiManager.input(inputTool);
         if (!paused && stage != null) {
             stage.input(inputTool);
@@ -88,10 +92,12 @@ public abstract class Application<T extends Renderer, V extends InputTool> {
      * <p>Also recommend to use in glfwSetSizeCallback</p>
      */
     public void render() {
+        renderer.begin();
         if(stage != null){
             stage.render(renderer);
         }
         uiManager.render(renderer);
+        renderer.end();
     }
 
     /**

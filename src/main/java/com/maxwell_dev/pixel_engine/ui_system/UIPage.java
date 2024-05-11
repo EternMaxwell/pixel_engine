@@ -6,8 +6,8 @@ import com.maxwell_dev.pixel_engine.render.Renderer;
 import java.util.Map;
 
 public abstract class UIPage<T extends Renderer, V extends InputTool> extends UIComponent<T, V>{
-    public UIPage<T, V> parent;
-    public Map<String,UIPage<T, V>> children;
+    public UIComponent<T, V> parent;
+    public Map<String,UIComponent<T, V>> children;
 
     public UIPage(UIManager<T, V> manager) {
         super(manager);
