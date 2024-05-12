@@ -32,6 +32,9 @@ public class App extends Application<Render, InputTool> {
 
         uiManager = new UISystem();
         uiManager.init();
+
+        stage = new GameStage();
+        stage.init();
     }
 
     @Override
