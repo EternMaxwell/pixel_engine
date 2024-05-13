@@ -4,16 +4,17 @@ layout(location = 0) in vec4 in_color;
 layout(location = 1) in vec2 in_pos;
 layout(location = 2) in vec2 in_dir;
 layout(location = 3) in float in_intensity;
+layout(location = 4) in float in_brightness;
 
 layout(location = 0) out vec4 out_color;
 
 float size(float intensity){
-    return 4 * intensity * 64;
+    return intensity;
 }
 
 float cal_lightness(float distance, float intensity){
     float ratio = 1 - pow(distance / size(intensity), 1/2.0);
-    return clamp(intensity * ratio, 0, 1);
+    return clamp(in_brightness * ratio, 0, 1);
 }
 
 float dir_lightness(vec2 dir, vec2 pos, float intensity){
@@ -34,8 +35,8 @@ float adjust(float value, float add){
 void main()
 {
     float distance = length(in_pos);
-    float lightness;
-    lightness = dir_lightness(in_dir, in_pos, in_intensity);
+    float lightness = in_brightness;
+    lightness *= dir_lightness(in_dir, in_pos, in_intensity);
 
     out_color = in_color * lightness;
 }

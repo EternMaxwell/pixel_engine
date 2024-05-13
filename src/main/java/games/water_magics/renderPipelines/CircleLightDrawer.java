@@ -42,10 +42,11 @@ public class CircleLightDrawer extends Pipeline {
         program.attach(geometry);
         program.attach(fragment);
         program.link();
-        vertexAttribPointer(0, 2, GL_FLOAT, 9 * 4, 0);
-        vertexAttribPointer(1, 2, GL_FLOAT, 9 * 4, 2 * 4);
-        vertexAttribPointer(2, 4, GL_FLOAT, 9 * 4, 4 * 4);
-        vertexAttribPointer(3, 1, GL_FLOAT, 9 * 4, 8 * 4);
+        vertexAttribPointer(0, 2, GL_FLOAT, 10 * 4, 0);
+        vertexAttribPointer(1, 2, GL_FLOAT, 10 * 4, 2 * 4);
+        vertexAttribPointer(2, 4, GL_FLOAT, 10 * 4, 4 * 4);
+        vertexAttribPointer(3, 1, GL_FLOAT, 10 * 4, 8 * 4);
+        vertexAttribPointer(4, 1, GL_FLOAT, 10 * 4, 9 * 4);
         uniformBuffer = glGenBuffers();
         glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer);
         glBufferData(GL_UNIFORM_BUFFER, 3 * 16 * 4, GL_DYNAMIC_DRAW);
@@ -76,7 +77,7 @@ public class CircleLightDrawer extends Pipeline {
         MemoryUtil.memFree(buffer);
     }
 
-    private void vertex(float x, float y, float dirAngle, float dirConcentrate, float r, float g, float b, float a, float intensity){
+    private void vertex(float x, float y, float dirAngle, float dirConcentrate, float r, float g, float b, float a, float intensity, float brightness){
         vertices.putFloat(x);
         vertices.putFloat(y);
         vertices.putFloat(dirAngle);
@@ -86,6 +87,7 @@ public class CircleLightDrawer extends Pipeline {
         vertices.putFloat(b);
         vertices.putFloat(a);
         vertices.putFloat(intensity);
+        vertices.putFloat(brightness);
         count++;
     }
 
@@ -98,8 +100,8 @@ public class CircleLightDrawer extends Pipeline {
         vertices.clear();
     }
 
-    public void drawLightMap(float x, float y, float dirAngle, float dirConcentrate, float r, float g, float b, float a, float intensity){
-        vertex(x, y, dirAngle, dirConcentrate, r, g, b, a, intensity);
+    public void drawLightMap(float x, float y, float dirAngle, float dirConcentrate, float r, float g, float b, float a, float intensity, float brightness){
+        vertex(x, y, dirAngle, dirConcentrate, r, g, b, a, intensity, brightness);
         flush();
     }
 }

@@ -5,6 +5,7 @@ layout (points) in;
 layout (location = 0) in vec4 in_color[];
 layout (location = 1) in vec2 in_dir[];
 layout (location = 2) in float in_intensity[];
+layout (location = 3) in float in_max_lightness[];
 
 layout (triangle_strip, max_vertices = 4) out;
 
@@ -12,6 +13,7 @@ layout (location = 0) out vec4 out_color;
 layout (location = 1) out vec2 out_pos;
 layout (location = 2) out vec2 out_dir;
 layout (location = 3) out float out_intensity;
+layout (location = 4) out float out_max_lightness;
 
 layout (binding = 0) uniform Uniform{
     mat4 projection;
@@ -20,7 +22,7 @@ layout (binding = 0) uniform Uniform{
 } uniforms;
 
 float size(float intensity){
-    return 4 * intensity * 64;
+    return intensity;
 }
 
 void main()
@@ -37,6 +39,7 @@ void main()
     out_pos = vec2(-size, -size);
     out_dir = dir;
     out_intensity = intensity;
+    out_max_lightness = in_max_lightness[0];
     gl_Position = mvp * vec4(pos + out_pos, 0.0, 1.0);
     EmitVertex();
 
@@ -44,6 +47,7 @@ void main()
     out_pos = vec2(size, -size);
     out_dir = dir;
     out_intensity = intensity;
+    out_max_lightness = in_max_lightness[0];
     gl_Position = mvp * vec4(pos + out_pos, 0.0, 1.0);
     EmitVertex();
 
@@ -51,6 +55,7 @@ void main()
     out_pos = vec2(-size, size);
     out_dir = dir;
     out_intensity = intensity;
+    out_max_lightness = in_max_lightness[0];
     gl_Position = mvp * vec4(pos + out_pos, 0.0, 1.0);
     EmitVertex();
 
@@ -58,6 +63,7 @@ void main()
     out_pos = vec2(size, size);
     out_dir = dir;
     out_intensity = intensity;
+    out_max_lightness = in_max_lightness[0];
     gl_Position = mvp * vec4(pos + out_pos, 0.0, 1.0);
     EmitVertex();
 

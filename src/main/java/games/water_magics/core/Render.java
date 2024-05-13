@@ -38,6 +38,14 @@ public class Render extends Renderer {
 
     }
 
+    public void enableDepth(){
+        glEnable(GL_DEPTH);
+    }
+
+    public void disableDepth(){
+        glDisable(GL_DEPTH);
+    }
+
     @Override
     public void end() {
         glfwSwapBuffers(window.id());
